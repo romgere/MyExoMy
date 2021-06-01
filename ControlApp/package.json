@@ -11,6 +11,7 @@
     "url": "git://github.com/romgere/MyExoMy"
   },
   "dependencies": {
-    "nipplejs": "^0.8.5"
+    "nipplejs": "^0.8.5",
+    "roslib": "^1.1.0"
   }
 }
