@@ -1,34 +1,103 @@
-# ExoMy - Software Repository
-This repository contains the software to run Exomy. The [wiki](https://github.com/esa-prl/ExoMy/wiki) explains you how to use it.
 
-![ExoMy image](https://github.com/esa-prl/ExoMy/wiki/images/renderings/2020_02_25.JPG)
+# My ExoMy Project Structure
 
-# ExoMy Project Structure
+### `ControlApp` folder
 
-### [Website](https://esa-prl.github.io/ExoMy/)
-There is a website about ExoMy. It does not help you build it, but is still nice to look at.
+Contains the web app used to control the ExoMy Robot
 
-### [Wiki](https://github.com/esa-prl/ExoMy/wiki)
-The [wiki](https://github.com/esa-prl/ExoMy/wiki) contains step by step instructions on how the 3D-printed rover ExoMy can be built, controlled and customized. 
+### `Docker` folder
 
-### [Documentation Repository](https://github.com/esa-prl/ExoMy)
-This repository contains all the files of the documentation of ExoMy. Just click on [*Releases*](https://github.com/esa-prl/ExoMy/releases) and download the files of the latest release. They are explained further in the [wiki](https://github.com/esa-prl/ExoMy/wiki).
+Contains the docker file & usefull stuff related to docker
 
-### Social Media
-<!-- Add icon library -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css">
+### `ElectricalDesign` foler
 
-<!-- Add font awesome icons -->
-<p>
-    <img src="https://github.com/esa-prl/ExoMy/wiki/images/social_media_icons/discord-brands.svg" width="20px">
-    <a href="https://discord.gg/gZk62gg"> Join the Community!</a>  
-</p>
-<p>
-    <img src="https://github.com/esa-prl/ExoMy/wiki/images/social_media_icons/twitter-square-brands.svg" width="20px">
-    <a href="https://twitter.com/exomy_rover"> @ExoMy_Rover</a> 
-</p>
-<p>
-    <img src="https://github.com/esa-prl/ExoMy/wiki/images/social_media_icons/instagram-square-brands.svg" width="20px">
-    <a href="https://www.instagram.com/exomy_rover/"> @ExoMy_Rover</a>
-</p>
+Contains Fritzing schema of the robot
 
+### `MechanicalDesign` folder
+
+Contains freecad file of the robot design
+
+
+### `Misc` folder
+
+Various usefull stuff (personnal purchase list, freecad macro, ...)
+
+
+### `Robot` folder
+
+Robot software aims to be run on Rapsberry based on top of ROS
+
+
+# Configure Raspberry Pi
+
+### Start from fresh install
+
+### Enable Camera, SSH and I2C
+
+### OS update 
+`apt-get update && sudo apt-get full-upgrade`)
+
+### Install docker
+
+```sh
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker pi
+sudo reboot now
+```
+
+(Optional) test docker installation with : 
+`docker run hello-world`
+
+### Get Source Code
+
+```sh
+cd
+git clone https://github.com/romgere/MyExoMy.git
+```
+
+### Run Docker Containers
+
+To see the different options of the script use:
+
+`sh ~/MyExoMy/Docker/run_exomy.sh -h`
+
+Or if you are already in the `MyExoMy/Docker` folder:
+
+`sh run_exomy.sh -h`
+
+Depending on the state of the project, different configurations of the docker container are used:
+
+#### Config
+
+This configuration is used to run configuration scripts for the motors as described in the chapter final integration
+
+`sh ~/MyExoMy/Docker/run_exomy.sh -c`
+
+#### Devel
+
+This configuration is used to start the container for development purposes. It installs the source code and sources the environment. You can make modifications to the code and run your custom launch files.
+
+`sh ~/MyExoMy/Docker/run_exomy.sh -d`
+
+#### Autostart
+
+This configuration is used to autostart the software when ExoMy is switched on. ExoMy can then be controlled using the website or with a gamepad.
+
+`sh ~/MyExoMy/Docker/run_exomy.sh -a`
+
+Stop Autostart This configuration is used to stop the autostart docker container.
+
+`sh ~/MyExoMy/Docker/run_exomy.sh -s`
+
+### Tips
+
+Edit source files from raspberry directly on your computeur : 
+
+```sh
+apt-get install sshfs
+cd
+mkdir pi_home
+sshfs -o allow_other,default_permissions pi@xxx.xxx.xxx.xxx:/home/pi pi_home/ # replace xxx.xxx.xxx.xxx by your raspberry address
+cd pi_home/MyExoMy #Open this folder in your IDE
+```

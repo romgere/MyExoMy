@@ -1,7 +1,7 @@
 {
-  "name": "my-exomy_robot",
+  "name": "my-exomy_control-app",
   "version": "0.0.0",
-  "description": "ExoMy robot control software based on ROS",
+  "description": "Control App for ExoMy robot",
   "keywords": [],
   "scripts": {},
   "author": "Jérôme Mestres",
@@ -11,7 +11,6 @@
     "url": "git://github.com/romgere/MyExoMy"
   },
   "dependencies": {
-    "onoff": "^6.0.3",
-    "rosnodejs": "^3.0.2"
+    "nipplejs": "^0.8.5"
   }
 }
