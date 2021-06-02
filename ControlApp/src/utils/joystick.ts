@@ -1,0 +1,83 @@
+import ROSLIB from 'roslib'
+import ros from './ros'
+
+export type AxesValue = [number, number, number, number, number, number]
+type ButtonValue = 1 | 0
+export type ButtonsValue = [
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue,
+  ButtonValue
+]
+
+class JoystickUtils {
+
+  private axes: AxesValue = [0, 0, 0, 0, 0, 0]
+  private buttons: ButtonsValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+  private joyTopic: ROSLIB.Topic
+
+  private publishImmidiately = true
+  private intervalId?: number = undefined
+
+  constructor () {
+    this.joyTopic = new ROSLIB.Topic({
+      ros,
+      name: '/joy',
+      messageType: 'sensor_msgs/Joy'
+    })
+  }
+
+  moveAxes(axesValue: AxesValue, moveEnd = false): void {
+
+    this.axes = axesValue
+
+    if (moveEnd) {
+      window.clearInterval(this.intervalId)
+      this.sendJoyEvent()
+    } else if (this.publishImmidiately) {
+      // TODO: refactor this with a debounce lib ?
+      this.publishImmidiately = false
+      this.sendJoyEvent()
+      window.clearInterval(this.intervalId)
+
+      this.intervalId = window.setInterval(this.sendJoyEvent.bind(this), 50)
+
+      setTimeout(() => {
+        this.publishImmidiately = true
+      }, 50)
+    }
+  }
+
+  pressButton(buttonIndex: number): void {
+
+    // Set axes to 0 to prevent driving during mode change.
+    this.axes = [0, 0, 0, 0, 0, 0]
+    this.buttons[buttonIndex] = 1
+
+    this.sendJoyEvent()
+    // After the command is sent set the index back to 0
+    this.buttons[buttonIndex] = 0
+  }
+
+  private sendJoyEvent () {
+    const joy = new ROSLIB.Message({
+      axes: this.axes,
+      buttons: this.buttons
+    })
+    this.joyTopic.publish(joy)
+
+    console.log(this.axes)
+    console.log(this.buttons)
+  }
+}
+
+export default new JoystickUtils()
