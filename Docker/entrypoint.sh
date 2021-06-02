@@ -7,16 +7,19 @@ elif [[ $1 == "autostart" ]]
 then
 	source /opt/ros/melodic/setup.bash
 	cd /root/exomy_ws
+
+	# Install & build control App
+	npm install --prefix src/exomy/ControlApp/
+	npm run build --prefix src/exomy/ControlApp/
+	# Launch Web GUI
+	http-server src/exomy/ControlApp/build -p 8000 &
+
 	# Run catkin make
 	catkin_make
 	# Install npm package for our ROS nodejs script
 	npm install --prefix src/exomy/Robot/
-	# Same for control App
-	npm install --prefix src/exomy/ControlApp/
 	# Catkin Sourcing
 	source devel/setup.bash
-	# Launch Web GUI
-	http-server src/exomy/ControlApp/ -p 8000 &
 	# Start ROS Robot software nodes
 	roslaunch exomy exomy.launch
 
