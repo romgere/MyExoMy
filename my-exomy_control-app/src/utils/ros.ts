@@ -1,6 +1,7 @@
 import ROSLIB from 'roslib'
 
-const { hostname } = window.location
+import conf from './conf'
+const { hostname } = conf
 
 export default new ROSLIB.Ros({
   url: 'ws://' + hostname + ':9090'

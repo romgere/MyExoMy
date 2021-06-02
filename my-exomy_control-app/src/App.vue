@@ -1,33 +1,51 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-    <div>
-      joy :
-      <Joystick />
-    </div>
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <Main />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import HelloWorld from './components/HelloWorld.vue'
-import Joystick from './components/Joystick.vue'
+import Main from './components/Main.vue'
+import ROSLIB from 'roslib'
+import ros from './utils/ros'
+
+interface TypedMessage<T> extends ROSLIB.Message {
+  data: T
+}
 
 @Options({
   components: {
-    HelloWorld,
-    Joystick
+    Main
   }
 })
-export default class App extends Vue {}
-</script>
+export default class App extends Vue {
+  constructor() {
+    super(...arguments)
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+    // Romgere tests
+    // Communication test with node.js ROS node
+    const nodeJsChatter = new ROSLIB.Topic({
+      ros,
+      name: '/chatter',
+      messageType: 'std_msgs/String'
+    })
+    nodeJsChatter.subscribe(function (m) {
+      const { data } = (m as TypedMessage<string>)
+      console.log('chatter', data)
+    })
+
+    // Communication test with node.js ROS node
+    const gpioChatter = new ROSLIB.Topic({
+      ros,
+      name: '/gpio',
+      messageType: 'std_msgs/String'
+    })
+    gpioChatter.subscribe(function (m) {
+      const { data } = (m as TypedMessage<string>)
+      // var btn = document.getElementById("btn")
+      // btn.innerHTML = data;
+      // btn.style.backgroundColor = data === 'ON' ? 'green' : 'red';
+      console.log('gpio', data)
+    })
+  }
 }
-</style>
+</script>
