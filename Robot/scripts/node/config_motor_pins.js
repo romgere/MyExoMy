@@ -1,43 +1,20 @@
 const path = require('path');
 const fs = require('fs-extra')
 const YAML = require('yaml')
-var prompt = require('prompt');
+const prompt = require('prompt');
 prompt.start();
 prompt.message = ''
 const {
   sleep,
   asyncPca9685,
-  pwmFrequency,
   exomyBigString,
-  finisedBigString
+  finisedBigString,
+  configFile,
+  ensureConfigFileExist,
+  positionNames,
 } = require('./_misc')
 
-const posNames = {
-  1: 'fl',
-  2: 'fr',
-  3: 'cl',
-  4: 'cr',
-  5: 'rl',
-  6: 'rr'
-}
-
 let motors = {}
-
-
-// The cycle is the inverted frequency converted to milliseconds
-let cycle = 1 / pwmFrequency * 1000 // ms
-
-// The time the pwm signal is set to on during the duty cycle
-let onTime1 = 2.4 // ms
-let onTime2 = 1.5 // ms
-
-// Duty cycle is the percentage of a cycle the signal is on
-let dutyCycle1 = onTime1 / cycle
-let dutyCycle2 = onTime2 / cycle
-
-// The PCA 9685 board requests a 12 bit number for the duty_cycle
-let value1 = 200 // int(duty_cycle_1*4096.0)
-let value2 = 400 // int(duty_cycle_2*4096.0)
 
 class Motor {
   
@@ -58,11 +35,11 @@ class Motor {
 
   async wiggleMotor() {
     // Set the motor to the second value
-    this.pwm.setPulseRange(this.pinNumber, 0, value2)
+    this.pwm.setPulseRange(this.pinNumber, 0, 200)
     // Wait for 1 seconds
     await sleep(1000)
     // Set the motor to the first value
-    this.pwm.setPulseRange(this.pinNumber, 0, value1)
+    this.pwm.setPulseRange(this.pinNumber, 0, 400)
     // Wait for 1 seconds
     await sleep(1000)
     // Set the motor to neutral
@@ -85,15 +62,10 @@ function printExomyLayout() {
     
 
 function updateConfigFile() {
-  const fileName = path.resolve(__dirname, '../../config/exomy.yaml')
-  const templateFileName = `${fileName}.template`
 
-  if (! fs.existsSync(fileName)) {
-    fs.copySync(templateFileName, fileName)
-    console.log('exomy.yaml.template was copied to exomy.yaml')
-  }
+  ensureConfigFileExist()
 
-  let output = ''
+  const fileName = path.resolve(__dirname, configFile)
   
   const file = fs.readFileSync(fileName, 'utf8')
   const document = YAML.parseDocument(file)
@@ -113,15 +85,15 @@ async function main() {
 
   console.log(exomyBigString)
   console.log(`###############
-  Motor Configuration
-  
-  This scripts leads you through the configuration of the motors.
-  First we have to find out, to which pin of the PWM board a motor is connected.
-  Look closely which motor moves and type in the answer.
-  
-  Ensure to run the script until the end, otherwise your changes will not be saved!
-  This script can always be stopped with ctrl+c and restarted.
-  All other controls will be explained in the process.
+Motor Configuration
+
+This scripts leads you through the configuration of the motors.
+First we have to find out, to which pin of the PWM board a motor is connected.
+Look closely which motor moves and type in the answer.
+
+Ensure to run the script until the end, otherwise your changes will not be saved!
+This script can always be stopped with ctrl+c and restarted.
+All other controls will be explained in the process.
 ###############`)
 
   // Stop all motors
@@ -184,7 +156,7 @@ async function main() {
           
           pos = parseInt(position_type)
           if(pos >= 1 && pos <= 6) {
-            motor.motorSlot = posNames[pos]
+            motor.motorSlot = positionNames[pos]
             break
           } else { 
             console.log('The input was not a number between 1 and 6')
