@@ -1,5 +1,11 @@
 This is based on [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
+TODO: 
+
+- switch to yarn
+- use yarn workspace
+- put eslint conf on Robot folder
+
 # My ExoMy Project Structure
 
 ### `ControlApp` folder
