@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install ros-melodic-rosbridge-server ros-melodic-j
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get update && \
     apt-get install nodejs -y
-RUN npm install http-server -g
+RUN npm install http-server yarn -g
 
 # Install packages for camera use
 RUN apt-get update && \
