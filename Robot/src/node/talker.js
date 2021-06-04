@@ -27,6 +27,10 @@ const rosnodejs = require('rosnodejs');
 // Requires the std_msgs message package
 const std_msgs = rosnodejs.require('std_msgs').msg;
 
+// for test : (it works!)
+const screen_msgs = rosnodejs.require('exomy').msg.Screen;
+
+
 function talker() {
   // Register node with ROS master
   rosnodejs.initNode('/talker_node')

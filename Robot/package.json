@@ -11,7 +11,12 @@
     "url": "git://github.com/romgere/MyExoMy"
   },
   "dependencies": {
+    "fs-extra": "^10.0.0",
     "onoff": "^6.0.3",
-    "rosnodejs": "^3.0.2"
+    "pca9685": "^5.0.0",
+    "pi-camera": "^1.5.0",
+    "prompt": "^1.1.0",
+    "rosnodejs": "^3.0.2",
+    "yaml": "^1.10.2"
   }
 }
