@@ -156,7 +156,7 @@ All other controls will be explained in the process.
           
           pos = parseInt(position_type)
           if(pos >= 1 && pos <= 6) {
-            motor.motorSlot = positionNames[pos]
+            motor.motorSlot = positionNames[pos-1]
             break
           } else { 
             console.log('The input was not a number between 1 and 6')

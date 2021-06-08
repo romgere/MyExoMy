@@ -45,14 +45,14 @@ function ensureConfigFileExist() {
   }
 }
 
-const positionNames = {
-  1: 'fl',
-  2: 'fr',
-  3: 'cl',
-  4: 'cr',
-  5: 'rl',
-  6: 'rr'
-}
+const positionNames = [
+  'fl',
+  'fr',
+  'cl',
+  'cr',
+  'rl',
+  'rr'
+]
 
 const exomyBigString = `$$$$$$$$\\                     $$\\      $$\\           
 $$  _____|                    $$$\\    $$$ |          

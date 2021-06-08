@@ -20,8 +20,8 @@ const drivePwmNeutralDefault = 300
 function getDrivingPins(config) {
 
   const pinList = []
-  for (const k in positionNames) {
-    pinList.push( config.get(`pin_drive_${positionNames[k]}`))
+  for (const pos of positionNames) {
+    pinList.push( config.get(`pin_drive_${pos}`))
   }
   
   return pinList

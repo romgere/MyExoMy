@@ -19,7 +19,7 @@ config_filename = '../config/exomy.yaml'
 function getSteeringMotorPins(config) {
 
   const pinList = {}
-  for (const name of Object.values(positionNames)) {
+  for (const name of positionNames) {
     pinList[name] = config.get(`pin_steer_${name}`)
   }
   
@@ -29,7 +29,7 @@ function getSteeringMotorPins(config) {
 function getSteeringPwmNeutralValues(config) {
 
   const neutralValues = {}
-  for (const name of Object.values(positionNames)) {
+  for (const name of positionNames) {
     neutralValues[name] = config.get(`steer_pwm_neutral_${name}`)
   }
   
@@ -107,12 +107,9 @@ ctrl+c - Exit script
   let steeringMotorPins = getSteeringMotorPins(config)
   let pwmNeutralValues = getSteeringPwmNeutralValues(config)
   
-  console.log(positionNames)
-  console.log(steeringMotorPins)
-  console.log(pwmNeutralValues)
 
   // Iterating over all motors and fine tune the zero value
-  for (const pinName of Object.values(positionNames)) {
+  for (const pinName of positionNames) {
     console.log('INIINNI', pinName)
     let pinNumber = steeringMotorPins[pinName]
     let pwmNeutralValue = pwmNeutralValues[pinName] 
