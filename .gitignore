@@ -1,5 +1,7 @@
 .Trash*
 *.pyc
+*.fcstd1
+*.FCStd1
 
 Robot/config/exomy.yaml
 Robot/node_modules/
