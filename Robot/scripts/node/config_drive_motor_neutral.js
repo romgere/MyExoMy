@@ -40,6 +40,16 @@ function getDrivePwmNeutral(config) {
   return value
 }
 
+
+function setDrivePwmNeutral(config, value) {
+     
+  // Update value in conf
+  config.set('drive_pwm_neutral', value)
+  
+  const fileName = path.resolve(__dirname, configFile)
+  fs.writeFileSync(fileName, String(config))
+}
+
 async function main() {
 
   console.log(exomyBigString)
@@ -82,23 +92,38 @@ On each motor you have to turn the correction screw until the motor really stand
     value = int(duty_cycle*4096.0) # 307
   */
 
-  let value = getDrivePwmNeutral(config)
+  let pwmNeutralValue = getDrivePwmNeutral(config)
   let pinList = getDrivingPins(config)
 
-  for (const pin of pinList) {
-    pwm.setPulseRange(pin, 0, value)
-    sleep(100)    
+
+  while(1) {
+    // Set motor
+    
+    for (const pin of pinList) {
+      pwm.setPulseRange(pin, 0, pwmNeutralValue)
+    }
+
+    console.log( `Current value: ${pwmNeutralValue}`)
+    
+    console.log('Actions :\n - (s)et current value as pwm neutral\n - (D)ecrease pwm neutral value (-5)\n - (d)ecrease a little pwm neutral value (-1)\n - (i)ncrease a little pwm neutral value (+1)\n - (I)ncrease a little pwm neutral value (+5)')
+    let { action } = await prompt.get('action')
+
+    if(action == 's') {
+      
+      break
+    } else if (action == 'd' || action == 'D'){
+      console.log('Decreased pwm neutral value')
+      pwmNeutralValue -= action == 'd' ? 1 : 5
+    } else if (action == 'i' || action == 'I'){
+      console.log('Increased pwm neutral value')
+      pwmNeutralValue += action == 'i' ? 1 : 5
+    }
   }
 
-
-  console.log('Press any button if you are done to complete configuration')
-  await prompt.get('continue')
-
-  for (const pin of pinList) {
-    pwm.setPulseRange(pin, 0, 0)
-  }
-
+  setDrivePwmNeutral(config, pwmNeutralValue)
+  console.log(`PWM neutral value for driving motors has been set.`)
   console.log(finisedBigString)
 }
 
 main()
+
