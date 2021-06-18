@@ -1,5 +1,6 @@
 const std_msgs = rosnodejs.require('std_msgs').msg;
 
+// TODO: move this into "common" folder
 const {
   positionNames
 } = require('../../scripts/node/_misc')
@@ -7,21 +8,9 @@ const {
 // Motors class contains all functions to control the steering and driving
 class Motors {
      
-      // Motor commands are assuming positiv=driving_forward, negative=driving_backwards.
+  // Motor commands are assuming positiv=driving_forward, negative=driving_backwards.
   // The driving direction of the left side has to be inverted for this to apply to all wheels.
   wheelDirections = [-1, 1, -1, 1, -1, 1]
-
-  constructor() {
-
-    //  Define wheel names
-    // 0 fl-||-fr 1
-    //      ||
-    // 2 cl-||-cr 3
-    // 4 rl====rr 5
-    for (const key in positionNames) {
-      this[positionNames[key]] = key
-    }
-  }
 
   async init() {
 
@@ -104,3 +93,5 @@ class Motors {
     }
   }
 }
+
+module.exports = Motors

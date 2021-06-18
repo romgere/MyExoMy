@@ -1,46 +1,47 @@
-#!/usr/bin/env python
-import time
-import rospy
+const Motors = require('./motors');
 
-from exomy.msg import MotorCommands
-from motors import Motors
+const rosnodejs = require('rosnodejs');
+const { MotorCommands } = rosnodejs.require('exomy').msg;
 
-motors = Motors()
-global watchdog_timer
+let watchdogTimer = undefined
+let motors = undefined
 
 
-def callback(cmds):
-    motors.setSteering(cmds.motor_angles)
-    motors.setDriving(cmds.motor_speeds)
+function callback(cmds) {
+  motors.setSteering(cmds.motor_angles)
+  motors.setDriving(cmds.motor_speeds)
 
-    global watchdog_timer
-    watchdog_timer.shutdown()
-    # If this timer runs longer than the duration specified,
-    # then watchdog() is called stopping the driving motors.
-    watchdog_timer = rospy.Timer(rospy.Duration(5.0), watchdog, oneshot=True)
+  clearTimeout(watchdogTimer)
+  // If this timer runs longer than the duration specified,
+  // then watchdog() is called stopping the driving motors.
+  watchdogTimer = setTimeout(5000, watchdog)
+}
 
+function shutdown() {
+  motors.stopMotors()
+}
 
-def shutdown():
-    motors.stopMotors()
+function watchdog(event) {
+  rospy.loginfo("Watchdog fired. Stopping driving motors.")
+  motors.stopMotors()
+}
 
+async function nodeMain() {
 
-def watchdog(event):
-    rospy.loginfo("Watchdog fired. Stopping driving motors.")
-    motors.stopMotors()
+  await rosnodejs.initNode('motors')
+  
+  motors = Motors()
+  await motors.init()
 
+  // This node waits for commands from the robot and sets the motors accordingly
+  rosnodejs.log.info('Starting the motors node')
+  rosnodejs.on('shutdown', shutdown);
 
-if __name__ == "__main__":
-    # This node waits for commands from the robot and sets the motors accordingly
-    rospy.init_node("motors")
-    rospy.loginfo("Starting the motors node")
-    rospy.on_shutdown(shutdown)
+  watchdogTimer = setTimeout(1000, watchdog)
 
-    global watchdog_timer
-    watchdog_timer = rospy.Timer(rospy.Duration(1.0), watchdog, oneshot=True)
+  rosnodejs.subscribe('motor_commands', MotorCommands, callback, { queueSize: 1 })
+}
 
-    sub = rospy.Subscriber(
-        "/motor_commands", MotorCommands, callback, queue_size=1)
-
-    rate = rospy.Rate(10)
-
-    rospy.spin()
+if (require.main === module) {
+  nodeMain();
+}   
