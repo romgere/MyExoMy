@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+'use strict';
 
 const rosnodejs = require('rosnodejs');
 const { RoverCommand, MotorCommands, Screen } = rosnodejs.require('exomy').msg;
 const Rover = require('./rover')
 
-const exomy = Rover()
+const exomy = new Rover()
 
 let robot_pub = undefined
 
@@ -25,11 +27,11 @@ function joy_callback(message) {
 
 
 async function nodeMain() {
-  await rosnodejs.initNode('robot_node')
+  let rosNode = await rosnodejs.initNode('robot_node')
   rosnodejs.log.info('Starting the robot node')
 
-  rosnodejs.subscribe('/rover_command', RoverCommand, joy_callback, { queueSize: 1 })
-  robot_pub = rosnodejs.advertise("/motor_commands", MotorCommands, { queueSize: 1 })
+  rosNode.subscribe('/rover_command', RoverCommand, joy_callback, { queueSize: 1 })
+  robot_pub = rosNode.advertise("/motor_commands", MotorCommands, { queueSize: 1 })
 }
 
 if (require.main === module) {

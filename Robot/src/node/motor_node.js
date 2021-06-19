@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
 const Motors = require('./motors');
 
 const rosnodejs = require('rosnodejs');
@@ -28,7 +31,7 @@ function watchdog(event) {
 
 async function nodeMain() {
 
-  await rosnodejs.initNode('motors')
+  let rosNode = await rosnodejs.initNode('motors')
   
   motors = Motors()
   await motors.init()
@@ -39,7 +42,7 @@ async function nodeMain() {
 
   watchdogTimer = setTimeout(1000, watchdog)
 
-  rosnodejs.subscribe('motor_commands', MotorCommands, callback, { queueSize: 1 })
+  rosNode.subscribe('motor_commands', MotorCommands, callback, { queueSize: 1 })
 }
 
 if (require.main === module) {

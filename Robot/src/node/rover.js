@@ -1,6 +1,13 @@
+#!/usr/bin/env node
+'use strict';
 
 const rosnodejs = require('rosnodejs');
 const locomotionModes = require('./locomotion_modes');
+
+// TODO: move this into "common" folder
+const {
+  positionNames
+} = require('../../scripts/node/_misc')
 
 const {
   atan,
@@ -36,7 +43,7 @@ class Rover {
 
     
   constructor() {
-    this.locomotionNames =  Object.keys(locomotionModes).reduce(acc, function(name, key) {
+    this.locomotionNames =  Object.keys(locomotionModes).reduce(function(acc, name, key) {
       acc[key] = name
       return acc
     }, {})
@@ -229,3 +236,5 @@ class Rover {
     return motorSpeeds
   }
 }
+
+module.exports = Rover

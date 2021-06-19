@@ -1,3 +1,4 @@
+const rosnodejs = require('rosnodejs');
 const std_msgs = rosnodejs.require('std_msgs').msg;
 
 // TODO: move this into "common" folder

@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env node
+'use strict';
+
 const rosnodejs = require('rosnodejs');
 const { Joy } = rosnodejs.require('sensor_msgs').msg;
 const { RoverCommand } = rosnodejs.require('exomy').msg;
@@ -74,11 +76,11 @@ function joy_callback(data) {
 
 
 async function nodeMain() {
-  await rosnodejs.initNode('joystick_parser_node')
+  let rosNode = await rosnodejs.initNode('joystick_parser_node')
   rosnodejs.log.info('Starting the joystick_parser node')
 
-  rosnodejs.subscribe('/joy', Joy, joy_callback, { queueSize: 1 })
-  commandPub = rosnodejs.advertise("/rover_command", RoverCommand, { queueSize: 1 })
+  rosNode.subscribe('/joy', Joy, joy_callback, { queueSize: 1 })
+  commandPub = rosNode.advertise("/rover_command", RoverCommand, { queueSize: 1 })
 }
 
 if (require.main === module) {
