@@ -1,14 +1,13 @@
 #!/usr/bin/env node
-'use strict';
+'use strict'
 
-const Motors = require('./motors');
+const Motors = require('./motors')
 
-const rosnodejs = require('rosnodejs');
-const { MotorCommands } = rosnodejs.require('exomy').msg;
+const rosnodejs = require('rosnodejs')
+const { MotorCommands } = rosnodejs.require('exomy').msg
 
-let watchdogTimer = undefined
-let motors = undefined
-
+let watchdogTimer,
+  motors
 
 function callback(cmds) {
   motors.setSteering(cmds.motor_angles)
@@ -24,26 +23,25 @@ function shutdown() {
   motors.stopMotors()
 }
 
-function watchdog(event) {
-  rospy.loginfo("Watchdog fired. Stopping driving motors.")
+function watchdog() {
+  rosnodejs.log.info('Watchdog fired. Stopping driving motors.')
   motors.stopMotors()
 }
 
 async function nodeMain() {
+  const motorNode = await rosnodejs.initNode('motors')
 
-  let motorNode = await rosnodejs.initNode('motors')
-  
   motors = new Motors()
   await motors.init(motorNode)
 
   // This node waits for commands from the robot and sets the motors accordingly
   rosnodejs.log.info('Starting the motors node')
-  motorNode.on('shutdown', shutdown);
+  motorNode.on('shutdown', shutdown)
   motorNode.subscribe('motor_commands', MotorCommands, callback, { queueSize: 1 })
 
   watchdogTimer = setTimeout(1000, watchdog)
 }
 
 if (require.main === module) {
-  nodeMain();
-}   
+  nodeMain()
+}

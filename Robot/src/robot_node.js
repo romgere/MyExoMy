@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-'use strict';
+'use strict'
 
-const rosnodejs = require('rosnodejs');
-const { RoverCommand, MotorCommands, Screen } = rosnodejs.require('exomy').msg;
+const rosnodejs = require('rosnodejs')
+const { RoverCommand, MotorCommands } = rosnodejs.require('exomy').msg
 const Rover = require('./rover')
 
 const exomy = new Rover()
 
-let robotPub = undefined
+let robotPub
 
-function joy_callback(message) {
-  let cmds = MotorCommands()
+function robotCallback(message) {
+  const cmds = new MotorCommands()
 
   if (message.motors_enabled) {
     exomy.setLocomotionMode(message.locomotion_mode)
@@ -25,15 +25,14 @@ function joy_callback(message) {
   robotPub.publish(cmds)
 }
 
-
 async function nodeMain() {
-  let robotNode = await rosnodejs.initNode('robot_node')
+  const robotNode = await rosnodejs.initNode('robot_node')
   rosnodejs.log.info('Starting the robot node')
 
-  robotNode.subscribe('/rover_command', RoverCommand, joy_callback, { queueSize: 1 })
-  robotPub = robotNode.advertise("/motor_commands", MotorCommands, { queueSize: 1 })
+  robotNode.subscribe('/rover_command', RoverCommand, robotCallback, { queueSize: 1 })
+  robotPub = robotNode.advertise('/motor_commands', MotorCommands, { queueSize: 1 })
 }
 
 if (require.main === module) {
-  nodeMain();
-}   
+  nodeMain()
+}

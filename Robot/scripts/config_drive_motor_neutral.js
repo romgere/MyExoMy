@@ -1,11 +1,10 @@
-const path = require('path');
+const path = require('path')
 const fs = require('fs-extra')
 const YAML = require('yaml')
-const prompt = require('prompt');
-prompt.start();
+const prompt = require('prompt')
+prompt.start()
 prompt.message = ''
 const {
-  sleep,
   asyncPca9685,
   exomyBigString,
   finisedBigString,
@@ -13,22 +12,20 @@ const {
   positionNames
 } = require('../misc')
 
-config_filename = '../config/exomy.yaml'
-
 const drivePwmNeutralDefault = 300
 
 function getDrivingPins(config) {
 
   const pinList = []
   for (const pos of positionNames) {
-    pinList.push( config.get(`pin_drive_${pos}`))
+    pinList.push(config.get(`pin_drive_${pos}`))
   }
-  
+
   return pinList
 }
 
 function getDrivePwmNeutral(config) {
-     
+
   let value = config.get('drive_pwm_neutral')
 
   if (!value) {
@@ -40,12 +37,11 @@ function getDrivePwmNeutral(config) {
   return value
 }
 
-
 function setDrivePwmNeutral(config, value) {
-     
+
   // Update value in conf
   config.set('drive_pwm_neutral', value)
-  
+
   const fileName = path.resolve(__dirname, configFile)
   fs.writeFileSync(fileName, String(config))
 }
@@ -60,7 +56,7 @@ On each motor you have to turn the correction screw until the motor really stand
   `)
 
   const fileName = path.resolve(__dirname, configFile)
-  if (! fs.existsSync(fileName)) {
+  if (!fs.existsSync(fileName)) {
     console.log('exomy.yaml does not exist. Finish config_motor_pins.py to generate it.')
     return
   }
@@ -72,7 +68,7 @@ On each motor you have to turn the correction screw until the motor really stand
 
   /*
     The drive_pwm_neutral value is determined from the exomy.yaml file.
-    But it can be also calculated from the values of the PWM board and motors, 
+    But it can be also calculated from the values of the PWM board and motors,
     like shown in the following calculation:
 
     # For most motors a pwm frequency of 50Hz is normal
@@ -95,33 +91,33 @@ On each motor you have to turn the correction screw until the motor really stand
   let pwmNeutralValue = getDrivePwmNeutral(config)
   let pinList = getDrivingPins(config)
 
-
-  while(1) {
+  // eslint-disable-next-line no-constant-condition
+  while (1) {
     // Set motor
-    
-    for (const pin of pinList) {
+
+    for (let pin of pinList) {
       pwm.setPulseRange(pin, 0, pwmNeutralValue)
     }
 
-    console.log( `Current value: ${pwmNeutralValue}`)
-    
+    console.log(`Current value: ${pwmNeutralValue}`)
+
     console.log('Actions :\n - (s)et current value as pwm neutral\n - (D)ecrease pwm neutral value (-5)\n - (d)ecrease a little pwm neutral value (-1)\n - (i)ncrease a little pwm neutral value (+1)\n - (I)ncrease a little pwm neutral value (+5)')
     let { action } = await prompt.get('action')
 
-    if(action == 's') {
-      
+    if (action == 's') {
+
       break
-    } else if (action == 'd' || action == 'D'){
+    } else if (action == 'd' || action == 'D') {
       console.log('Decreased pwm neutral value')
       pwmNeutralValue -= action == 'd' ? 1 : 5
-    } else if (action == 'i' || action == 'I'){
+    } else if (action == 'i' || action == 'I') {
       console.log('Increased pwm neutral value')
       pwmNeutralValue += action == 'i' ? 1 : 5
     }
   }
 
   setDrivePwmNeutral(config, pwmNeutralValue)
-  console.log(`PWM neutral value for driving motors has been set.`)
+  console.log('PWM neutral value for driving motors has been set.')
   console.log(finisedBigString)
 }
 

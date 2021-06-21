@@ -1,11 +1,12 @@
 const {
   positionNames,
-  asyncPca9685
+  asyncPca9685,
+  sleep
 } = require('../misc')
 
 // Motors class contains all functions to control the steering and driving
 class Motors {
-     
+
   // Motor commands are assuming positiv=driving_forward, negative=driving_backwards.
   // The driving direction of the left side has to be inverted for this to apply to all wheels.
   wheelDirections = [-1, 1, -1, 1, -1, 1]
@@ -26,36 +27,36 @@ class Motors {
 
     this.drivingPwmLowLimit = 100
     this.drivingPwmUpperLimit = 500
-    this.drivingPwmNeutral = await motorNode.getParam("drive_pwm_neutral")
-    this.drivingPwmRange = await motorNode.getParam("drive_pwm_range")
+    this.drivingPwmNeutral = await motorNode.getParam('drive_pwm_neutral')
+    this.drivingPwmRange = await motorNode.getParam('drive_pwm_range')
 
     // Set steering motors to neutral values (straight)
-    for (const key in positionNames) {
+    await Promise.all(positionNames.map(async(_, key) => {
       this.pwm.setPulseRange(
         this.pins.steer[key],
         0,
         self.steeringPwmNeutral[key]
       )
-      await sleep(100) 
-    }
+      await sleep(100) // TODO: needed ?
+    }))
 
     await this.wiggle()
   }
 
   async wiggle() {
-      await sleep(100)
-      this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0] + this.steeringPwmRange * 0.3)
-      await sleep(100)
-      this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0] + this.steeringPwmRange * 0.3)
-      await sleep(300)
-      this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0] - this.steeringPwmRange * 0.3)
-      await sleep(100)
-      this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0] - this.steeringPwmRange * 0.3)
-      await sleep(300)
-      this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0])
-      await sleep(100)
-      this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0])
-      await sleep(300)
+    await sleep(100)
+    this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0] + this.steeringPwmRange * 0.3)
+    await sleep(100)
+    this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0] + this.steeringPwmRange * 0.3)
+    await sleep(300)
+    this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0] - this.steeringPwmRange * 0.3)
+    await sleep(100)
+    this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0] - this.steeringPwmRange * 0.3)
+    await sleep(300)
+    this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0])
+    await sleep(100)
+    this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0])
+    await sleep(300)
   }
 
   setSteering(steeringCommand) {
