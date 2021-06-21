@@ -4,7 +4,6 @@
 const rosnodejs = require('rosnodejs');
 const { Joy } = rosnodejs.require('sensor_msgs').msg;
 const { RoverCommand } = rosnodejs.require('exomy').msg;
-const locomotionModes = require('./locomotion_modes');
 
 const {
   min,
@@ -39,7 +38,6 @@ function joy_callback(data) {
     x = data.axes[0]
 
     // Reading out button data to set locomotion mode
-    let locomotionMode = undefined
     if (data.buttons[0] == 1) {
       // X Button
       locomotionMode = LocomotionMode.POINT_TURN

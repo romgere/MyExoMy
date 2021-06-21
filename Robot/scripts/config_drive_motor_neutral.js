@@ -11,7 +11,7 @@ const {
   finisedBigString,
   configFile,
   positionNames
-} = require('./_misc')
+} = require('../misc')
 
 config_filename = '../config/exomy.yaml'
 

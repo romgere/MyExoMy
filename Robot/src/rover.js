@@ -2,12 +2,11 @@
 'use strict';
 
 const rosnodejs = require('rosnodejs');
-const locomotionModes = require('./locomotion_modes');
 
-// TODO: move this into "common" folder
 const {
-  positionNames
-} = require('../../scripts/node/_misc')
+  positionNames,
+  locomotionModes
+} = require('../misc')
 
 const {
   atan,
@@ -37,12 +36,9 @@ class Rover {
   
   locomotionNames = undefined
   locomotionMode = 1 // ACKERMANN
-
-  // # Defining wheel names
-  // FL, FR, CL, CR, RL, RR = range(0, 6)
-
     
   constructor() {
+    // Set locomotion mode name as sting (eg. 1 : "ACKERMANN", ...)
     this.locomotionNames =  Object.keys(locomotionModes).reduce(function(acc, name, key) {
       acc[key] = name
       return acc

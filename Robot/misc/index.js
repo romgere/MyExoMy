@@ -6,7 +6,7 @@ const i2cBus = require("i2c-bus");
 // For most motors a pwm frequency of 50Hz is normal
 const pwmFrequency = 50.0  // Hz
 
-const configFile = '../../config/exomy.yaml'
+const configFile = '../config/exomy.yaml'
 
 function sleep(msTime) {
   return new Promise((resolve) => {
@@ -54,6 +54,13 @@ const positionNames = [
   'rr'
 ]
 
+const locomotionModes = {
+  ACKERMANN: 1,
+  POINT_TURN: 2,
+  CRABBING: 3
+}
+
+
 const exomyBigString = `$$$$$$$$\\                     $$\\      $$\\           
 $$  _____|                    $$$\\    $$$ |          
 $$ |      $$\\   $$\\  $$$$$$\\  $$$$\\  $$$$ |$$\\   $$\\ 
@@ -83,5 +90,6 @@ module.exports = {
   sleep,
   asyncPca9685,
   ensureConfigFileExist,
-  positionNames
+  positionNames,
+  locomotionModes
 }

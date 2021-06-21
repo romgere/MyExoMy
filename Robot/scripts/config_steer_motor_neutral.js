@@ -12,7 +12,7 @@ const {
   finisedBigString,
   configFile,
   positionNames
-} = require('./_misc')
+} = require('../misc')
 
 config_filename = '../config/exomy.yaml'
 
@@ -110,7 +110,7 @@ ctrl+c - Exit script
 
   // Iterating over all motors and fine tune the zero value
   for (const pinName of positionNames) {
-    console.log('INIINNI', pinName)
+
     let pinNumber = steeringMotorPins[pinName]
     let pwmNeutralValue = pwmNeutralValues[pinName] 
 

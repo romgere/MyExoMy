@@ -12,7 +12,7 @@ const {
   configFile,
   ensureConfigFileExist,
   positionNames,
-} = require('./_misc')
+} = require('../misc')
 
 let motors = {}
 

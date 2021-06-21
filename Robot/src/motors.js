@@ -1,10 +1,9 @@
 const rosnodejs = require('rosnodejs');
 const std_msgs = rosnodejs.require('std_msgs').msg;
 
-// TODO: move this into "common" folder
 const {
   positionNames
-} = require('../../scripts/node/_misc')
+} = require('../misc')
 
 // Motors class contains all functions to control the steering and driving
 class Motors {
@@ -63,7 +62,7 @@ class Motors {
 
   setSteering(steeringCommand) {
     for (const key in positionNames) {
-      let duty_cycle = parseInt(
+      let dutyCycle = parseInt(
         this.steeringPwmNeutral[key]
         + steeringCommand[key] / 90
         * this.steeringPwmRange

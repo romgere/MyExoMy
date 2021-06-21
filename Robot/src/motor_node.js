@@ -33,7 +33,7 @@ async function nodeMain() {
 
   let rosNode = await rosnodejs.initNode('motors')
   
-  motors = Motors()
+  motors = new Motors()
   await motors.init()
 
   // This node waits for commands from the robot and sets the motors accordingly

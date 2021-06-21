@@ -1,4 +1,4 @@
-const { sleep, asyncPca9685, pwmFrequency } = require('./_misc');
+const { sleep, asyncPca9685, pwmFrequency } = require('../misc');
 var prompt = require('prompt');
 prompt.start();
 prompt.message = ''
@@ -28,8 +28,8 @@ console.log('Pin', pin)
 // The cycle is the inverted frequency converted to milliseconds
 const cycle = 1 / pwmFrequency * 1000 //ms 
 
-// The time the pwm signal is set to on during the duty cycle
-const onTime = 2.0 // ms
+// // The time the pwm signal is set to on during the duty cycle
+// const onTime = 2.0 // ms
 
 async function testLoop(pwm) {
   

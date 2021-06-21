@@ -1,4 +1,4 @@
-const { asyncPca9685 } = require('./_misc');
+const { asyncPca9685 } = require('../misc');
 
 // This script simply stops all the motors, in case they were left in a running state. 
 
