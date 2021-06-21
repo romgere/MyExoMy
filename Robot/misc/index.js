@@ -1,23 +1,23 @@
-const path = require('path');
+const path = require('path')
 const fs = require('fs-extra')
-const Pca9685Driver = require("pca9685").Pca9685Driver;
-const i2cBus = require("i2c-bus");
+const { Pca9685Driver } = require('pca9685')
+const i2cBus = require('i2c-bus')
 
 // For most motors a pwm frequency of 50Hz is normal
 const pwmFrequency = 50.0  // Hz
 
-const configFile = '../../config/exomy.yaml'
+const configFile = '../config/exomy.yaml'
 
 function sleep(msTime) {
   return new Promise((resolve) => {
-    setTimeout(resolve, msTime);
+    setTimeout(resolve, msTime)
   })
 }
 
 function asyncPca9685(options = {}) {
   return new Promise((resolve, reject) => {
     let pwm = new Pca9685Driver(
-      {        
+      {
         i2c: i2cBus.openSync(1),
         address: 0x40,
         debug: false,
@@ -27,7 +27,7 @@ function asyncPca9685(options = {}) {
       function(err) {
         if (err) {
           reject(err)
-        } else{
+        } else {
           resolve(pwm)
         }
       }
@@ -39,19 +39,25 @@ function ensureConfigFileExist() {
   const fileName = path.resolve(__dirname, configFile)
   const templateFileName = `${fileName}.template`
 
-  if (! fs.existsSync(fileName)) {
+  if (!fs.existsSync(fileName)) {
     fs.copySync(templateFileName, fileName)
     console.log('exomy.yaml.template was copied to exomy.yaml')
   }
 }
 
-const positionNames = {
-  1: 'fl',
-  2: 'fr',
-  3: 'cl',
-  4: 'cr',
-  5: 'rl',
-  6: 'rr'
+const positionNames = [
+  'fl',
+  'fr',
+  'cl',
+  'cr',
+  'rl',
+  'rr'
+]
+
+const locomotionModes = {
+  ACKERMANN: 1,
+  POINT_TURN: 2,
+  CRABBING: 3
 }
 
 const exomyBigString = `$$$$$$$$\\                     $$\\      $$\\           
@@ -83,5 +89,6 @@ module.exports = {
   sleep,
   asyncPca9685,
   ensureConfigFileExist,
-  positionNames
+  positionNames,
+  locomotionModes
 }

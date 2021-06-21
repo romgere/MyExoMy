@@ -1,5 +1,5 @@
 bool connected
 bool motors_enabled
-int64 locomotion_mode
-int64 vel
-int64 steering
+int32 locomotion_mode
+int32 vel
+int32 steering

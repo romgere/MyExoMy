@@ -7,3 +7,5 @@ Robot/config/exomy.yaml
 Robot/node_modules/
 
 ControlApp/node_modules/
+.DS_Store
+.DS_Store?

@@ -6,10 +6,10 @@
         <label class="video-text">Controls</label>
         <div class="control-container">
           <div class="control-container--btn">
-            <Button type="x">CRABBING</Button>
+            <Button type="y">CRABBING</Button>
           </div>
           <div class="control-container--btn">
-            <Button type="y">SPOT TURN</Button>
+            <Button type="x">SPOT TURN</Button>
           </div>
           <div class="control-container--btn">
             <Button type="a">ACKERMANN</Button>

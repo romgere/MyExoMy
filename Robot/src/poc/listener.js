@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/************************************************************************
+/** **********************************************************************
  Copyright (c) 2017, Rethink Robotics
  Copyright (c) 2017, Ian McMahon
 
@@ -17,30 +17,30 @@
  limitations under the License.
 ************************************************************************/
 
-'use strict';
+'use strict'
 /**
  * This example demonstrates simple receiving of messages over the ROS system.
  */
 
 // Require rosnodejs itself
-const rosnodejs = require('rosnodejs');
+const rosnodejs = require('rosnodejs')
 // Requires the std_msgs message package
-const std_msgs = rosnodejs.require('std_msgs').msg;
+const std_msgs = rosnodejs.require('std_msgs').msg // eslint-disable-line camelcase
 
 function listener() {
   // Register node with ROS master
   rosnodejs.initNode('/listener_node')
     .then((rosNode) => {
       // Create ROS subscriber on the 'chatter' topic expecting String messages
-      let sub = rosNode.subscribe('/chatter', std_msgs.String,
+      rosNode.subscribe('/chatter', std_msgs.String,
         (data) => { // define callback execution
-          rosnodejs.log.info('I heard: [' + data.data + ']');
+          rosnodejs.log.info(`I heard: [${data.data}]`)
         }
-      );
-    });
+      )
+    })
 }
 
 if (require.main === module) {
   // Invoke Main Listener Function
-  listener();
+  listener()
 }

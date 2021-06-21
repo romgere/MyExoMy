@@ -9,12 +9,10 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654
 
 # Basic tools
 RUN apt-get update && \
-    apt-get install vim nano git tmux wget curl python-pip net-tools iputils-ping  -y
+    apt-get install vim nano git tmux wget curl net-tools iputils-ping  -y
 
 # Install additional ros packages
 RUN apt-get update && apt-get install ros-melodic-rosbridge-server ros-melodic-joy -y
-RUN pip install adafruit-pca9685
-
 
 # Install packages for web application
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
