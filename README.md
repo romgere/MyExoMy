@@ -4,7 +4,18 @@ TODO:
 
 - switch to yarn
 - use yarn workspace
-- put eslint conf on Robot folder
+- Update docker / readme to not run Web GUI on Raspberry
+- handle neutral + min/max or range on each servo (steering & drive)
+- Send some usefull information from Rover (Wifi strengh, ...)
+
+# Modifications made on My ExoMy Vs original ExoMy
+
+- convert Rover ROS node to nodejs
+- convert web GUI to vue.js app
+- convert configuration script to nodejs
+- modification on some part to handle cheap MG996R servo (P19, P28, P30)
+- convert step files to openscad file
+- merge ExoMy & ExoMy_Software repo
 
 # My ExoMy Project Structure
 
