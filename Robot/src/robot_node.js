@@ -7,7 +7,7 @@ const Rover = require('./rover')
 
 const exomy = new Rover()
 
-let robot_pub = undefined
+let robotPub = undefined
 
 function joy_callback(message) {
   let cmds = MotorCommands()
@@ -22,16 +22,16 @@ function joy_callback(message) {
     cmds.motor_speeds = exomy.joystickToVelocity(0, 0)
   }
 
-  robot_pub.publish(cmds)
+  robotPub.publish(cmds)
 }
 
 
 async function nodeMain() {
-  let rosNode = await rosnodejs.initNode('robot_node')
+  let robotNode = await rosnodejs.initNode('robot_node')
   rosnodejs.log.info('Starting the robot node')
 
-  rosNode.subscribe('/rover_command', RoverCommand, joy_callback, { queueSize: 1 })
-  robot_pub = rosNode.advertise("/motor_commands", MotorCommands, { queueSize: 1 })
+  robotNode.subscribe('/rover_command', RoverCommand, joy_callback, { queueSize: 1 })
+  robotPub = robotNode.advertise("/motor_commands", MotorCommands, { queueSize: 1 })
 }
 
 if (require.main === module) {

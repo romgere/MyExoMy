@@ -1,8 +1,6 @@
-const rosnodejs = require('rosnodejs');
-const std_msgs = rosnodejs.require('std_msgs').msg;
-
 const {
-  positionNames
+  positionNames,
+  asyncPca9685
 } = require('../misc')
 
 // Motors class contains all functions to control the steering and driving
@@ -12,24 +10,24 @@ class Motors {
   // The driving direction of the left side has to be inverted for this to apply to all wheels.
   wheelDirections = [-1, 1, -1, 1, -1, 1]
 
-  async init() {
+  async init(motorNode) {
 
     // Set variables for the GPIO motor pins
     this.pins = {
-      drive: await Promise.all(positionNames.map((pos) => nh.getParam(`pin_drive_${pos}`))),
-      steer: await Promise.all(positionNames.map((pos) => nh.getParam(`pin_steer_${pos}`)))
+      drive: await Promise.all(positionNames.map((pos) => motorNode.getParam(`pin_drive_${pos}`))),
+      steer: await Promise.all(positionNames.map((pos) => motorNode.getParam(`pin_steer_${pos}`)))
     }
 
     this.pwm = await asyncPca9685()
 
     // PWM characteristics
-    this.steeringPwmNeutral = await Promise.all(positionNames.map((pos) => nh.getParam(`steer_pwm_neutral_${pos}`)))
-    this.steeringPwmRange = await nh.getParam('steer_pwm_range')
+    this.steeringPwmNeutral = await Promise.all(positionNames.map((pos) => motorNode.getParam(`steer_pwm_neutral_${pos}`)))
+    this.steeringPwmRange = await motorNode.getParam('steer_pwm_range')
 
     this.drivingPwmLowLimit = 100
     this.drivingPwmUpperLimit = 500
-    this.drivingPwmNeutral = await nh.getParam("drive_pwm_neutral")
-    this.drivingPwmRange = await nh.getParam("drive_pwm_range")
+    this.drivingPwmNeutral = await motorNode.getParam("drive_pwm_neutral")
+    this.drivingPwmRange = await motorNode.getParam("drive_pwm_range")
 
     // Set steering motors to neutral values (straight)
     for (const key in positionNames) {

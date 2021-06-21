@@ -31,18 +31,17 @@ function watchdog(event) {
 
 async function nodeMain() {
 
-  let rosNode = await rosnodejs.initNode('motors')
+  let motorNode = await rosnodejs.initNode('motors')
   
   motors = new Motors()
-  await motors.init()
+  await motors.init(motorNode)
 
   // This node waits for commands from the robot and sets the motors accordingly
   rosnodejs.log.info('Starting the motors node')
-  rosnodejs.on('shutdown', shutdown);
+  motorNode.on('shutdown', shutdown);
+  motorNode.subscribe('motor_commands', MotorCommands, callback, { queueSize: 1 })
 
   watchdogTimer = setTimeout(1000, watchdog)
-
-  rosNode.subscribe('motor_commands', MotorCommands, callback, { queueSize: 1 })
 }
 
 if (require.main === module) {

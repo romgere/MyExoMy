@@ -74,11 +74,11 @@ function joy_callback(data) {
 
 
 async function nodeMain() {
-  let rosNode = await rosnodejs.initNode('joystick_parser_node')
+  let joystickNode = await rosnodejs.initNode('joystick_parser_node')
   rosnodejs.log.info('Starting the joystick_parser node')
 
-  rosNode.subscribe('/joy', Joy, joy_callback, { queueSize: 1 })
-  commandPub = rosNode.advertise("/rover_command", RoverCommand, { queueSize: 1 })
+  joystickNode.subscribe('/joy', Joy, joy_callback, { queueSize: 1 })
+  commandPub = joystickNode.advertise("/rover_command", RoverCommand, { queueSize: 1 })
 }
 
 if (require.main === module) {
