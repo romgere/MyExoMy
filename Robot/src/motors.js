@@ -35,7 +35,7 @@ class Motors {
       this.pwm.setPulseRange(
         this.pins.steer[key],
         0,
-        self.steeringPwmNeutral[key]
+        this.steeringPwmNeutral[key]
       )
       await sleep(100) // TODO: needed ?
     }))
@@ -67,7 +67,7 @@ class Motors {
         * this.steeringPwmRange
       )
 
-      self.pwm.setPulseRange(this.pins.steer[key], 0, dutyCycle)
+      this.pwm.setPulseRange(this.pins.steer[key], 0, dutyCycle)
     }
   }
 

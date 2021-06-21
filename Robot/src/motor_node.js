@@ -16,7 +16,7 @@ function callback(cmds) {
   clearTimeout(watchdogTimer)
   // If this timer runs longer than the duration specified,
   // then watchdog() is called stopping the driving motors.
-  watchdogTimer = setTimeout(5000, watchdog)
+  watchdogTimer = setTimeout(watchdog, 5000)
 }
 
 function shutdown() {
@@ -36,10 +36,10 @@ async function nodeMain() {
 
   // This node waits for commands from the robot and sets the motors accordingly
   rosnodejs.log.info('Starting the motors node')
-  motorNode.on('shutdown', shutdown)
+  rosnodejs.on('shutdown', shutdown)
   motorNode.subscribe('motor_commands', MotorCommands, callback, { queueSize: 1 })
 
-  watchdogTimer = setTimeout(1000, watchdog)
+  watchdogTimer = setTimeout(watchdog, 1000)
 }
 
 if (require.main === module) {

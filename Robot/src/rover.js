@@ -15,7 +15,6 @@ const {
   min,
   max,
   cos,
-  radians,
   abs,
   pow,
   sqrt
@@ -31,6 +30,10 @@ function degrees(radians) {
   return radians * (180 / PI)
 }
 
+function radians(degrees) {
+  return degrees * (PI / 180)
+}
+
 // Rover class contains all the math and motor control algorithms to move the rover
 class Rover {
 
@@ -39,8 +42,8 @@ class Rover {
 
   constructor() {
     // Set locomotion mode name as sting (eg. 1 : "ACKERMANN", ...)
-    this.locomotionNames =  Object.keys(locomotionModes).reduce(function(acc, name, key) {
-      acc[key] = name
+    this.locomotionNames =  Object.keys(locomotionModes).reduce(function(acc, name) {
+      acc[locomotionModes[name]] = name
       return acc
     }, {})
 
@@ -109,10 +112,10 @@ class Rover {
       }
 
       let innerAngle = parseInt(degrees(
-        atan(self.wheelX / (abs(r) - wheelY))
+        atan(wheelX / (abs(r) - wheelY))
       ))
       let outerAngle = parseInt(degrees(
-        atan(self.wheelX / (abs(r) + wheelY))
+        atan(wheelX / (abs(r) + wheelY))
       ))
 
       if (steeringCommand > 90 || steeringCommand < -90) {
@@ -187,7 +190,7 @@ class Rover {
         return motorSpeeds
       }
 
-      if (radius == self.ackermann_r_max) {
+      if (radius == ackermannRMax) {
         motorSpeeds.fill(v)
       } else {
 
