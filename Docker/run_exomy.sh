@@ -61,10 +61,16 @@ if [ -n "$RUNNING_CONTAINERS" ]; then
     docker rm -f "$RUNNING_CONTAINERS"
 fi
 
+if [[ -z "${MY_EXOMY_FOLDER}" ]]; then
+  MY_EXOMY_FOLDER="~/MyExoMy"
+else
+  MY_EXOMY_FOLDER="${MY_EXOMY_FOLDER}"
+fi
+
 # Run docker container
 docker run \
     -it \
-    -v ~/MyExoMy:/root/exomy_ws/src/exomy \
+    -v ${MY_EXOMY_FOLDER}:/root/exomy_ws/src/exomy \
     -p 8000:8000 \
     -p 8080:8080 \
     -p 9090:9090 \
