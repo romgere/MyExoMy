@@ -10,9 +10,7 @@ then
 
 	# Install npm deps for control app & ROS nodejs scrips
 	yarn --cwd src/exomy --production install
-  # delete useless simlink to prevent error
-  rm -Rf src/exomy/node_module/@my-exomy
-	
+
 	# build control App
 	yarn --cwd src/exomy/ControlApp run build
 	# Launch Web GUI
