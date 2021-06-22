@@ -1,5 +1,5 @@
 {
-  "name": "my-exomy_control-app",
+  "name": "@my-exomy/control-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -8,8 +8,10 @@ then
 	source /opt/ros/melodic/setup.bash
 	cd /root/exomy_ws
 
-	# Install npm deps for both control app & ROS nodejs scrips
-	yarn --cwd src/exomy/ install
+	# Install npm deps for control app & ROS nodejs scrips
+	yarn --cwd src/exomy --production install
+  # delete useless simlink to prevent error
+  rm -Rf src/exomy/node_module/@my-exomy
 	
 	# build control App
 	yarn --cwd src/exomy/ControlApp run build
@@ -17,7 +19,8 @@ then
 	http-server src/exomy/ControlApp/dist -p 8000 &
 
 	# Run catkin make
-	catkin_make	
+	catkin_make --source src/exomy/Robot
+
 	# Catkin Sourcing
 	source devel/setup.bash
 
