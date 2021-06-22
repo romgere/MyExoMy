@@ -1,0 +1,8 @@
+{
+  "name": "my-exomy",
+  "private": true,
+  "workspaces": [
+    "ControlApp",
+    "Robot"
+  ]
+}

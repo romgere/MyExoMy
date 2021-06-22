@@ -8,7 +8,6 @@ project(exomy)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  rospy
   std_msgs
   sensor_msgs
   message_generation
@@ -108,7 +107,7 @@ add_message_files(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES exomy
-   CATKIN_DEPENDS rospy std_msgs sensor_msgs message_runtime
+   CATKIN_DEPENDS std_msgs sensor_msgs message_runtime
 #  DEPENDS python-rpi.gpio
 )
 
