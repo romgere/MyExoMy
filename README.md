@@ -2,6 +2,8 @@ This is based on [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
 **TODO** : 
 
+- remove TS from vuejs app
+- use common eslint base for both Robot & ControlApp
 - Update docker / readme to not run Web GUI on Raspberry
 - handle neutral + min/max or range on each servo (steering & drive)
 - Send some usefull information from Rover (Wifi strengh, ...)
