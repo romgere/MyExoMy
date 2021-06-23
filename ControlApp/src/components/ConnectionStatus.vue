@@ -4,22 +4,22 @@
   </span>
 </template>
 
-<script lang="ts">
+<script>
 import { Vue } from 'vue-class-component'
 import ros from '../utils/ros'
 
-enum ConnectionStatuses {
-  Disconnected = 'disconnected',
-  Connected = 'connected',
-  Error = 'error',
-  Closed = 'closed'
+const ConnectionStatuses = {
+  Disconnected: 'disconnected',
+  Connected: 'connected',
+  Error: 'error',
+  Closed: 'closed'
 }
 
 export default class ConnectionStatus extends Vue {
 
-  status: ConnectionStatuses = ConnectionStatuses.Disconnected
+  status = ConnectionStatuses.Disconnected
 
-  get statusClass(): string {
+  get statusClass() {
     return `cnx-status--${this.status}`
   }
 
