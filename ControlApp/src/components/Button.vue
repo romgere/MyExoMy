@@ -4,14 +4,9 @@
   </button>
 </template>
 
-<script lang="ts">
+<script>
 import { Options, Vue } from 'vue-class-component'
 import joystickUtils from '../utils/joystick'
-
-type ButtonType = 'y' | 'x' | 'a' | 'start'
-interface ButtonComponentProps {
-  type?: ButtonType
-}
 
 const typeMapping = {
   y: 3,
@@ -23,17 +18,16 @@ const typeMapping = {
 @Options({
   props: {
     type: undefined
-  } as ButtonComponentProps
+  }
 })
 export default class Joystick extends Vue {
+  type = undefined
 
-  type?: ButtonType
-
-  get buttonClass(): string {
+  get buttonClass() {
     return `button--${this.type}`
   }
 
-  sendButtonEvent(): void {
+  sendButtonEvent() {
     if (!this.type) {
       return
     }

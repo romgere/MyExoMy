@@ -29,7 +29,7 @@
   <Joystick />
 </template>
 
-<script lang="ts">
+<script>
 import { Options, Vue } from 'vue-class-component'
 import Joystick from './Joystick.vue'
 import Button from './Button.vue'
@@ -37,9 +37,6 @@ import ConnectionStatus from './ConnectionStatus.vue'
 import VideoOutput from './VideoOutput.vue'
 
 @Options({
-  props: {
-    msg: String
-  },
   components: {
     Joystick,
     Button,
@@ -48,7 +45,7 @@ import VideoOutput from './VideoOutput.vue'
   }
 })
 export default class HelloWorld extends Vue {
-  msg!: string
+
 }
 </script>
 

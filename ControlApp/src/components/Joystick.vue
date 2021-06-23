@@ -2,15 +2,15 @@
   <div id="joy_container"></div>
 </template>
 
-<script lang="ts">
+<script>
 import { Vue } from 'vue-class-component'
 import nipplejs from 'nipplejs'
-import joystickUtils, { AxesValue } from '../utils/joystick'
+import joystickUtils from '../utils/joystick'
 
 const maxDistance = 75
 
 export default class Joystick extends Vue {
-  private options: nipplejs.JoystickManagerOptions = {
+  _options = {
     threshold: 0.1,
     position: { left: '50%', bottom: '10rem' },
     mode: 'static',
@@ -18,31 +18,30 @@ export default class Joystick extends Vue {
     color: 'black'
   }
 
-  private manager!: nipplejs.JoystickManager
+  _manager = undefined
 
-  mounted () : void {
-    this.manager = nipplejs.create({
-      ...this.options,
-      zone: document.getElementById('joy_container') as HTMLElement
+  mounted() {
+    this._manager = nipplejs.create({
+      ...this._options,
+      zone: document.getElementById('joy_container')
     })
 
-    this.manager.on('move', this.onJoyMove.bind(this))
-    this.manager.on('end', this.onJoyEnd.bind(this))
+    this._manager.on('move', this.onJoyMove.bind(this))
+    this._manager.on('end', this.onJoyEnd.bind(this))
   }
 
-  onJoyMove (event: nipplejs.EventData, nipple: nipplejs.JoystickOutputData): void {
+  onJoyMove(event, nipple) {
     const x = -Math.cos(nipple.angle.radian) * nipple.distance / maxDistance
     const y = Math.sin(nipple.angle.radian) * nipple.distance / maxDistance
 
-    const axes: AxesValue = [x, y, 0, 0, 0, 0]
+    const axes = [x, y, 0, 0, 0, 0]
 
     joystickUtils.moveAxes(axes)
   }
 
-  onJoyEnd(): void {
+  onJoyEnd() {
     joystickUtils.moveAxes([0, 0, 0, 0, 0, 0], true)
     console.log('End function called')
   }
-
 }
 </script>

@@ -2,15 +2,11 @@
   <Main />
 </template>
 
-<script lang="ts">
+<script>
 import { Options, Vue } from 'vue-class-component'
 import Main from './components/Main.vue'
 import ROSLIB from 'roslib'
 import ros from './utils/ros'
-
-interface TypedMessage<T> extends ROSLIB.Message {
-  data: T
-}
 
 @Options({
   components: {
@@ -28,8 +24,7 @@ export default class App extends Vue {
       name: '/chatter',
       messageType: 'std_msgs/String'
     })
-    nodeJsChatter.subscribe(function (m) {
-      const { data } = (m as TypedMessage<string>)
+    nodeJsChatter.subscribe(function({ data }) {
       console.log('chatter', data)
     })
 
@@ -39,8 +34,7 @@ export default class App extends Vue {
       name: '/gpio',
       messageType: 'std_msgs/String'
     })
-    gpioChatter.subscribe(function (m) {
-      const { data } = (m as TypedMessage<string>)
+    gpioChatter.subscribe(function({ data }) {
       // var btn = document.getElementById("btn")
       // btn.innerHTML = data;
       // btn.style.backgroundColor = data === 'ON' ? 'green' : 'red';

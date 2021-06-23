@@ -1,34 +1,16 @@
 import ROSLIB from 'roslib'
 import ros from './ros'
 
-export type AxesValue = [number, number, number, number, number, number]
-type ButtonValue = 1 | 0
-export type ButtonsValue = [
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue,
-  ButtonValue
-]
-
 class JoystickUtils {
+  axes = [0, 0, 0, 0, 0, 0]
+  buttons = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-  private axes: AxesValue = [0, 0, 0, 0, 0, 0]
-  private buttons: ButtonsValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  joyTopic = undefined
 
-  private joyTopic: ROSLIB.Topic
+  publishImmidiately = true
+  intervalId = undefined
 
-  private publishImmidiately = true
-  private intervalId?: number = undefined
-
-  constructor () {
+  constructor() {
     this.joyTopic = new ROSLIB.Topic({
       ros,
       name: '/joy',
@@ -36,8 +18,7 @@ class JoystickUtils {
     })
   }
 
-  moveAxes(axesValue: AxesValue, moveEnd = false): void {
-
+  moveAxes(axesValue, moveEnd = false) {
     this.axes = axesValue
 
     if (moveEnd) {
@@ -57,18 +38,17 @@ class JoystickUtils {
     }
   }
 
-  pressButton(buttonIndex: number): void {
-
+  pressButton(buttonIndex) {
     // Set axes to 0 to prevent driving during mode change.
     this.axes = [0, 0, 0, 0, 0, 0]
     this.buttons[buttonIndex] = 1
 
-    this.sendJoyEvent()
+    this._sendJoyEvent()
     // After the command is sent set the index back to 0
     this.buttons[buttonIndex] = 0
   }
 
-  private sendJoyEvent () {
+  _sendJoyEvent() {
     const joy = new ROSLIB.Message({
       axes: this.axes,
       buttons: this.buttons
