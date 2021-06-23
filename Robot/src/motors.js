@@ -4,6 +4,10 @@ const {
   sleep
 } = require('../misc')
 
+function getServoSettingsArray(confBaseName, motorNode) {
+  return Promise.all(positionNames.map((pos) => motorNode.getParam(`${confBaseName}${pos}`)))
+}
+
 // Motors class contains all functions to control the steering and driving
 class Motors {
 
@@ -13,29 +17,30 @@ class Motors {
 
   async init(motorNode) {
 
-    // Set variables for the GPIO motor pins
-    this.pins = {
-      drive: await Promise.all(positionNames.map((pos) => motorNode.getParam(`pin_drive_${pos}`))),
-      steer: await Promise.all(positionNames.map((pos) => motorNode.getParam(`pin_steer_${pos}`)))
+    // Get settings for driving & steering servo
+    this.settings = {
+      drive: {
+        pin: await getServoSettingsArray('pin_drive_', motorNode),
+        min: await getServoSettingsArray('steer_pwm_min', motorNode),
+        neutral: await getServoSettingsArray('steer_pwm_neutral_', motorNode),
+        max: await getServoSettingsArray('steer_pwm_max', motorNode)
+      },
+      steer: {
+        pin: await getServoSettingsArray('pin_steer_', motorNode),
+        min: await getServoSettingsArray('drive_pwm_min_', motorNode),
+        neutral: await getServoSettingsArray('drive_pwm_neutral_', motorNode),
+        max: await getServoSettingsArray('drive_pwm_max_', motorNode)
+      }
     }
 
     this.pwm = await asyncPca9685()
 
-    // PWM characteristics
-    this.steeringPwmNeutral = await Promise.all(positionNames.map((pos) => motorNode.getParam(`steer_pwm_neutral_${pos}`)))
-    this.steeringPwmRange = await motorNode.getParam('steer_pwm_range')
-
-    this.drivingPwmLowLimit = 100
-    this.drivingPwmUpperLimit = 500
-    this.drivingPwmNeutral = await motorNode.getParam('drive_pwm_neutral')
-    this.drivingPwmRange = await motorNode.getParam('drive_pwm_range')
-
     // Set steering motors to neutral values (straight)
     await Promise.all(positionNames.map(async(_, key) => {
       this.pwm.setPulseRange(
-        this.pins.steer[key],
+        this.settings.steer.pins[key],
         0,
-        this.steeringPwmNeutral[key]
+        this.settings.steer.neutral[key]
       )
       await sleep(100) // TODO: needed ?
     }))
@@ -44,51 +49,99 @@ class Motors {
   }
 
   async wiggle() {
+    let { steer: steerSettings } = this.settings
+
     await sleep(100)
-    this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0] + this.steeringPwmRange * 0.3)
+    this.pwm.setPulseRange(
+      steerSettings.pins[0],
+      0,
+      steerSettings.neutral[0] + ((steerSettings.max[0] - steerSettings.neutral[0]) * 0.5)
+    )
     await sleep(100)
-    this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0] + this.steeringPwmRange * 0.3)
+    this.pwm.setPulseRange(
+      steerSettings.pins[1],
+      0,
+      steerSettings.neutral[10] + ((steerSettings.max[1] - steerSettings.neutral[1]) * 0.5)
+    )
+    await sleep(500)
+    this.pwm.setPulseRange(
+      steerSettings.pins[0],
+      0,
+      steerSettings.neutral[0] - ((steerSettings.neutral[0] - steerSettings.min[0]) * 0.5)
+    )
+    await sleep(100)
+    this.pwm.setPulseRange(
+      steerSettings.pins[1],
+      0,
+      steerSettings.neutral[0] - ((steerSettings.neutral[1] - steerSettings.min[1]) * 0.5)
+    )
     await sleep(300)
-    this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0] - this.steeringPwmRange * 0.3)
+    this.pwm.setPulseRange(
+      steerSettings.pins[0],
+      0,
+      steerSettings.neutral[0]
+    )
     await sleep(100)
-    this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0] - this.steeringPwmRange * 0.3)
-    await sleep(300)
-    this.pwm.setPulseRange(this.pins.steer[0], 0, this.steeringPwmNeutral[0])
-    await sleep(100)
-    this.pwm.setPulseRange(this.pins.steer[1], 0, this.steeringPwmNeutral[0])
+    this.pwm.setPulseRange(
+      steerSettings.pins[1],
+      0,
+      steerSettings.neutral[0]
+    )
     await sleep(300)
   }
 
   setSteering(steeringCommand) {
+
+    let { steer: steerSettings } = this.settings
+
     for (const key in positionNames) {
+
+      let range = steeringCommand[key] > 0
+        ? (steerSettings.max[key] - steerSettings.neutral[key])
+        : (steerSettings.neutral[key] - steerSettings.min[key])
+
       let dutyCycle = parseInt(
-        this.steeringPwmNeutral[key]
+        steerSettings.neutral[key]
         + steeringCommand[key] / 90
-        * this.steeringPwmRange
+        * range
       )
 
-      this.pwm.setPulseRange(this.pins.steer[key], 0, dutyCycle)
+      this.pwm.setPulseRange(steerSettings.pins[key], 0, dutyCycle)
     }
   }
 
   setDriving(drivingCommand) {
+
+    let { drive: driveSettings } = this.settings
+
     for (const key in positionNames) {
+
+      // Get the range between neutral & max when drivingCommand is pos for regular direction
+      // or when drivingCommand is neg for inverted direction
+      let hightRange = (driveSettings[key] > 0 && this.wheelDirections[key] === 1)
+        || (driveSettings[key] < 0 && this.wheelDirections[key] === -1)
+
+      let range = hightRange
+        ? driveSettings.max[key] - driveSettings.neutral[key]
+        : (driveSettings.neutral[key] - driveSettings.min[key])
+
       let dutyCycle = parseInt(
-        this.drivingPwmNeutral
+        driveSettings.neutral[key]
         + drivingCommand[key] / 100
-        * this.drivingPwmRange
+        * range
         * this.wheelDirections[key]
       )
 
-      this.pwm.setPulseRange(this.pins.drive[key], 0, dutyCycle)
+      this.pwm.setPulseRange(driveSettings.pins[key], 0, dutyCycle)
     }
   }
 
   // Set driving wheels to neutral position to stop them
   stopMotors() {
-    let dutyCycle = this.drivingPwmNeutral
+    let { drive: driveSettings } = this.settings
+
     for (const key in positionNames) {
-      this.pwm.setPulseRange(this.pins.drive[key], 0, dutyCycle)
+      this.pwm.setPulseRange(driveSettings.pins[key], 0, driveSettings.neutral[key])
     }
   }
 }

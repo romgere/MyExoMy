@@ -35,11 +35,43 @@ steer_pwm_neutral_cr: 300
 steer_pwm_neutral_rl: 300
 steer_pwm_neutral_rr: 300
 
-# PWW range around steering neutral position
-steer_pwm_range: 250
+# PWM values for the min steering position
+steer_pwm_min_fl: 50
+steer_pwm_min_fr: 50
+steer_pwm_min_cl: 50
+steer_pwm_min_cr: 50
+steer_pwm_min_rl: 50
+steer_pwm_min_rr: 50
 
-# PWM value for the stop position of driving motors
-drive_pwm_neutral: 307
+# PWM values for the max steering position
+steer_pwm_max_fl: 550
+steer_pwm_max_fr: 550
+steer_pwm_max_cl: 550
+steer_pwm_max_cr: 550
+steer_pwm_max_rl: 550
+steer_pwm_max_rr: 550
 
-# PWW range around driving neutral position
-drive_pwm_range: 100
+
+# PWM values for the neutral steering position
+drive_pwm_neutral_fl: 300
+drive_pwm_neutral_fr: 300
+drive_pwm_neutral_cl: 300
+drive_pwm_neutral_cr: 300
+drive_pwm_neutral_rl: 300
+drive_pwm_neutral_rr: 300
+
+# PWM values for the min steering position
+drive_pwm_min_fl: 50
+drive_pwm_min_fr: 50
+drive_pwm_min_cl: 50
+drive_pwm_min_cr: 50
+drive_pwm_min_rl: 50
+drive_pwm_min_rr: 50
+
+# PWM values for the max drive position
+drive_pwm_max_fl: 550
+drive_pwm_max_fr: 550
+drive_pwm_max_cl: 550
+drive_pwm_max_cr: 550
+drive_pwm_max_rl: 550
+drive_pwm_max_rr: 550
