@@ -61,7 +61,7 @@ class Motors {
     this.pwm.setPulseRange(
       steerSettings.pins[1],
       0,
-      steerSettings.neutral[10] + ((steerSettings.max[1] - steerSettings.neutral[1]) * 0.5)
+      steerSettings.neutral[1] + ((steerSettings.max[1] - steerSettings.neutral[1]) * 0.5)
     )
     await sleep(500)
     this.pwm.setPulseRange(
@@ -73,7 +73,7 @@ class Motors {
     this.pwm.setPulseRange(
       steerSettings.pins[1],
       0,
-      steerSettings.neutral[0] - ((steerSettings.neutral[1] - steerSettings.min[1]) * 0.5)
+      steerSettings.neutral[1] - ((steerSettings.neutral[1] - steerSettings.min[1]) * 0.5)
     )
     await sleep(300)
     this.pwm.setPulseRange(
@@ -85,7 +85,7 @@ class Motors {
     this.pwm.setPulseRange(
       steerSettings.pins[1],
       0,
-      steerSettings.neutral[0]
+      steerSettings.neutral[1]
     )
     await sleep(300)
   }

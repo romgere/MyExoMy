@@ -151,20 +151,20 @@ class Rover {
       if (drivingCommand) {
         if (deg < 85 && deg > -85) {
           // Left turn
-          motorSpeeds[this.fl] = -50
-          motorSpeeds[this.fr] = 50
-          motorSpeeds[this.cl] = -50
-          motorSpeeds[this.cr] = 50
-          motorSpeeds[this.rl] = -50
-          motorSpeeds[this.rr] = 50
+          motorSpeeds[this.fl] = -drivingCommand * 0.75
+          motorSpeeds[this.fr] = drivingCommand * 0.75
+          motorSpeeds[this.cl] = -drivingCommand * 0.75
+          motorSpeeds[this.cr] = drivingCommand * 0.75
+          motorSpeeds[this.rl] = -drivingCommand * 0.75
+          motorSpeeds[this.rr] = drivingCommand * 0.75
         } else if (deg > 95 || deg < -95) {
           // Right turn
-          motorSpeeds[this.fl] = 50
-          motorSpeeds[this.fr] = -50
-          motorSpeeds[this.cl] = 50
-          motorSpeeds[this.cr] = -50
-          motorSpeeds[this.rl] = 50
-          motorSpeeds[this.rr] = -50
+          motorSpeeds[this.fl] = drivingCommand * 0.75
+          motorSpeeds[this.fr] = -drivingCommand * 0.75
+          motorSpeeds[this.cl] = drivingCommand * 0.75
+          motorSpeeds[this.cr] = -drivingCommand * 0.75
+          motorSpeeds[this.rl] = drivingCommand * 0.75
+          motorSpeeds[this.rr] = -drivingCommand * 0.75
         }
       } else {
         // Stop
@@ -172,7 +172,7 @@ class Rover {
       }
     } else if (this.locomotionMode == locomotionModes.CRABBING) {
       if (drivingCommand) {
-        motorSpeeds.fill(steeringCommand > 0 ? 50 : -50)
+        motorSpeeds.fill(steeringCommand > 0 ? drivingCommand : -drivingCommand)
       }
     } else if (this.locomotionMode == locomotionModes.ACKERMANN) {
       let v = drivingCommand
