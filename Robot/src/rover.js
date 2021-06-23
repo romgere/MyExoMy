@@ -26,6 +26,8 @@ const maxSteeringAngle = 45
 const ackermannRMin = wheelY / tan(maxSteeringAngle * PI / 180.0) + wheelX
 const ackermannRMax = 250
 
+const maxAngleChange = 30
+
 function degrees(radians) {
   return radians * (180 / PI)
 }
@@ -39,6 +41,11 @@ class Rover {
 
   locomotionNames = undefined
   locomotionMode = 1 // ACKERMANN
+
+  // Workarround to prevent cheap servo to make full rotation
+  // In crabbing mode, if the previous wheel direction diff is > 30°
+  // => rotate only 30° 
+  previousWheelDirection = 0
 
   constructor() {
     // Set locomotion mode name as sting (eg. 1 : "ACKERMANN", ...)
@@ -86,8 +93,20 @@ class Rover {
         let wheelDirection = steeringCommand + (steeringCommand > 0 ? -90 : 90)
         wheelDirection = min(max(wheelDirection, -90), 90)
 
+        // start cheap servo workarround
+        let diff = wheelDirection - this.previousWheelDirection
+        if (abs(diff) > maxAngleChange) {
+          wheelDirection = diff > 0
+            ? this.previousWheelDirection + maxAngleChange
+            : this.previousWheelDirection - maxAngleChange
+        }
+        this.previousWheelDirection = wheelDirection
+        // end cheap servo workarround
+
         // set all 6 wheels to same angle
         steeringAngles = steeringAngles.fill(wheelDirection)
+      } else {
+        this.previousWheelDirection = 0
       }
     } else if (this.locomotionMode == locomotionModes.ACKERMANN) {
 
