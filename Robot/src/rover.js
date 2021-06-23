@@ -84,7 +84,7 @@ class Rover {
 
       if (drivingCommand != 0) {
         let wheelDirection = steeringCommand + (steeringCommand > 0 ? -90 : 90)
-        wheelDirection = min(max(wheelDirection, -75), 75)
+        wheelDirection = min(max(wheelDirection, -90), 90)
 
         // set all 6 wheels to same angle
         steeringAngles = steeringAngles.fill(wheelDirection)

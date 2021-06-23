@@ -151,6 +151,9 @@ ctrl+c - Exit script
       }
 
       pwmValues[valueType][pinName] = pwmValue
+
+
+      pwm.setPulseRange(pinNumber, 0, pwmValues.neutral[pinName])
     }
   }
 

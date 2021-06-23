@@ -20,16 +20,16 @@ class Motors {
     // Get settings for driving & steering servo
     this.settings = {
       drive: {
-        pin: await getServoSettingsArray('pin_drive_', motorNode),
-        min: await getServoSettingsArray('steer_pwm_min', motorNode),
-        neutral: await getServoSettingsArray('steer_pwm_neutral_', motorNode),
-        max: await getServoSettingsArray('steer_pwm_max', motorNode)
-      },
-      steer: {
-        pin: await getServoSettingsArray('pin_steer_', motorNode),
+        pins: await getServoSettingsArray('pin_drive_', motorNode),
         min: await getServoSettingsArray('drive_pwm_min_', motorNode),
         neutral: await getServoSettingsArray('drive_pwm_neutral_', motorNode),
         max: await getServoSettingsArray('drive_pwm_max_', motorNode)
+      },
+      steer: {
+        pins: await getServoSettingsArray('pin_steer_', motorNode),
+        min: await getServoSettingsArray('steer_pwm_min_', motorNode),
+        neutral: await getServoSettingsArray('steer_pwm_neutral_', motorNode),
+        max: await getServoSettingsArray('steer_pwm_max_', motorNode)
       }
     }
 

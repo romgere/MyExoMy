@@ -23,14 +23,14 @@ class JoystickUtils {
 
     if (moveEnd) {
       window.clearInterval(this.intervalId)
-      this.sendJoyEvent()
+      this._sendJoyEvent()
     } else if (this.publishImmidiately) {
       // TODO: refactor this with a debounce lib ?
       this.publishImmidiately = false
-      this.sendJoyEvent()
+      this._sendJoyEvent()
       window.clearInterval(this.intervalId)
 
-      this.intervalId = window.setInterval(this.sendJoyEvent.bind(this), 50)
+      this.intervalId = window.setInterval(this._sendJoyEvent.bind(this), 50)
 
       setTimeout(() => {
         this.publishImmidiately = true
