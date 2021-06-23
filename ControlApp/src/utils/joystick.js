@@ -5,12 +5,12 @@ class JoystickUtils {
   axes = [0, 0, 0, 0, 0, 0]
   buttons = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-  joyTopic
+  joyTopic = undefined
 
   publishImmidiately = true
   intervalId = undefined
 
-  constructor () {
+  constructor() {
     this.joyTopic = new ROSLIB.Topic({
       ros,
       name: '/joy',
@@ -18,7 +18,7 @@ class JoystickUtils {
     })
   }
 
-  moveAxes (axesValue, moveEnd = false) {
+  moveAxes(axesValue, moveEnd = false) {
     this.axes = axesValue
 
     if (moveEnd) {
@@ -38,7 +38,7 @@ class JoystickUtils {
     }
   }
 
-  pressButton (buttonIndex) {
+  pressButton(buttonIndex) {
     // Set axes to 0 to prevent driving during mode change.
     this.axes = [0, 0, 0, 0, 0, 0]
     this.buttons[buttonIndex] = 1
@@ -48,7 +48,7 @@ class JoystickUtils {
     this.buttons[buttonIndex] = 0
   }
 
-  _sendJoyEvent () {
+  _sendJoyEvent() {
     const joy = new ROSLIB.Message({
       axes: this.axes,
       buttons: this.buttons

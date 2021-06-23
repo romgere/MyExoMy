@@ -21,8 +21,7 @@ const typeMapping = {
   }
 })
 export default class Joystick extends Vue {
-
-  type
+  type = undefined
 
   get buttonClass() {
     return `button--${this.type}`

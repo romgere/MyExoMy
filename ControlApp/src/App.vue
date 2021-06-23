@@ -14,7 +14,7 @@ import ros from './utils/ros'
   }
 })
 export default class App extends Vue {
-  constructor () {
+  constructor() {
     super(...arguments)
 
     // Romgere tests
@@ -24,7 +24,7 @@ export default class App extends Vue {
       name: '/chatter',
       messageType: 'std_msgs/String'
     })
-    nodeJsChatter.subscribe(function ({ data }) {
+    nodeJsChatter.subscribe(function({ data }) {
       console.log('chatter', data)
     })
 
@@ -34,7 +34,7 @@ export default class App extends Vue {
       name: '/gpio',
       messageType: 'std_msgs/String'
     })
-    gpioChatter.subscribe(function ({ data }) {
+    gpioChatter.subscribe(function({ data }) {
       // var btn = document.getElementById("btn")
       // btn.innerHTML = data;
       // btn.style.backgroundColor = data === 'ON' ? 'green' : 'red';

@@ -18,9 +18,9 @@ export default class Joystick extends Vue {
     color: 'black'
   }
 
-  _manager
+  _manager = undefined
 
-  mounted () {
+  mounted() {
     this._manager = nipplejs.create({
       ...this._options,
       zone: document.getElementById('joy_container')
@@ -30,7 +30,7 @@ export default class Joystick extends Vue {
     this._manager.on('end', this.onJoyEnd.bind(this))
   }
 
-  onJoyMove (event, nipple) {
+  onJoyMove(event, nipple) {
     const x = -Math.cos(nipple.angle.radian) * nipple.distance / maxDistance
     const y = Math.sin(nipple.angle.radian) * nipple.distance / maxDistance
 
@@ -39,7 +39,7 @@ export default class Joystick extends Vue {
     joystickUtils.moveAxes(axes)
   }
 
-  onJoyEnd () {
+  onJoyEnd() {
     joystickUtils.moveAxes([0, 0, 0, 0, 0, 0], true)
     console.log('End function called')
   }
