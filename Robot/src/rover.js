@@ -44,7 +44,7 @@ class Rover {
 
   // Workarround to prevent cheap servo to make full rotation
   // In crabbing mode, if the previous wheel direction diff is > 30°
-  // => rotate only 30° 
+  // => rotate only 30°
   previousWheelDirection = 0
 
   constructor() {
