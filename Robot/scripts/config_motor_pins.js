@@ -54,7 +54,7 @@ class Motor {
 function printExomyLayout() {
   console.log(`
     1 fl-||-fr 2
-        ||
+         ||
     3 cl-||-cr 4
     5 rl====rr 6
   `)

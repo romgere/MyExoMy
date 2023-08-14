@@ -1,25 +1,48 @@
 module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }]],
+    },
+  },
+  plugins: ['node'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ],
   env: {
     browser: true,
-    commonjs: true,
-    es6: true,
-    node: true
   },
-  extends: [
-    '../eslint-common.js'
-  ],
-  parser: 'babel-eslint',
-  parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module'
+  rules: {
+    'node/no-missing-import': 'off', // Let's TS deal with this
+    'no-duplicate-imports': 'off', // Let's TS deal with this
   },
+  ignorePatterns: [],
   overrides: [
-    // testem config file
+    
     {
-      files: ['scripts/**.js'],
+      files: [
+        './.eslintrc.js',
+        './.prettierrc.js',
+      ],
+      parserOptions: {
+        sourceType: 'script',
+      },
+      env: {
+        browser: false,
+        node: true,
+      },
+      plugins: ['node'],
+      extends: ['plugin:n/recommended'],
       rules: {
-        'no-await-in-loop': 'off'
-      }
+        '@typescript-eslint/no-var-requires': 'off',
+      },
     }
-  ]
-}
+  ],
+};
