@@ -20,10 +20,12 @@ class MotorService extends Service {
 
   async init() {
     await this.motors.init();
+    this.initWatchdog()
     this.eventBroker.on('motorCommand', this.onMotorCommand.bind(this));
   }
 
   onMotorCommand(cmd: MotorCommand) {
+    console.log('onMotorCommand', cmd);
     this.motors.setSteering(cmd.motorAngles);
     this.motors.setDriving(cmd.motorSpeeds);
   }

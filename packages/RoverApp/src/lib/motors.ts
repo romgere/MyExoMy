@@ -9,7 +9,7 @@ import type { Pca9685Driver } from 'pca9685';
 // Motors class contains all functions to control the steering and driving
 class Motors {
   motorsSettings: ExomyConfig;
-  // pwm?: Pca9685Driver;
+  pwm?: Pca9685Driver;
 
   // Motor commands are assuming positiv=driving_forward, negative=driving_backwards.
   // The driving direction of the left side has to be inverted for this to apply to all wheels.
