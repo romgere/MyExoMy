@@ -16,7 +16,7 @@ then
 	bash
 elif [[ $1 == "devel" ]]
 then
-	cd /root/rover-app
+	cd /root/rover-app/packages/RoverApp
 	bash
 else
 	bash

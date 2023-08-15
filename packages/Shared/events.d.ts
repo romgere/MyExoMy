@@ -21,6 +21,7 @@ export type ControlCommand = {
     locomotionMode1: boolean;
     locomotionMode2: boolean;
     locomotionMode3: boolean;
+    locomotionMode4: boolean;
     toggleMotors: boolean;
   };
 };

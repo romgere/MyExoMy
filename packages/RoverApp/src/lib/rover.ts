@@ -106,6 +106,74 @@ class Rover {
         steeringAngles[WheelPosition.RL] = innerAngle;
         steeringAngles[WheelPosition.RR] = outerAngle;
       }
+    } else if(this.locomotionMode == LocomotionMode.FAKE_ACKERMANN) {
+      
+      if (!drivingCommand) {
+        // Stop
+        steeringAngles[WheelPosition.FL] = 0;
+        steeringAngles[WheelPosition.FR] = 0;
+        steeringAngles[WheelPosition.CR] = 0;
+        steeringAngles[WheelPosition.CL] = 0;
+        steeringAngles[WheelPosition.RL] = 0;
+        steeringAngles[WheelPosition.RR] = 0;
+        return steeringAngles
+      }
+
+      // Drive straight forward
+      if(steeringCommand > 80 && steeringCommand < 100) {
+        steeringAngles[WheelPosition.FL] = 0;
+        steeringAngles[WheelPosition.FR] = 0;
+        steeringAngles[WheelPosition.CR] = 0;
+        steeringAngles[WheelPosition.CL] = 0;
+        steeringAngles[WheelPosition.RL] = 0;
+        steeringAngles[WheelPosition.RR] = 0;
+      }
+      // Drive straight backwards
+      else if(steeringCommand < -80 && steeringCommand > -100){
+        steeringAngles[WheelPosition.FL] = 0;
+        steeringAngles[WheelPosition.FR] = 0;
+        steeringAngles[WheelPosition.CR] = 0;
+        steeringAngles[WheelPosition.CL] = 0;
+        steeringAngles[WheelPosition.RL] = 0;
+        steeringAngles[WheelPosition.RR] = 0;
+      }
+      // Drive right forwards
+      else if(steeringCommand > 100 && steeringCommand <= 180) {
+        steeringAngles[WheelPosition.FL] = 45;
+        steeringAngles[WheelPosition.FR] = 45;
+        steeringAngles[WheelPosition.CR] = 0;
+        steeringAngles[WheelPosition.CL] = 0;
+        steeringAngles[WheelPosition.RL] = -45;
+        steeringAngles[WheelPosition.RR] = -45;
+      }
+      // Drive right backwards
+      else if(steeringCommand < -100 && steeringCommand >= -180) {
+        steeringAngles[WheelPosition.FL] = 45;
+        steeringAngles[WheelPosition.FR] = 45;
+        steeringAngles[WheelPosition.CR] = 0;
+        steeringAngles[WheelPosition.CL] = 0;
+        steeringAngles[WheelPosition.RL] = -45;
+        steeringAngles[WheelPosition.RR] = -45;
+      }
+      // Drive left forwards
+      else if(steeringCommand < 80 && steeringCommand >= 0) {
+        steeringAngles[WheelPosition.FL] = -45;
+        steeringAngles[WheelPosition.FR] = -45;
+        steeringAngles[WheelPosition.CR] = 0;
+        steeringAngles[WheelPosition.CL] = 0;
+        steeringAngles[WheelPosition.RL] = 45;
+        steeringAngles[WheelPosition.RR] = 45;
+      }
+      // Drive left backwards
+      else if(steeringCommand < 0 && steeringCommand > -80) {
+        steeringAngles[WheelPosition.FL] = -45;
+        steeringAngles[WheelPosition.FR] = -45;
+        steeringAngles[WheelPosition.CR] = 0;
+        steeringAngles[WheelPosition.CL] = 0;
+        steeringAngles[WheelPosition.RL] = 45;
+        steeringAngles[WheelPosition.RR] = 45;
+      }
+      return steeringAngles
     }
 
     return steeringAngles;
@@ -193,6 +261,26 @@ class Rover {
           motorSpeeds = [v6, v5, v4, v3, v2, v1];
         }
       }
+    } else if( this.locomotionMode === LocomotionMode.FAKE_ACKERMANN) {
+      
+      if(drivingCommand > 0 && steeringCommand >= 0) {
+        motorSpeeds[WheelPosition.FL] = 50
+        motorSpeeds[WheelPosition.FR] = 50
+        motorSpeeds[WheelPosition.CR] = 50
+        motorSpeeds[WheelPosition.CL] = 50
+        motorSpeeds[WheelPosition.RL] = 50
+        motorSpeeds[WheelPosition.RR] = 50
+      }
+      else if(drivingCommand > 0 && steeringCommand <= 0) {
+        motorSpeeds[WheelPosition.FL] = -50
+        motorSpeeds[WheelPosition.FR] = -50
+        motorSpeeds[WheelPosition.CR] = -50
+        motorSpeeds[WheelPosition.CL] = -50
+        motorSpeeds[WheelPosition.RL] = -50
+        motorSpeeds[WheelPosition.RR] = -50
+      }
+
+      return motorSpeeds
     }
 
     return motorSpeeds;

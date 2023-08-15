@@ -76,6 +76,13 @@ export default class ApplicationController extends Controller {
   }
 
   @action
+  fakeAckermann() {
+    this.sendCommand({
+      locomotionMode4: true,
+    });
+  }
+
+  @action
   motors() {
     this.sendCommand({
       toggleMotors: true,

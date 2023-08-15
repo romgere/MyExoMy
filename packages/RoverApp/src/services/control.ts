@@ -24,7 +24,7 @@ class ControlService extends Service {
 
     const {
       axes: [x, y],
-      buttons: { locomotionMode1, locomotionMode2, locomotionMode3, toggleMotors },
+      buttons: { locomotionMode1, locomotionMode2, locomotionMode3, locomotionMode4, toggleMotors },
     } = command;
 
     // Reading out button data to set locomotion mode
@@ -34,6 +34,8 @@ class ControlService extends Service {
       this.locomotionMode = LocomotionMode.ACKERMANN;
     } else if (locomotionMode3) {
       this.locomotionMode = LocomotionMode.CRABBING;
+    } else if(locomotionMode4) {
+      this.locomotionMode = LocomotionMode.FAKE_ACKERMANN;
     }
 
     // Enable and disable motors
