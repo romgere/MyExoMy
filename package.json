@@ -2,8 +2,9 @@
   "name": "exomy",
   "private": true,
   "workspaces": [
-    "Robot",
-    "ControlApp",
-    "Event"
-  ]
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "yarn workspaces run lint"
+  }
 }

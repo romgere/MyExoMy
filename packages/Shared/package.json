@@ -1,0 +1,29 @@
+{
+  "name": "@robot/shared",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Robot shared types/code",
+  "private": true,
+  "scripts": {
+    "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
+    "lint:js": "eslint . --ext ts",
+    "lint:types": "tsc --noEmit --composite false"
+  },
+  "files": [],
+  "author": "Jérôme Mestres",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/romgere/MyExoMy"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.1"
+  }
+}
