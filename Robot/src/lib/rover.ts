@@ -3,7 +3,7 @@ import { degrees, radians } from '@exomy/robot/helpers/math.js';
 import { LocomotionMode, WheelPosition } from './const.js';
 const { atan, tan, PI, min, max, cos, abs, pow, sqrt } = Math;
 
-import type { DrivingCommand, MotorAngle, MotorVelocity, SteeringCommand } from '../types.js';
+import type { DrivingCommand, MotorAngle, MotorSpeed, SteeringCommand } from '../types.js';
 
 // TODO: export this to const ?
 const wheelX = 12.0;
@@ -113,11 +113,11 @@ class Rover {
    * @param drivingCommand Drive speed command range from -100 to 100
    * @param steringCommand Turning radius command with the values
    */
-  joystickToVelocity(
+  joystickToSpeed(
     drivingCommand: DrivingCommand,
     steeringCommand: SteeringCommand,
-  ): MotorVelocity {
-    let motorSpeeds: MotorVelocity = [0, 0, 0, 0, 0, 0];
+  ): MotorSpeed {
+    let motorSpeeds: MotorSpeed = [0, 0, 0, 0, 0, 0];
 
     if (this.locomotionMode == LocomotionMode.POINT_TURN) {
       const deg = steeringCommand;

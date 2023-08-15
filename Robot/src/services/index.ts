@@ -1,3 +1,11 @@
-debugger
+import ServerService from './server.js'
+import RobotService from './robot.js'
+import MotorService from './motor.js'
+import ControlService from './control.js'
 
-console.log('dede')
+export default [
+  ServerService,
+  RobotService,
+  // MotorService,
+  ControlService
+];

@@ -8,7 +8,7 @@ export type SteeringCommand = number;
 export type ServoArray<T> = [T, T, T, T, T, T];
 
 export type MotorAngle = ServoArray<number>;
-export type MotorVelocity = ServoArray<number>;
+export type MotorSpeed = ServoArray<number>;
 
 type ServoConfig = {
   pins: ServoArray<number>;

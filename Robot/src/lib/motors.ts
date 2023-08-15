@@ -2,7 +2,7 @@ import sleep from '@exomy/robot/helpers/sleep.js';
 import asyncPca9685 from '@exomy/robot/helpers/async-pca-9685.js';
 import { WheelPosition } from './const.js';
 
-import type { ExomyConfig, MotorAngle, MotorVelocity, ServoArray } from '@exomy/robot/types.js';
+import type { ExomyConfig, MotorAngle, MotorSpeed, ServoArray } from '@exomy/robot/types.js';
 import type { Pca9685Driver } from 'pca9685';
 
 // Motors class contains all functions to control the steering and driving
@@ -84,7 +84,7 @@ class Motors {
     }
   }
 
-  setDriving(drivingCommand: MotorVelocity) {
+  setDriving(drivingCommand: MotorSpeed) {
     if (!this.pwm) {
       return;
     }
