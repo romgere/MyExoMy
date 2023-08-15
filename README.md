@@ -2,9 +2,9 @@ This is inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
 **TODO** :
 
+- Update docker / readme to not run Web GUI on Raspberry (& not install it)
 - Send some usefull information from Rover (Wifi strengh, ...)
 - handle 4G hat, GPS position & init SMS
-- Update docker / readme to not run Web GUI on Raspberry
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage
 
 # My ExoMy Project Structure

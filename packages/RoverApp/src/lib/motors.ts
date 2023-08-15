@@ -1,6 +1,6 @@
 import sleep from '@robot/rover-app/helpers/sleep.js';
 import asyncPca9685 from '@robot/rover-app/helpers/async-pca-9685.js';
-import { WheelPosition } from './const.js';
+import { WheelPositions } from './const.js';
 
 import type { MotorAngle, MotorSpeed, ServoArray } from '@robot/shared/types.js';
 import type { ExomyConfig } from '@robot/rover-app/types.js';
@@ -9,7 +9,7 @@ import type { Pca9685Driver } from 'pca9685';
 // Motors class contains all functions to control the steering and driving
 class Motors {
   motorsSettings: ExomyConfig;
-  pwm?: Pca9685Driver;
+  // pwm?: Pca9685Driver;
 
   // Motor commands are assuming positiv=driving_forward, negative=driving_backwards.
   // The driving direction of the left side has to be inverted for this to apply to all wheels.
@@ -73,7 +73,7 @@ class Motors {
 
     const { steer: steerSettings } = this.motorsSettings;
 
-    for (const wheel in WheelPosition) {
+    for (const wheel of WheelPositions) {
       const range =
         steeringCommand[wheel] > 0
           ? steerSettings.max[wheel] - steerSettings.neutral[wheel]
@@ -92,7 +92,7 @@ class Motors {
 
     const { drive: driveSettings } = this.motorsSettings;
 
-    for (const wheel in WheelPosition) {
+    for (const wheel of WheelPositions) {
       // Get the range between neutral & max when drivingCommand is pos for regular direction
       // or when drivingCommand is neg for inverted direction
       const hightRange =
@@ -119,7 +119,9 @@ class Motors {
 
     const { drive: driveSettings } = this.motorsSettings;
 
-    for (const wheel in WheelPosition) {
+    for (const wheel of WheelPositions) {
+      console.log('set wheel', wheel, driveSettings.pins[wheel]);
+
       this.pwm.setPulseRange(driveSettings.pins[wheel], 0, driveSettings.neutral[wheel]);
     }
   }

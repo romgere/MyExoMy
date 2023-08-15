@@ -13,6 +13,15 @@ export enum WheelPosition {
   RR = 5,
 }
 
+export const WheelPositions = [
+  WheelPosition.FL,
+  WheelPosition.FR,
+  WheelPosition.CL,
+  WheelPosition.CR,
+  WheelPosition.RL,
+  WheelPosition.RR,
+];
+
 // For most motors a pwm frequency of 50Hz is normal
 export const pwmFrequency = 50.0; // Hz
 
