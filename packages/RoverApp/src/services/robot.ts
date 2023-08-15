@@ -24,6 +24,8 @@ class RobotService extends Service {
 
     let motorAngles: MotorAngle;
     let motorSpeeds: MotorSpeed;
+    
+    this.rover.setLocomotionMode(command.locomotionMode);
 
     if (command.motorsEnabled) {
       motorAngles = this.rover.joystickToSteeringAngle(command.velocity, command.steering);

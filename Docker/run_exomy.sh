@@ -61,13 +61,6 @@ if [ -n "$RUNNING_CONTAINERS" ]; then
     docker rm -f "$RUNNING_CONTAINERS"
 fi
 
-
-if [[ -z "${DEPLOY_ENV}" ]]; then
-  MY_SCRIPT_VARIABLE="Some default value because DEPLOY_ENV is undefined"
-else
-  MY_SCRIPT_VARIABLE="${DEPLOY_ENV}"
-fi
-
 MY_EXOMY_FOLDER=${MY_EXOMY_FOLDER:-~/MyExoMy}
 MY_EXOMY_FOLDER=`realpath $MY_EXOMY_FOLDER`
 

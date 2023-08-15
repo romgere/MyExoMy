@@ -25,6 +25,8 @@ export default class ApplicationController extends Controller {
   stopSending() {
     clearInterval(this?.interval);
     this.interval = undefined;
+    this.joystickData = [0, 0];
+    this.sendCommand();
   }
 
   @action
