@@ -1,24 +1,42 @@
-# @my-exomy/control-app
+# Exomy control app
 
-## Project setup
-```
-yarn install
-```
+Exomy control app ...
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Prerequisites
 
-### Compiles and minifies for production
-```
-yarn build
-```
+You will need the following things properly installed on your computer.
 
-### Lints and fixes files
-```
-yarn lint
-```
+* [Git](https://git-scm.com/)
+* [Node.js](https://nodejs.org/) (with npm)
+* [Ember CLI](https://cli.emberjs.com/release/)
+* [Google Chrome](https://google.com/chrome/)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Installation
+
+* `git clone <repository-url>` this repository
+* `cd text2stl`
+* `npm install`
+
+
+## Running / Development
+
+* `ember serve`
+* Visit your app at [http://localhost:4200](http://localhost:4200).
+* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+
+### Running Tests
+
+* `ember test`
+* `ember test --server`
+
+### Linting
+
+* `npm run lint`
+* `npm run lint:fix`
+
+### Building
+
+* `ember build` (development)
+* `ember build --environment production` (production)
+

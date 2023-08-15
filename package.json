@@ -2,6 +2,7 @@
   "name": "my-exomy",
   "private": true,
   "workspaces": [
-    "Robot"
+    "Robot",
+    "ControlApp"
   ]
 }

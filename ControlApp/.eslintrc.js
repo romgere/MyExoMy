@@ -1,22 +1,58 @@
 module.exports = {
   root: true,
-  env: {
-    node: true
-  },
-  extends: [
-    'plugin:vue/vue3-essential',
-    '@vue/standard',
-    '../eslint-common.js'
-  ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    parser: 'babel-eslint',
-    ecmaFeatures: {
-      legacyDecorators: true
-    }
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }]],
+    },
   },
-  rules: {
-    'padded-blocks': 'off',
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
-  }
-}
+  plugins: ['ember'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:ember/recommended',
+    'plugin:prettier/recommended',
+  ],
+  env: {
+    browser: true,
+  },
+  rules: {},
+  ignorePatterns: ['tests/fixtures/meshs'],
+  overrides: [
+    {
+      files: [
+        './.eslintrc.js',
+        './.prettierrc.js',
+        './.stylelintrc.js',
+        './.template-lintrc.js',
+        './ember-cli-build.js',
+        './testem.js',
+        './blueprints/*/index.js',
+        './config/**/*.js',
+        './lib/*/index.js',
+        './server/**/*.js',
+      ],
+      parserOptions: {
+        sourceType: 'script',
+      },
+      env: {
+        browser: false,
+        node: true,
+      },
+      plugins: ['node'],
+      extends: ['plugin:n/recommended'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+    {
+      // test files
+      files: ['tests/**/*-test.{js,ts}'],
+      extends: ['plugin:qunit/recommended'],
+    },
+  ],
+};
