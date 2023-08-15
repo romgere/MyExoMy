@@ -120,8 +120,6 @@ class Motors {
     const { drive: driveSettings } = this.motorsSettings;
 
     for (const wheel of WheelPositions) {
-      console.log('set wheel', wheel, driveSettings.pins[wheel]);
-
       this.pwm.setPulseRange(driveSettings.pins[wheel], 0, driveSettings.neutral[wheel]);
     }
   }

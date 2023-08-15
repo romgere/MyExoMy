@@ -25,7 +25,6 @@ class MotorService extends Service {
   }
 
   onMotorCommand(cmd: MotorCommand) {
-    console.log('onMotorCommand', cmd);
     this.motors.setSteering(cmd.motorAngles);
     this.motors.setDriving(cmd.motorSpeeds);
   }

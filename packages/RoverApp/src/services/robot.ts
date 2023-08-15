@@ -20,8 +20,6 @@ class RobotService extends Service {
   }
 
   onRobotCommand(command: RoverCommand) {
-    this.logger.info('onRobotCommand', command);
-
     let motorAngles: MotorAngle;
     let motorSpeeds: MotorSpeed;
     

@@ -20,8 +20,6 @@ class ControlService extends Service {
   }
 
   onControlCommand(command: ControlCommand) {
-    this.logger.info('onControlCommand', command);
-
     const {
       axes: [x, y],
       buttons: { locomotionMode1, locomotionMode2, locomotionMode3, locomotionMode4, toggleMotors },

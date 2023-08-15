@@ -29,8 +29,6 @@ export default class RoverConnexionService extends Service {
     if (!this.connected) {
       return;
     }
-
-    console.log('sendControlCommand', data);
     this.socket?.emit('controlCommand', data);
   }
 
