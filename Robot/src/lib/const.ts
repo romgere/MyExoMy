@@ -13,12 +13,6 @@ export enum WheelPosition {
   RR = 5,
 }
 
-export enum LocomotionMode {
-  ACKERMANN = 'ACKERMANN',
-  POINT_TURN = 'POINT_TURN',
-  CRABBING = 'CRABBING',
-}
-
 // For most motors a pwm frequency of 50Hz is normal
 export const pwmFrequency = 50.0; // Hz
 

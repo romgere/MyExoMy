@@ -1,6 +1,6 @@
 // Inspired from https://blog.makerx.com.au/a-type-safe-event-emitter-in-node-js/
 import EventEmitter from 'events';
-import type { EventsNameTypesMapping } from '@exomy/robot/events.js'
+import type { EventsNameTypesMapping } from '@exomy/event-types/events.js';
 
 export default class EventBroker {
   private emitter = new EventEmitter()

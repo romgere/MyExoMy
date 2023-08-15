@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "nodenext",
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "strict": true,
+    "paths": {    
+       "@exomy/event/*": ["*"],
+    }
+  }
+}

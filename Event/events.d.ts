@@ -1,7 +1,6 @@
 // This contains all the events name & event args used to communicate through nodes
-
-import { LocomotionMode } from "./lib/const.js";
-import { MotorSpeed, MotorAngle } from "./types.js";
+import { MotorSpeed, MotorAngle } from './types.js'
+import { LocomotionMode } from './locomotion-modes.js';
 
 export type RoverCommand = {
   connected: boolean,
@@ -16,10 +15,15 @@ export type MotorCommand = {
   motorAngles: MotorAngle
 };
 
-// inspired from http://docs.ros.org/en/api/sensor_msgs/html/msg/Joy.html
+
 export type ControlCommand = {
-  axes: number[]; // inspired from joy
-  buttons: number[];
+  axes: [number, number];
+  buttons: {
+    locomotionMode1: boolean;
+    locomotionMode2: boolean;
+    locomotionMode3: boolean;
+    toggleMotors: boolean;
+  };
 };
 
 

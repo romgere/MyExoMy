@@ -1,8 +1,9 @@
 {
-  "name": "my-exomy",
+  "name": "exomy",
   "private": true,
   "workspaces": [
     "Robot",
-    "ControlApp"
+    "ControlApp",
+    "Event"
   ]
 }

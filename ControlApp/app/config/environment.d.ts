@@ -1,4 +1,4 @@
-export default config
+export default config;
 
 /**
  * Type declarations for
@@ -10,5 +10,5 @@ declare const config: {
   podModulePrefix: string;
   locationType: string;
   rootURL: string;
-  APP: Record<string, unknown> & {};
-}
+  APP: Record<string, unknown>;
+};

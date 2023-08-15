@@ -1,0 +1,17 @@
+{
+  "name": "@exomy/event-types",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Robot command/event types",
+  "private": true,
+  "scripts": {
+    "lint:types": "tsc --noEmit --composite false"
+  },
+  "files": [],
+  "author": "Jérôme Mestres",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/romgere/MyExoMy"
+  }
+}

@@ -7,9 +7,9 @@ const {
   PI
 } = Math
 
-import type { ControlCommand } from "@exomy/robot/events.js";
-import type { MotorAngle, MotorSpeed } from "@exomy/robot/types.js"
-import { LocomotionMode } from '../lib/const.js';
+import type { ControlCommand } from "@exomy/event-types/events.js";
+import type { MotorAngle, MotorSpeed } from "@exomy/event-types/types.js"
+import { LocomotionMode } from '@exomy/event-types/locomotion-modes.js';
 
 /**
  * This received control commands & convert them to rover command
@@ -28,30 +28,27 @@ class ControlService extends Service {
   onControlCommand(command: ControlCommand) {
     this.logger.info('onControlCommand', command);
     
-    // Function map for the Logitech F710 joystick
-    // Button on pad | function
-    // --------------|----------------------
-    // A             | Ackermann mode
-    // X             | Point turn mode
-    // Y             | Crabbing mode
-    // Left Stick    | Control speed and direction
-    // START Button  | Enable and disable motors
-
-    // Reading out joystick data
-    const [x, y] = command.axes
-    const [btnX, btnA,, btnY,,,,,, btnStart] = command.buttons;
+    const { 
+      axes: [x, y],
+      buttons: {
+        locomotionMode1,
+        locomotionMode2,
+        locomotionMode3,
+        toggleMotors
+      }
+    } = command;
 
     // Reading out button data to set locomotion mode
-    if (btnX === 1) {
+    if (locomotionMode1) {
       this.locomotionMode = LocomotionMode.POINT_TURN
-    } else if (btnA == 1) { 
+    } else if (locomotionMode2) { 
       this.locomotionMode = LocomotionMode.ACKERMANN
-    } else if (btnY == 1) { 
+    } else if (locomotionMode3) { 
       this.locomotionMode = LocomotionMode.CRABBING
     }
 
     // Enable and disable motors
-    if (btnStart === 1) {
+    if (toggleMotors) {
       this.motorsEnabled = !this.motorsEnabled
       this.logger.info(`Motors ${this.motorsEnabled ? 'enabled' : 'disabled'}!`)
     }

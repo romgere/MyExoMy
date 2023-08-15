@@ -1,7 +1,7 @@
 import SocketServer from "@exomy/robot/lib/socket-server.js";
 import Service from './-base.js';
 
-import type { RoverCommand, ControlCommand } from "@exomy/robot/events.js";
+import type { RoverCommand, ControlCommand } from "@exomy/event-types/events.js";
 
 
 type ServerEvent = { 
@@ -16,7 +16,7 @@ class ServerService extends Service {
 
   async init() {
 
-    this.server = new SocketServer<ServerEvent>(3000, 'http://127.0.0.1:8000');  
+    this.server = new SocketServer<ServerEvent>(3001, ['http://localhost:4200', 'http://127.0.0.1:4200']);  
     
     // Proxy incomming socket command to other services through event broker
     this.server.on('controlCommand', (cmd) => {

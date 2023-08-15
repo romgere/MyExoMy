@@ -1,11 +1,83 @@
-import Controller from '@ember/controller'
+import Controller from '@ember/controller';
+import { service } from '@ember/service';
+import { action } from '@ember/object';
+
+import type RoverConnexionService from '@exomy/control-app/services/rover-connexion';
+import type { ControlCommand } from '@exomy/event-types/events';
+
+type ControlCommandButton = ControlCommand['buttons'];
 
 
 export default class ApplicationController extends Controller {
+  @service declare roverConnexion: RoverConnexionService;
+
+  joystickData: [number, number] = [0, 0];
+  interval?: NodeJS.Timeout;
+
+  startSending() {
+    if (!this.interval) {
+      this.interval = setInterval(this.sendCommand, 50);
+    }
+  }
+
+  stopSending() {
+    clearInterval(this?.interval);
+    this.interval = undefined;
+  }
+
+  @action
+  sendCommand(buttons: Partial<ControlCommandButton> = {}) {
+    this.roverConnexion.sendControlCommand({
+      axes: this.joystickData,
+      buttons: {
+        locomotionMode1: false,
+        locomotionMode2: false,
+        locomotionMode3: false,
+        toggleMotors: false,
+        ...buttons,
+      },
+    });
+  }
+
+  @action
+  onJoyMove(data: [number, number]) {
+    this.joystickData = data;
+    this.startSending();
+  }
+
+  @action
+  onJoyEnd() {
+    this.stopSending();
+  }
+
+  @action
+  crabbing() {
+    this.sendCommand({
+      locomotionMode3: true,
+    });
+  }
+  @action
+  spotTurn() {
+    this.sendCommand({
+      locomotionMode1: true,
+    });
+  }
+  @action
+  ackermann() {
+    this.sendCommand({
+      locomotionMode2: true,
+    });
+  }
+  @action
+  motors() {
+    this.sendCommand({
+      toggleMotors: true,
+    });
+  }
 }
 
 declare module '@ember/controller' {
   interface Registry {
-    'application': ApplicationController;
+    application: ApplicationController;
   }
 }

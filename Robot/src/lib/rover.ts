@@ -1,9 +1,12 @@
 import logger from './logger.js';
 import { degrees, radians } from '@exomy/robot/helpers/math.js';
-import { LocomotionMode, WheelPosition } from './const.js';
+import {  WheelPosition } from './const.js';
 const { atan, tan, PI, min, max, cos, abs, pow, sqrt } = Math;
 
-import type { DrivingCommand, MotorAngle, MotorSpeed, SteeringCommand } from '../types.js';
+import { LocomotionMode } from '@exomy/event-types/locomotion-modes.js';
+
+import type { MotorAngle, MotorSpeed } from '@exomy/event-types/types.js';
+import type { DrivingCommand,  SteeringCommand } from '@exomy/robot/types.js';
 
 // TODO: export this to const ?
 const wheelX = 12.0;

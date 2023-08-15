@@ -3,7 +3,7 @@ import Motors from "@exomy/robot/lib/motors.js";
 
 import type EventBroker from '@exomy/robot/lib/event-broker.js';
 import type { ExomyConfig } from "@exomy/robot/types.js"
-import type { MotorCommand } from "@exomy/robot/events.js"
+import type { MotorCommand } from "@exomy/event-types/events.js"
 
 const watchdog_timeout = 5000;
 

@@ -1,8 +1,8 @@
 import Service from './-base.js';
 import Rover from "@exomy/robot/lib/rover.js";
 
-import type { RoverCommand } from "@exomy/robot/events.js";
-import type { MotorAngle, MotorSpeed } from "@exomy/robot/types.js"
+import type { RoverCommand } from "@exomy/event-types/events.js";
+import type { MotorAngle, MotorSpeed } from "@exomy/event-types/types.js"
 /**
  * This received rover commands & convert them to motor instructions
  */

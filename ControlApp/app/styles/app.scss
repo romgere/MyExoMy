@@ -1,0 +1,101 @@
+body {
+  margin: 0
+}
+
+.video-text {
+  text-shadow: 1px 1px 5px #fff;
+}
+
+.cnx-status {
+  padding: 0.2rem 0.5rem;
+  border-radius: 2rem;
+
+  background-color: white;
+  color: gray;
+  font-weight: bold;
+  text-transform: capitalize;
+
+  &::after {
+    content: ' ';
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-block;
+    border-radius: 0.75rem;
+    position: relative;
+    top: 0.25rem;
+    left: 0.25rem;
+  }
+
+  &--disconnected::after {
+    background-color: red;
+  }
+
+  &--connected::after {
+    background-color: green;
+  }
+}
+
+.video_output--full-screen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+
+.main-container {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: flex-start;
+
+    .sidebar {
+      order: 0;
+      flex: 0 1 auto;
+      align-self: auto;
+
+      padding: 1.5rem;
+
+      label {
+        display: block;
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      .control-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-content: stretch;
+        align-items: center;
+
+        button {
+          order: 0;
+          flex: 0 1 auto;
+          align-self: auto;
+          margin-top: 2rem;
+        }
+      }
+    }
+
+    .main {
+      order: 1;
+      flex: 1 1 auto;
+      align-self: auto;
+
+      padding: 1.5rem;
+
+      .connection-status {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+    }
+  }
+}

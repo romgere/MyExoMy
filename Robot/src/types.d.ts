@@ -1,14 +1,11 @@
 
+import type { ServoArray } from '@exomy/event-types/types.js';
+
 // TODO: restrict to -100 to 100
 export type DrivingCommand = number;
 
 // 0(left) +90(forward) -90(backward)  +-180(right)
 export type SteeringCommand = number;
-
-export type ServoArray<T> = [T, T, T, T, T, T];
-
-export type MotorAngle = ServoArray<number>;
-export type MotorSpeed = ServoArray<number>;
 
 type ServoConfig = {
   pins: ServoArray<number>;
