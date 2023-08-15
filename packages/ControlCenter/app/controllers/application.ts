@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 import type RoverConnexionService from '@robot/control-center/services/rover-connexion';
 import type { ControlCommand } from '@robot/shared//events';
@@ -12,6 +13,8 @@ export default class ApplicationController extends Controller {
 
   joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
+
+  @tracked roverAddress = 'ws://localhost:3000';
 
   startSending() {
     if (!this.interval) {
@@ -55,23 +58,41 @@ export default class ApplicationController extends Controller {
       locomotionMode3: true,
     });
   }
+
   @action
   spotTurn() {
     this.sendCommand({
       locomotionMode1: true,
     });
   }
+
   @action
   ackermann() {
     this.sendCommand({
       locomotionMode2: true,
     });
   }
+
   @action
   motors() {
     this.sendCommand({
       toggleMotors: true,
     });
+  }
+
+  @action
+  connect() {
+    this.roverConnexion.connect(this.roverAddress);
+  }
+
+  @action
+  disconnect() {
+    this.roverConnexion.disconnect();
+  }
+
+  @action
+  updateRoverAddress(e: InputEvent) {
+    this.roverAddress = (e.target as HTMLInputElement).value;
   }
 }
 

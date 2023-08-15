@@ -24,10 +24,12 @@
     <div class="main">
       <div class="connection-status video-text">
         Connection status: <ConnexionStatus @connected={{this.roverConnexion.connected}} />
+        {{!-- template-lint-disable require-input-label --}}
+        <input type="text" disabled={{this.roverConnexion.connected}} value={{this.roverAddress}} {{on "input" this.updateRoverAddress}} />
         {{#if this.roverConnexion.connected}}
-          <button {{on "click" this.roverConnexion.disconnect}} type="button">Disconnect</button>
+          <button {{on "click" this.disconnect}} type="button">Disconnect</button>
         {{else}}
-          <button {{on "click" this.roverConnexion.connect}} type="button">Connect</button>
+          <button {{on "click" this.connect}} type="button">Connect</button>
         {{/if}}
       </div>
     </div>

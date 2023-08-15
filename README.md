@@ -37,13 +37,13 @@ Contains freecad file of the robot design
 
 Various usefull stuff (personnal purchase list, freecad macro, ...)
 
-# Following content need update ...
-
 # Configure Raspberry Pi
 
 ### Start from fresh install
 
 ### Enable Camera, SSH and I2C
+
+run `sudo raspi-config` & ensure Camera, SSH & I2C are enable.
 
 ### OS update
 

@@ -61,19 +61,24 @@ if [ -n "$RUNNING_CONTAINERS" ]; then
     docker rm -f "$RUNNING_CONTAINERS"
 fi
 
-if [[ -z "${MY_EXOMY_FOLDER}" ]]; then
-  MY_EXOMY_FOLDER="~/MyExoMy"
+
+if [[ -z "${DEPLOY_ENV}" ]]; then
+  MY_SCRIPT_VARIABLE="Some default value because DEPLOY_ENV is undefined"
 else
-  MY_EXOMY_FOLDER="${MY_EXOMY_FOLDER}"
+  MY_SCRIPT_VARIABLE="${DEPLOY_ENV}"
 fi
+
+MY_EXOMY_FOLDER=${MY_EXOMY_FOLDER:-~/MyExoMy}
+MY_EXOMY_FOLDER=`realpath $MY_EXOMY_FOLDER`
+
+echo "using ${MY_EXOMY_FOLDER} as EXOMY FOLDER"
+
 
 # Run docker container
 docker run \
     -it \
-    -v ${MY_EXOMY_FOLDER}:/root/exomy_ws/src/exomy \
-    -p 8000:8000 \
-    -p 8080:8080 \
-    -p 9090:9090 \
+    -v ${MY_EXOMY_FOLDER}:/root/rover-app \
+    -p 3000:3000 \
     --privileged \
     ${options} \
     --name "${container_name}" \

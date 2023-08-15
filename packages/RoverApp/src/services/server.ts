@@ -13,10 +13,7 @@ class ServerService extends Service {
   server?: SocketServer<ServerEvent>;
 
   async init() {
-    this.server = new SocketServer<ServerEvent>(3001, [
-      'http://localhost:4200',
-      'http://127.0.0.1:4200',
-    ]);
+    this.server = new SocketServer<ServerEvent>(3000, '*');
 
     // Proxy incomming socket command to other services through event broker
     this.server.on('controlCommand', (cmd) => {

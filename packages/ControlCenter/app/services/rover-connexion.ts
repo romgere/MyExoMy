@@ -12,10 +12,17 @@ export default class RoverConnexionService extends Service {
   @tracked connected = false;
 
   @action
-  connect() {
-    this.socket = io('ws://localhost:3001');
-    this.socket.on('connect', () => (this.connected = true));
-    this.socket.on('disconnect', () => (this.connected = false));
+  connect(address: string) {
+    console.log(`connecting to rover on ${address}...`);
+    this.socket = io(address);
+    this.socket.on('connect', () => {
+      console.log('connected to rover.');
+      this.connected = true;
+    });
+    this.socket.on('disconnect', () => {
+      console.log('disconnected from rover.');
+      this.connected = false;
+    });
   }
 
   sendControlCommand(data: ControlCommand) {
