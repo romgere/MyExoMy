@@ -37,6 +37,7 @@ export default class ApplicationController extends Controller {
         locomotionMode1: false,
         locomotionMode2: false,
         locomotionMode3: false,
+        locomotionMode4: false,
         toggleMotors: false,
         ...buttons,
       },
