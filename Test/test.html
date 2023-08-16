@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    </head>
+    <body>
+        <script>
+        var socket = io('ws://127.0.0.1:3000');
+        socket.on('connect', function(){
+          debugger;
+          socket.emit('robotCommand', {
+            connected: true,
+            motorsEnabled: true,
+            locomotionMode: 'POINT_TURN',
+            velocity: 1,
+            steering: 1,
+          })
+        });
+        </script>
+    </body>
+</html>

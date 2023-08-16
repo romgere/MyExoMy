@@ -1,8 +1,10 @@
 {
-  "name": "my-exomy",
+  "name": "exomy",
   "private": true,
   "workspaces": [
-    "ControlApp",
-    "Robot"
-  ]
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "yarn workspaces run lint"
+  }
 }

@@ -1,0 +1,44 @@
+{{page-title "My Exomy Control App"}}
+
+<Video class="video_output--full-screen" />
+
+<div class="main-container">
+  <div class="flex-container">
+    <div class="sidebar">
+      <label class="video-text">Controls</label>
+      <div class="control-container">
+        <div class="control-container--btn">
+          <button type="button" {{on "click" this.crabbing}}>CRABBING</button>
+        </div>
+        <div class="control-container--btn">
+          <button type="button" {{on "click" this.spotTurn}}>SPOT TURN</button>
+        </div>
+        <div class="control-container--btn">
+          <button type="button" {{on "click" this.ackermann}}>ACKERMANN</button>
+        </div>
+        <div class="control-container--btn">
+          <button type="button" {{on "click" this.fakeAckermann}}>FAKE ACKERMANN</button>
+        </div>
+        <div class="control-container--btn">
+          <button type="button" {{on "click" this.motors}}>MOTORS</button>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="connection-status video-text">
+        Connection status: <ConnexionStatus @connected={{this.roverConnexion.connected}} />
+        {{!-- template-lint-disable require-input-label --}}
+        <input type="text" disabled={{this.roverConnexion.connected}} value={{this.roverAddress}} {{on "input" this.updateRoverAddress}} />
+        {{#if this.roverConnexion.connected}}
+          <button {{on "click" this.disconnect}} type="button">Disconnect</button>
+        {{else}}
+          <button {{on "click" this.connect}} type="button">Connect</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
+<VirtualJoystick
+  @onJoyMove={{this.onJoyMove}}
+  @onJoyEnd={{this.onJoyEnd}}
+/>

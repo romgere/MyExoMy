@@ -1,29 +1,26 @@
-This is based on [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
+This is inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
-**TODO** : 
+**TODO** :
 
+- Update docker / readme to not run Web GUI on Raspberry (& not install it)
+- Allow command to live update some settings (camera settings, ...)
 - Send some usefull information from Rover (Wifi strengh, ...)
 - handle 4G hat, GPS position & init SMS
-- Update docker / readme to not run Web GUI on Raspberry
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage
-
-# Modifications made on My ExoMy Vs original ExoMy
-
-- add a workaround for cheap servo
-- handle neutral, min & max pwm on each servo (steering & drive) & update configuration script according
-- Switch to yarn & use yarn workspace
-- convert Rover ROS node to nodejs
-- convert web GUI to vue.js app
-- convert configuration script to nodejs
-- modification on some part to handle cheap MG996R servo (P19, P28, P30)
-- convert step files to openscad file
-- merge ExoMy & ExoMy_Software repo
 
 # My ExoMy Project Structure
 
-### `ControlApp` folder
+### `packages/ControlCenter` folder (`@robot/control-center`)
 
 Contains the web app used to control the ExoMy Robot
+
+### `packages/RoverApp` folder (`@robot/rover-app`)
+
+Robot software aims to be run on Rapsberry
+
+### `packages/Shared` folder (`@robot/shared`)
+
+Package to share types/code from control app & Robot software
 
 ### `Docker` folder
 
@@ -37,16 +34,9 @@ Contains Fritzing schema of the robot
 
 Contains freecad file of the robot design
 
-
 ### `Misc` folder
 
 Various usefull stuff (personnal purchase list, freecad macro, ...)
-
-
-### `Robot` folder
-
-Robot software aims to be run on Rapsberry based on top of ROS
-
 
 # Configure Raspberry Pi
 
@@ -54,8 +44,11 @@ Robot software aims to be run on Rapsberry based on top of ROS
 
 ### Enable Camera, SSH and I2C
 
-### OS update 
-`apt-get update && sudo apt-get full-upgrade`)
+run `sudo raspi-config` & ensure Camera, SSH & I2C are enable.
+
+### OS update
+
+`apt-get update && sudo apt-get full-upgrade`
 
 ### Install docker
 
@@ -66,7 +59,7 @@ sudo usermod -aG docker pi
 sudo reboot now
 ```
 
-(Optional) test docker installation with : 
+(Optional) test docker installation with :
 `docker run hello-world`
 
 ### Get Source Code
@@ -112,7 +105,7 @@ Stop Autostart This configuration is used to stop the autostart docker container
 
 ### Tips
 
-Edit source files from raspberry directly on your computeur : 
+Edit source files from raspberry directly on your computeur :
 
 ```sh
 apt-get install sshfs
