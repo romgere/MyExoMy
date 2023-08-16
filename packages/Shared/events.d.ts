@@ -27,7 +27,7 @@ export type ControlCommand = {
 };
 
 export type EventsNameTypesMapping = {
-  roverCommand: RoverCommand;
-  motorCommand: MotorCommand;
-  controlCommand: ControlCommand;
+  roverCommand: (cmd: RoverCommand) => void;
+  motorCommand: (cmd: MotorCommand) => void;
+  controlCommand: (cmd: ControlCommand) => void;
 };

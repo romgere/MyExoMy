@@ -56,7 +56,7 @@ directory=$( dirname "$0" )
 docker build -t $image_name $directory
 
 # Stop any of the 3 containers if running
-RUNNING_CONTAINERS=$( docker container ls -a -q --filter ancestor=exomy )
+RUNNING_CONTAINERS=$( docker container ls -a -q --filter name=exomy* )
 if [ -n "$RUNNING_CONTAINERS" ]; then
     docker rm -f "$RUNNING_CONTAINERS"
 fi

@@ -4,6 +4,7 @@ import Motors from '@robot/rover-app/lib/motors.js';
 import type EventBroker from '@robot/rover-app/lib/event-broker.js';
 import type { ExomyConfig } from '@robot/rover-app/types.js';
 import type { MotorCommand } from '@robot/shared/events.js';
+import type { Express } from 'express';
 
 const watchdog_timeout = 5000;
 
@@ -13,14 +14,14 @@ class MotorService extends Service {
   motors: Motors;
   watchdogTimer?: NodeJS.Timeout;
 
-  constructor(config: ExomyConfig, eventBroker: EventBroker) {
-    super(config, eventBroker);
+  constructor(config: ExomyConfig, eventBroker: EventBroker, express: Express) {
+    super(config, eventBroker, express);
     this.motors = new Motors(config);
   }
 
   async init() {
     await this.motors.init();
-    this.initWatchdog()
+    this.initWatchdog();
     this.eventBroker.on('motorCommand', this.onMotorCommand.bind(this));
   }
 

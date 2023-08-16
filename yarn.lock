@@ -9236,10 +9236,10 @@ pca9685@^5.0.0:
     i2c-bus "^5.2.1"
     rxjs "^6.6.3"
 
-pi-camera@^1.5.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/pi-camera/-/pi-camera-1.7.0.tgz#b9309f48c187eb89bdde4dde6989a6438481d5a5"
-  integrity sha512-96LdjJeh/1sZKYdBugURUnhoTdIUu5u8oDbVW2EFtxiGpz6Vs4nATmQHY4jibopZNfDhH9He9j0iDmS6w0L2/Q==
+pi-camera-connect@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.npmjs.org/pi-camera-connect/-/pi-camera-connect-0.3.4.tgz#a7d5e993997f3b63e9f36b25870a6239c63f358a"
+  integrity sha512-0mVOJXYY8CvAuswWXs3OnL2+pOczjuLGHca+Q479mbOC+eS6wjMameTA66B0q5KVtTAB6YplS7/Q4rieojGEVg==
 
 picocolors@^1.0.0:
   version "1.0.0"

@@ -9,7 +9,7 @@ then
 	cd /root/rover-app/packages/RoverApp
 
 	# Install npm deps for control app & ROS nodejs scrips
-	yarn install
+	yarn install --production
 
 	# run robot software
 	yarn tsx src/index.ts 
