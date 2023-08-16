@@ -12,7 +12,7 @@ then
 	yarn install --production
 
 	# run robot software
-	yarn tsx src/index.ts 
+	yarn start
 	bash
 elif [[ $1 == "devel" ]]
 then

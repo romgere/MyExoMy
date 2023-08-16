@@ -22,6 +22,8 @@ export const WheelPositions = [
   WheelPosition.RR,
 ];
 
+export const WheelNames = ['FL', 'FR', 'CL', 'CR', 'RL', 'RR'];
+
 // For most motors a pwm frequency of 50Hz is normal
 export const pwmFrequency = 50.0; // Hz
 

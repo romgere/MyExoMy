@@ -4,7 +4,7 @@ import logger from '@robot/rover-app/lib/logger.js';
 
 import type { ExomyConfig } from '@robot/rover-app/types.js';
 
-async function ensureConfigFileExist() {
+export async function ensureConfigFileExist() {
   const templateFileName = `${configFilePath}.template`;
 
   if (!(await fs.exists(configFilePath))) {
