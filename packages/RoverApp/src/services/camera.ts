@@ -1,5 +1,4 @@
 import Service from './-base.js';
-import * as stream from 'stream';
 import { StreamCamera, Codec } from 'pi-camera-connect';
 
 import type { Request, Response } from 'express';
@@ -16,7 +15,6 @@ class CameraService extends Service {
   static serviceName = 'camera';
 
   camera: StreamCamera;
-  // stream: stream.Readable;
 
   cameraStarted = false;
   clientResponses: Response[] = [];
@@ -31,7 +29,6 @@ class CameraService extends Service {
     });
 
     this.express.get('/videostream.mjpg', this.onGetStream.bind(this));
-    // this.stream = this.camera.createStream();
   }
 
   async init() {}

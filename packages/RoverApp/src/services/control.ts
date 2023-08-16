@@ -32,7 +32,7 @@ class ControlService extends Service {
       this.locomotionMode = LocomotionMode.ACKERMANN;
     } else if (locomotionMode3) {
       this.locomotionMode = LocomotionMode.CRABBING;
-    } else if(locomotionMode4) {
+    } else if (locomotionMode4) {
       this.locomotionMode = LocomotionMode.FAKE_ACKERMANN;
     }
 

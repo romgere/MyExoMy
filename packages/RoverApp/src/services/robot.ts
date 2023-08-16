@@ -22,7 +22,7 @@ class RobotService extends Service {
   onRobotCommand(command: RoverCommand) {
     let motorAngles: MotorAngle;
     let motorSpeeds: MotorSpeed;
-    
+
     this.rover.setLocomotionMode(command.locomotionMode);
 
     if (command.motorsEnabled) {
