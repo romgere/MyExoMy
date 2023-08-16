@@ -29,7 +29,6 @@ export default class VirtualJoystick extends Component<VirtualJoystickArgs> {
     color: 'black',
   };
 
-
   mountNipple = modifier((element: HTMLDivElement) => {
     this.manager = nipplejs.create({
       ...this.nippleOptions,
