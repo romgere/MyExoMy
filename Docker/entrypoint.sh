@@ -1,10 +1,5 @@
 #!/bin/bash
-if [[ $1 == "config" ]]
-then
-	cd /root/rover-app/packages/RoverApp/scripts
-	bash
-  
-elif [[ $1 == "autostart" ]]
+if [[ $1 == "autostart" ]]
 then
 	cd /root/rover-app/packages/RoverApp
 

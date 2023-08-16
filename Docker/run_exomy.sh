@@ -5,7 +5,6 @@ help_text="Usage: "$0" [MODE] [OPTIONS]
     A script to run ExoMy in different configurations
     Options:
         -a, --autostart     Toggles autostart mode on or off
-        -c, --config        Runs the motor configuration of ExoMy
         -d, --devel         Runs the development mode to change some code of ExoMy 
         -h, --help          Shows this text
 "
@@ -22,16 +21,10 @@ if [ "$1" != "" ]; then
                                 container_name="${container_name}_autostart"
                                 start_command="autostart"
                                 options="--restart always"
-                                 
                                 ;;
         -s | --stop_autostart)  
                                 docker container stop "${container_name}_autostart"
                                 exit     
-                                ;;
-        -c | --config)          
-                                container_name="${container_name}_config"
-                                start_command="config"
-                                options="--rm"
                                 ;;
         -d | --devel)           
                                 container_name="${container_name}_devel"
