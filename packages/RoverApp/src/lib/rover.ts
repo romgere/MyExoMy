@@ -1,6 +1,12 @@
 import logger from './logger.js';
 import { degrees, radians } from '@robot/rover-app/helpers/math.js';
-import { WheelPosition } from './const.js';
+import {
+  WheelPosition,
+  wheelX,
+  wheelY,
+  maxSteeringAngle,
+  maxAngleChange,
+} from '@robot/rover-app/const.js';
 const { atan, tan, PI, min, max, cos, abs, pow, sqrt } = Math;
 
 import { LocomotionMode } from '@robot/shared/locomotion-modes.js';
@@ -8,13 +14,8 @@ import { LocomotionMode } from '@robot/shared/locomotion-modes.js';
 import type { MotorAngle, MotorSpeed } from '@robot/shared/types.js';
 import type { DrivingCommand, SteeringCommand } from '@robot/rover-app/types.js';
 
-// TODO: export this to const ?
-const wheelX = 12.0;
-const wheelY = 20.0;
-const maxSteeringAngle = 45;
 const ackermannRMin = wheelY / tan((maxSteeringAngle * PI) / 180.0) + wheelX;
 const ackermannRMax = 250;
-const maxAngleChange = 30;
 
 // Rover class contains all the math and motor control algorithms to move the rover
 class Rover {

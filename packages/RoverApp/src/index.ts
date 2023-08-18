@@ -3,7 +3,7 @@ import EventBroker from '@robot/rover-app/lib/event-broker.js';
 import HttpServer from '@robot/rover-app/lib/http-server.js';
 import logger from '@robot/rover-app/lib/logger.js';
 import services from '@robot/rover-app/services/index.js';
-import { httpServerPort } from '@robot/rover-app/lib/const.js';
+import { httpServerPort } from '@robot/rover-app/const.js';
 
 import type Service from '@robot/rover-app/services/-base.js';
 import type { ExomyConfig } from '@robot/rover-app/types.js';

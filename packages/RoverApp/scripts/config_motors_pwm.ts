@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import prompt from 'prompt';
 import asyncPca9685 from '@robot/rover-app/helpers/async-pca-9685.js';
 import sleep from '@robot/rover-app/helpers/sleep.js';
-import { WheelPosition, WheelPositions, configFilePath } from '@robot/rover-app/lib/const.js';
+import { WheelPosition, WheelPositions, configFilePath } from '@robot/rover-app/const.js';
 
 import type { ServoArray } from '@robot/shared/types.js';
 import type { ExomyConfig } from '@robot/rover-app/types.js';

@@ -1,6 +1,6 @@
 import { openSync } from 'i2c-bus';
 import { Pca9685Driver } from 'pca9685';
-import { pwmFrequency } from '@robot/rover-app/lib/const.js';
+import { pwmFrequency } from '@robot/rover-app/const.js';
 
 import type { Pca9685Options } from 'pca9685';
 

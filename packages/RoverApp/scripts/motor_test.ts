@@ -1,6 +1,6 @@
 import asyncPca9685 from '@robot/rover-app/helpers/async-pca-9685.js';
 import sleep from '@robot/rover-app/helpers/sleep.js';
-import { pwmFrequency } from '@robot/rover-app/lib/const.js';
+import { pwmFrequency } from '@robot/rover-app/const.js';
 import prompt from 'prompt';
 
 import type { Pca9685Driver } from 'pca9685';

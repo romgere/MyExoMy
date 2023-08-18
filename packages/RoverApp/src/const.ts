@@ -31,3 +31,11 @@ export const configFilePath = path.resolve(process.cwd(), 'config/exomy.json');
 
 export const httpServerPort = 3000;
 export const httpServerCorsOrigin = '*';
+
+// Rover "physical" settings
+export const wheelX = 12.0;
+export const wheelY = 20.0;
+export const maxSteeringAngle = 45;
+export const maxAngleChange = 30;
+
+export const motor_watchdog_timeout = 5000;

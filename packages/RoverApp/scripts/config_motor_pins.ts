@@ -3,11 +3,10 @@ import prompt from 'prompt';
 import asyncPca9685 from '@robot/rover-app/helpers/async-pca-9685.js';
 import sleep from '@robot/rover-app/helpers/sleep.js';
 import readConfig, { ensureConfigFileExist } from '@robot/rover-app/helpers/read-config.js';
-import { configFilePath } from '@robot/rover-app/lib/const.js';
-import { WheelPositions, WheelNames } from '@robot/rover-app/lib/const.js';
+import { configFilePath, WheelPositions, WheelNames } from '@robot/rover-app/const.js';
 
 import type { Pca9685Driver } from 'pca9685';
-import type { WheelPosition } from '@robot/rover-app/lib/const.js';
+import type { WheelPosition } from '@robot/rover-app/const.js';
 
 prompt.start();
 prompt.message = '';

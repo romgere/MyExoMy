@@ -1,6 +1,6 @@
 import SocketServer from '@robot/rover-app/lib/socket-server.js';
 import Service from './-base.js';
-import { httpServerCorsOrigin } from '@robot/rover-app/lib/const.js';
+import { httpServerCorsOrigin } from '@robot/rover-app/const.js';
 
 import type { RoverCommand, ControlCommand } from '@robot/shared/events.js';
 
