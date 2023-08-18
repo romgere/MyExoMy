@@ -1,6 +1,5 @@
 import Service from './-base.js';
 import { StreamCamera, Codec } from 'pi-camera-connect';
-import logger from '@robot/rover-app/lib/logger.js';
 
 import type { Request, Response } from 'express';
 import type EventBroker from '@robot/rover-app/lib/event-broker.js';
@@ -52,8 +51,6 @@ class CameraService extends Service {
   }
 
   async updateCameraSettings(config: CameraConfig) {
-    console.log('update camera settings asked', config);
-
     if (this.cameraStarted) {
       await this.stopCamera();
     }
