@@ -1,30 +1,33 @@
-import SocketServer from '@robot/rover-app/lib/socket-server.js';
+import { Server } from 'socket.io';
 import Service from './-base.js';
 import { httpServerCorsOrigin } from '@robot/rover-app/const.js';
 
-import type { RoverCommand, ControlCommand } from '@robot/shared/events.js';
-
-type ServerEvent = {
-  roverCommand: (cmd: RoverCommand) => void;
-  controlCommand: (cmd: ControlCommand) => void;
-};
+import type EventBroker from '@robot/rover-app/lib/event-broker.js';
+import type { ExomyConfig } from '@robot/rover-app/types.js';
+import type HttpServer from '@robot/rover-app/lib/http-server.js';
 
 class SocketServerService extends Service {
   static serviceName = 'socket server';
-  server?: SocketServer<ServerEvent>;
+  io: Server;
 
-  async init() {
-    this.server = new SocketServer<ServerEvent>(this.httpServer.server, httpServerCorsOrigin);
+  constructor(config: ExomyConfig, eventBroker: EventBroker, httpsServer: HttpServer) {
+    super(config, eventBroker, httpsServer);
 
-    // Proxy incomming socket command to other services through event broker
-    this.server.on('controlCommand', (cmd) => {
-      this.eventBroker.emit('controlCommand', cmd);
+    this.io = new Server(httpsServer.server, {
+      cors: {
+        origin: httpServerCorsOrigin,
+      },
     });
 
-    this.server.on('roverCommand', (cmd) => {
-      this.eventBroker.emit('roverCommand', cmd);
+    // Proxy io event to eventBroker class
+    this.io.on('connection', (socket) => {
+      socket.onAny((event, ...args) => {
+        this.eventBroker.emit(event, ...args);
+      });
     });
   }
+
+  async init() {}
 }
 
 export default SocketServerService;

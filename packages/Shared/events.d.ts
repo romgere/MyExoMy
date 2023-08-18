@@ -1,6 +1,7 @@
 // This contains all the events name & event args used to communicate through nodes
 import { MotorSpeed, MotorAngle } from './types.js';
 import { LocomotionMode } from './locomotion-modes.js';
+import type { CameraConfig } from './camera.js';
 
 export type RoverCommand = {
   connected: boolean;
@@ -30,4 +31,5 @@ export type EventsNameTypesMapping = {
   roverCommand: (cmd: RoverCommand) => void;
   motorCommand: (cmd: MotorCommand) => void;
   controlCommand: (cmd: ControlCommand) => void;
+  updateCameraSettings: (cmd: CameraConfig) => void;
 };
