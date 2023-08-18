@@ -1,19 +1,19 @@
 import sleep from '@robot/rover-app/helpers/sleep.js';
 import asyncPca9685 from '@robot/rover-app/helpers/async-pca-9685.js';
-import { WheelPositions } from './const.js';
+import { WheelPositions } from '@robot/rover-app/const.js';
 
 import type { MotorAngle, MotorSpeed, ServoArray } from '@robot/shared/types.js';
 import type { ExomyConfig } from '@robot/rover-app/types.js';
 import type { Pca9685Driver } from 'pca9685';
 
+// Motor commands are assuming positiv=driving_forward, negative=driving_backwards.
+// The driving direction of the left side has to be inverted for this to apply to all wheels.
+const wheelDirections: ServoArray<1 | -1> = [-1, 1, -1, 1, -1, 1];
+
 // Motors class contains all functions to control the steering and driving
 class Motors {
   motorsSettings: ExomyConfig;
   pwm?: Pca9685Driver;
-
-  // Motor commands are assuming positiv=driving_forward, negative=driving_backwards.
-  // The driving direction of the left side has to be inverted for this to apply to all wheels.
-  wheelDirections: ServoArray<1 | -1> = [-1, 1, -1, 1, -1, 1];
 
   constructor(motorsSettings: ExomyConfig) {
     this.motorsSettings = motorsSettings;
@@ -96,8 +96,8 @@ class Motors {
       // Get the range between neutral & max when drivingCommand is pos for regular direction
       // or when drivingCommand is neg for inverted direction
       const hightRange =
-        (drivingCommand[wheel] > 0 && this.wheelDirections[wheel] === 1) ||
-        (drivingCommand[wheel] < 0 && this.wheelDirections[wheel] === -1);
+        (drivingCommand[wheel] > 0 && wheelDirections[wheel] === 1) ||
+        (drivingCommand[wheel] < 0 && wheelDirections[wheel] === -1);
 
       const range = hightRange
         ? driveSettings.max[wheel] - driveSettings.neutral[wheel]
@@ -105,7 +105,7 @@ class Motors {
 
       const dutyCycle =
         driveSettings.neutral[wheel] +
-        (drivingCommand[wheel] / 100) * range * this.wheelDirections[wheel];
+        (drivingCommand[wheel] / 100) * range * wheelDirections[wheel];
 
       this.pwm.setPulseRange(driveSettings.pins[wheel], 0, dutyCycle);
     }

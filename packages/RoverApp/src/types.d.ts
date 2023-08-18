@@ -1,4 +1,5 @@
 import type { ServoArray } from '@robot/shared/types.js';
+import type { StreamOptions } from 'pi-camera-connect';
 
 // TODO: restrict to -100 to 100
 export type DrivingCommand = number;
@@ -13,7 +14,10 @@ type ServoConfig = {
   max: ServoArray<number>;
 };
 
+export type CameraConfig = Partial<Exclude<StreamOptions, 'codec'>>;
+
 export type ExomyConfig = {
   drive: ServoConfig;
   steer: ServoConfig;
+  camera?: CameraConfig;
 };

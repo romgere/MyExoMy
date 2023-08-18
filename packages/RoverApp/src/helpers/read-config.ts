@@ -1,4 +1,4 @@
-import { configFilePath } from '@robot/rover-app/lib/const.js';
+import { configFilePath } from '@robot/rover-app/const.js';
 import fs from 'fs-extra';
 import logger from '@robot/rover-app/lib/logger.js';
 

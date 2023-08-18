@@ -14,7 +14,7 @@ export default class ApplicationController extends Controller {
   joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
-  @tracked roverAddress = 'ws://localhost:3000';
+  @tracked roverAddress = 'ws://rover.local:3000';
 
   startSending() {
     if (!this.interval) {
@@ -42,6 +42,11 @@ export default class ApplicationController extends Controller {
         ...buttons,
       },
     });
+  }
+
+  @action
+  sendUpdateCameraSettingsCommand() {
+    this.roverConnexion.sendUpdateCameraSettingsCommand();
   }
 
   @action

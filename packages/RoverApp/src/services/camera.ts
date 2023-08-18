@@ -2,6 +2,9 @@ import Service from './-base.js';
 import { StreamCamera, Codec } from 'pi-camera-connect';
 
 import type { Request, Response } from 'express';
+import type EventBroker from '@robot/rover-app/lib/event-broker.js';
+import type { ExomyConfig, CameraConfig } from '@robot/rover-app/types.js';
+import type HttpServer from '@robot/rover-app/lib/http-server.js';
 
 const boundary = 'totalmjpeg';
 const streamHeaders = {
@@ -9,6 +12,12 @@ const streamHeaders = {
   Pragma: 'no-cache',
   Connection: 'close',
   'Content-Type': `multipart/x-mixed-replace; boundary=${boundary}`,
+};
+
+const defaultCameraSettings = {
+  width: 1296,
+  height: 972,
+  fps: 10,
 };
 
 class CameraService extends Service {
@@ -19,25 +28,53 @@ class CameraService extends Service {
   cameraStarted = false;
   clientResponses: Response[] = [];
 
-  constructor(...args: ConstructorParameters<typeof Service>) {
-    super(...args);
+  constructor(config: ExomyConfig, eventBroker: EventBroker, httpsServer: HttpServer) {
+    super(config, eventBroker, httpsServer);
+
     this.camera = new StreamCamera({
-      codec: Codec.MJPEG,
-      width: 1296,
-      height: 972,
-      fps: 10,
+      ...defaultCameraSettings,
+      ...(config.camera ?? {}),
+      codec: Codec.MJPEG, // Force codec to MJPEG
     });
 
-    this.express.get('/videostream.mjpg', this.onGetStream.bind(this));
+    this.httpServer.expressApp.get('/videostream.mjpg', this.onGetStream.bind(this));
+
+    this.eventBroker.on('updateCameraSettings', this.updateCameraSettings.bind(this));
   }
 
   async init() {}
 
+  async startCamera() {
+    await this.camera.startCapture();
+    this.camera.on('frame', this.broadcastFrameData.bind(this));
+    this.cameraStarted = true;
+  }
+
+  async updateCameraSettings(config: CameraConfig) {
+    if (this.cameraStarted) {
+      await this.stopCamera();
+    }
+
+    this.camera = new StreamCamera({
+      ...defaultCameraSettings,
+      ...(config ?? {}),
+      codec: Codec.MJPEG, // Force codec to MJPEG
+    });
+
+    if (this.clientResponses.length) {
+      await this.startCamera();
+    }
+  }
+
+  async stopCamera() {
+    this.camera.off('frame', this.broadcastFrameData.bind(this));
+    await this.camera.stopCapture();
+    this.cameraStarted = false;
+  }
+
   async onGetStream(req: Request, res: Response) {
     if (!this.cameraStarted) {
-      await this.camera.startCapture();
-      this.camera.on('frame', this.broadcastFrameData.bind(this));
-      this.cameraStarted = true;
+      await this.startCamera();
     }
 
     res.writeHead(200, streamHeaders);
@@ -48,9 +85,7 @@ class CameraService extends Service {
       this.clientResponses.splice(i, 1);
 
       if (!this.clientResponses.length) {
-        this.camera.off('frame', this.broadcastFrameData.bind(this));
-        await this.camera.stopCapture();
-        this.cameraStarted = false;
+        await this.stopCamera();
       }
     });
   }

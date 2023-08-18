@@ -2,7 +2,9 @@
   "name": "exomy",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/ControlCenter",
+    "packages/RoverApp",
+    "packages/Shared"
   ],
   "scripts": {
     "lint": "yarn workspaces run lint"

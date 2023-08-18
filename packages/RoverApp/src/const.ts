@@ -28,3 +28,17 @@ export const WheelNames = ['FL', 'FR', 'CL', 'CR', 'RL', 'RR'];
 export const pwmFrequency = 50.0; // Hz
 
 export const configFilePath = path.resolve(process.cwd(), 'config/exomy.json');
+
+export const httpServerPort = 3000;
+export const httpServerCorsOrigin = '*';
+
+// Rover "physical" settings
+export const wheelX = 12.0;
+export const wheelY = 20.0;
+export const maxSteeringAngle = 45;
+export const maxAngleChange = 30;
+
+export const motor_watchdog_timeout = 5000;
+
+// List rover event that are allowed to be sent by socket
+export const socketAllowedEvents = ['controlCommand', 'updateCameraSettings'];
