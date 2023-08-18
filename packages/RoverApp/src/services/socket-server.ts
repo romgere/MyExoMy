@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import Service from './-base.js';
-import { httpServerCorsOrigin } from '@robot/rover-app/const.js';
+import { httpServerCorsOrigin, socketAllowedEvents } from '@robot/rover-app/const.js';
 
 import type EventBroker from '@robot/rover-app/lib/event-broker.js';
 import type { ExomyConfig } from '@robot/rover-app/types.js';
@@ -22,6 +22,10 @@ class SocketServerService extends Service {
     // Proxy io event to eventBroker class
     this.io.on('connection', (socket) => {
       socket.onAny((event, ...args) => {
+        if (!socketAllowedEvents.includes(event)) {
+          this.logger.error(`Bad "${event}" event received ignoring.`, ...args);
+          return;
+        }
         this.eventBroker.emit(event, ...args);
       });
     });

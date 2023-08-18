@@ -39,3 +39,6 @@ export const maxSteeringAngle = 45;
 export const maxAngleChange = 30;
 
 export const motor_watchdog_timeout = 5000;
+
+// List rover event that are allowed to be sent by socket
+export const socketAllowedEvents = ['controlCommand', 'updateCameraSettings'];
