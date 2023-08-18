@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Remove Control app from mono repo to reduce dependency (not used directly on Raspberry)
+node /clean-monorepo.js
+
 if [[ $1 == "autostart" ]]
 then
 	cd /root/rover-app/packages/RoverApp
