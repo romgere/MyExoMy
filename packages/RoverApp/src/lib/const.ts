@@ -28,3 +28,6 @@ export const WheelNames = ['FL', 'FR', 'CL', 'CR', 'RL', 'RR'];
 export const pwmFrequency = 50.0; // Hz
 
 export const configFilePath = path.resolve(process.cwd(), 'config/exomy.json');
+
+export const httpServerPort = 3000;
+export const httpServerCorsOrigin = '*';

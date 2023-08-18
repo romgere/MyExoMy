@@ -1,5 +1,6 @@
 import SocketServer from '@robot/rover-app/lib/socket-server.js';
 import Service from './-base.js';
+import { httpServerCorsOrigin } from '@robot/rover-app/lib/const.js';
 
 import type { RoverCommand, ControlCommand } from '@robot/shared/events.js';
 
@@ -13,7 +14,7 @@ class SocketServerService extends Service {
   server?: SocketServer<ServerEvent>;
 
   async init() {
-    this.server = new SocketServer<ServerEvent>(this.express, 3000, '*');
+    this.server = new SocketServer<ServerEvent>(this.httpServer.server, httpServerCorsOrigin);
 
     // Proxy incomming socket command to other services through event broker
     this.server.on('controlCommand', (cmd) => {

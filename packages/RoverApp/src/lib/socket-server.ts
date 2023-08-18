@@ -3,29 +3,23 @@ import { Server } from 'socket.io';
 import TypedEventEmitter, { EventMap } from 'typed-emitter';
 import EventEmitter from 'events';
 
-import type { Express } from 'express';
-
 type TypedEmitter<T extends EventMap> = TypedEventEmitter.default<T>;
 
 export default class SocketServer<T extends EventMap> extends (EventEmitter as {
   new <U extends EventMap>(): TypedEmitter<U>;
 })<T> {
-  server: http.Server;
   io: Server;
 
-  constructor(app: Express, port: number, corsOrigin: string | string[]) {
+  constructor(server: http.Server, corsOrigin: string | string[]) {
     super();
 
-    this.server = http.createServer(app);
-
-    this.io = new Server(this.server, {
+    this.io = new Server(server, {
       cors: {
         origin: corsOrigin,
       },
     });
 
-    this.server.listen(port);
-
+    // Proxy io event to current class
     this.io.on('connection', (socket) => {
       socket.onAny((event, ...args) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

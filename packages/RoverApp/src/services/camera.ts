@@ -28,7 +28,7 @@ class CameraService extends Service {
       fps: 10,
     });
 
-    this.express.get('/videostream.mjpg', this.onGetStream.bind(this));
+    this.httpServer.expressApp.get('/videostream.mjpg', this.onGetStream.bind(this));
   }
 
   async init() {}

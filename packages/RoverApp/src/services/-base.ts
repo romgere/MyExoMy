@@ -1,21 +1,20 @@
 import type { ExomyConfig } from '@robot/rover-app/types.js';
-import EventBroker from '../lib/event-broker.js';
+import EventBroker from '@robot/rover-app/lib/event-broker.js';
+import HttpServer from '@robot/rover-app/lib/http-server.js';
 import logger from '@robot/rover-app/lib/logger.js';
-
-import type { Express } from 'express';
 
 export default abstract class Service {
   config: ExomyConfig;
   eventBroker: EventBroker;
-  express: Express;
+  httpServer: HttpServer;
   logger = logger;
 
   static serviceName: string;
 
-  constructor(config: ExomyConfig, eventBroker: EventBroker, express: Express) {
+  constructor(config: ExomyConfig, eventBroker: EventBroker, httpServer: HttpServer) {
     this.config = config;
     this.eventBroker = eventBroker;
-    this.express = express;
+    this.httpServer = httpServer;
   }
 
   abstract init(): Promise<void>;
