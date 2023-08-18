@@ -4,7 +4,8 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 
 import type { Socket } from 'socket.io-client';
-import type { ControlCommand } from '@robot/shared//events';
+import type { ControlCommand } from '@robot/shared/events';
+import type { CameraConfig } from '@robot/shared/camera';
 
 export default class RoverConnexionService extends Service {
   socket?: Socket;
@@ -30,6 +31,21 @@ export default class RoverConnexionService extends Service {
       return;
     }
     this.socket?.emit('controlCommand', data);
+  }
+
+  sendUpdateCameraSettingsCommand() {
+    if (!this.connected) {
+      return;
+    }
+
+    const conf: CameraConfig = {
+      fps: 25,
+      // width: 1920,
+      // height: 1080,
+      exposureMode: 'fixedfps',
+    } as CameraConfig;
+
+    this.socket?.emit('updateCameraSettings', conf);
   }
 
   @action
