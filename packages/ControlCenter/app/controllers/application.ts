@@ -2,20 +2,18 @@ import Controller from '@ember/controller';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import LocomotionMode from '@robot/shared/locomotion-modes';
 
 import type RoverConnexionService from '@robot/control-center/services/rover-connexion';
 import type GamepadService from '@robot/control-center/services/gamepad';
 import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
-import type { ControlCommand } from '@robot/shared/events';
-
-type ControlCommandButton = ControlCommand['buttons'];
 
 export default class ApplicationController extends Controller {
   @service declare roverConnexion: RoverConnexionService;
   @service declare gamepad: GamepadService;
 
-  // Virtual joystick
-  vJoystickData: [number, number] = [0, 0];
+  locomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
+  joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
   @tracked roverAddress = 'rover.local:3000';
@@ -37,22 +35,16 @@ export default class ApplicationController extends Controller {
   stopSending() {
     clearInterval(this?.interval);
     this.interval = undefined;
-    this.vJoystickData = [0, 0];
+    this.joystickData = [0, 0];
     this.sendCommand();
   }
 
   @action
-  sendCommand(buttons: Partial<ControlCommandButton> = {}) {
+  sendCommand(toggleMotors: boolean = false) {
     this.roverConnexion.sendControlCommand({
-      axes: this.vJoystickData,
-      buttons: {
-        locomotionMode1: false,
-        locomotionMode2: false,
-        locomotionMode3: false,
-        locomotionMode4: false,
-        toggleMotors: false,
-        ...buttons,
-      },
+      axes: this.joystickData,
+      locomotionMode: this.locomotionMode,
+      toggleMotors,
     });
   }
 
@@ -63,7 +55,7 @@ export default class ApplicationController extends Controller {
 
   @action
   onVJoyMove(data: [number, number]) {
-    this.vJoystickData = data;
+    this.joystickData = data;
     this.startSending();
   }
 
@@ -76,24 +68,18 @@ export default class ApplicationController extends Controller {
   onJoyMove(axes: PS4ContollerAxes) {
     // Ackerman mode
     if (axes.leftStick[0] || axes.leftStick[1]) {
-      this.sendCommand({
-        locomotionMode2: true,
-      });
-      this.vJoystickData = [-axes.leftStick[0], -axes.leftStick[1]];
+      this.locomotionMode = LocomotionMode.ACKERMANN;
+      this.joystickData = [-axes.leftStick[0], -axes.leftStick[1]];
     }
     // Crabbing
     else if (axes.rightStick[0] || axes.rightStick[1]) {
-      this.sendCommand({
-        locomotionMode3: true,
-      });
-      this.vJoystickData = [-axes.rightStick[0], -axes.rightStick[1]];
+      this.locomotionMode = LocomotionMode.CRABBING;
+      this.joystickData = [-axes.rightStick[0], -axes.rightStick[1]];
     }
     // sport turn
     else if (axes.trigger[0] || axes.trigger[1]) {
-      this.sendCommand({
-        locomotionMode1: true,
-      });
-      this.vJoystickData = [axes.trigger[0] ? axes.trigger[0] : -axes.trigger[1], 0];
+      this.locomotionMode = LocomotionMode.POINT_TURN;
+      this.joystickData = [axes.trigger[0] ? axes.trigger[0] : -axes.trigger[1], 0];
     }
 
     this.startSending();
@@ -106,37 +92,31 @@ export default class ApplicationController extends Controller {
 
   @action
   crabbing() {
-    this.sendCommand({
-      locomotionMode3: true,
-    });
+    this.locomotionMode = LocomotionMode.CRABBING;
+    this.sendCommand();
   }
 
   @action
   spotTurn() {
-    this.sendCommand({
-      locomotionMode1: true,
-    });
+    this.locomotionMode = LocomotionMode.POINT_TURN;
+    this.sendCommand();
   }
 
   @action
   ackermann() {
-    this.sendCommand({
-      locomotionMode2: true,
-    });
+    this.locomotionMode = LocomotionMode.ACKERMANN;
+    this.sendCommand();
   }
 
   @action
   fakeAckermann() {
-    this.sendCommand({
-      locomotionMode4: true,
-    });
+    this.locomotionMode = LocomotionMode.FAKE_ACKERMANN;
+    this.sendCommand();
   }
 
   @action
   motors() {
-    this.sendCommand({
-      toggleMotors: true,
-    });
+    this.sendCommand(true);
   }
 
   @action
