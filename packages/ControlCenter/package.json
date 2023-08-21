@@ -37,9 +37,9 @@
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.0.1",
     "@ember/test-helpers": "^3.2.0",
-    "@robot/shared": "*",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
+    "@robot/shared": "*",
     "@types/ember__application": "^~4.0",
     "@types/ember__array": "~4.0",
     "@types/ember__component": "~4.0",
@@ -116,6 +116,7 @@
     "edition": "octane"
   },
   "dependencies": {
+    "eventemitter3": "^5.0.1",
     "nipplejs": "^0.10.1",
     "socket.io-client": "^4.7.2"
   }

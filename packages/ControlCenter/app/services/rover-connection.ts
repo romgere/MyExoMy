@@ -12,6 +12,21 @@ export default class RoverConnexionService extends Service {
 
   @tracked connected = false;
 
+  async pingRover(address: string): Promise<true> {
+    try {
+      const data = await fetch(`http://${address}/ping`);
+      const response = await data.text();
+
+      if (response !== 'rover-pong') {
+        throw `Error on rover ping response, received: ${response}`;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      throw `Error during rover ping : ${e}`;
+    }
+  }
+
   @action
   connect(address: string) {
     console.log(`connecting to rover on ${address}...`);
@@ -57,6 +72,6 @@ export default class RoverConnexionService extends Service {
 // DO NOT DELETE: this is how TypeScript knows how to look up your services.
 declare module '@ember/service' {
   interface Registry {
-    'rover-connexion': RoverConnexionService;
+    'rover-connection': RoverConnexionService;
   }
 }

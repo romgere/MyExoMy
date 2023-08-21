@@ -9,7 +9,7 @@ import {
 } from '@robot/rover-app/const.js';
 const { atan, tan, PI, min, max, cos, abs, pow, sqrt } = Math;
 
-import { LocomotionMode } from '@robot/shared/locomotion-modes.js';
+import LocomotionMode from '@robot/shared/locomotion-modes.js';
 
 import type { MotorAngle, MotorSpeed } from '@robot/shared/types.js';
 import type { DrivingCommand, SteeringCommand } from '@robot/rover-app/types.js';

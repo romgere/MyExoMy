@@ -3,7 +3,7 @@ import Service from './-base.js';
 const { min, sqrt, atan2, PI } = Math;
 
 import type { ControlCommand } from '@robot/shared/events.js';
-import { LocomotionMode } from '@robot/shared/locomotion-modes.js';
+import LocomotionMode from '@robot/shared/locomotion-modes.js';
 
 /**
  * This received control commands & convert them to rover command
@@ -22,19 +22,11 @@ class ControlService extends Service {
   onControlCommand(command: ControlCommand) {
     const {
       axes: [x, y],
-      buttons: { locomotionMode1, locomotionMode2, locomotionMode3, locomotionMode4, toggleMotors },
+      locomotionMode,
+      toggleMotors,
     } = command;
 
-    // Reading out button data to set locomotion mode
-    if (locomotionMode1) {
-      this.locomotionMode = LocomotionMode.POINT_TURN;
-    } else if (locomotionMode2) {
-      this.locomotionMode = LocomotionMode.ACKERMANN;
-    } else if (locomotionMode3) {
-      this.locomotionMode = LocomotionMode.CRABBING;
-    } else if (locomotionMode4) {
-      this.locomotionMode = LocomotionMode.FAKE_ACKERMANN;
-    }
+    this.locomotionMode = locomotionMode;
 
     // Enable and disable motors
     if (toggleMotors) {

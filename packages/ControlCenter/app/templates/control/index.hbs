@@ -1,0 +1,40 @@
+<Video @roverAddress={{this.roverAddress}} class="video_output--full-screen" />
+
+<div class="main-container">
+  <div class="flex-container">
+    <div class="sidebar">
+      <label class="video-text">Controls</label>
+      <div class="control-container">
+        {{#each-in this.LocomotionMode as |mode|}}
+          <button
+            type="button"
+            class={{if (eq this.locomotionMode mode) "selected"}}
+            {{on "click" (fn this.changeDrivingMode mode)}}
+          >
+            {{mode}}
+          </button>
+        {{/each-in}}
+        <div class="control-container--btn">
+          <button type="button" {{on "click" this.motors}}>Toggle Motors</button>
+        </div>
+        <div class="control-container--btn">
+          <button type="button" {{on "click" this.sendUpdateCameraSettingsCommand}}>Camera Test</button>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="connection-status video-text">
+        Connection status: <ConnexionStatus @connected={{this.roverConnection.connected}} />
+        {{#if this.roverConnection.connected}}
+          <button {{on "click" this.disconnect}} type="button">Disconnect</button>
+        {{else}}
+          <button {{on "click" this.connect}} type="button">Connect</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
+<VirtualJoystick
+  @onJoyMove={{this.onVJoyMove}}
+  @onJoyEnd={{this.onVJoyEnd}}
+/>
