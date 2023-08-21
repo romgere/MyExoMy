@@ -75,10 +75,12 @@ const emptyPS4ContollerAxes: PS4ContollerAxes = {
 };
 
 type OS = 'mac' | 'ubuntu';
-type AxeMapping = { type: 'axe' | 'button'; index: number };
 
-type JoystickMapping = Record<keyof PS4ContollerAxes, [AxeMapping, AxeMapping]>;
-type ButtonMapping = Record<keyof PS4ContollerButtons, number>;
+type ButtonMap = { type: 'axe' | 'button'; index: number; pressedOn?: 1 | -1 };
+type AxeMap = { type: 'axe' | 'button'; index: number; normalizeToInt?: boolean };
+
+type JoystickMapping = Record<keyof PS4ContollerAxes, [AxeMap, AxeMap]>;
+type ButtonMapping = Record<keyof PS4ContollerButtons, ButtonMap | undefined>;
 
 export type JoysticksMapping = Record<OS, JoystickMapping>;
 export type ButtonsMapping = Record<OS, ButtonMapping>;
@@ -95,7 +97,6 @@ export default class GamepadService extends Service {
   @tracked
   gamepadConnected = false;
 
-  os: OS = 'mac';
   axes: PS4ContollerAxes = { ...emptyPS4ContollerAxes };
   buttons: PS4ContollerButtons = { ...emptyPS4ContollerButtons };
 
@@ -111,6 +112,11 @@ export default class GamepadService extends Service {
     return joystickMapping[this.os];
   }
 
+  // Try detect OS
+  get os(): OS {
+    return window.navigator.userAgent.indexOf('Mac') >= 0 ? 'mac' : 'ubuntu';
+  }
+
   constructor(...args: ConstructorParameters<typeof Service>) {
     super(...args);
 
@@ -124,14 +130,23 @@ export default class GamepadService extends Service {
   }
 
   // "Convert" raw gamepad buttons array to PS4 controller buttons
-  getButtonState(buttons: readonly GamepadButton[]): PS4ContollerButtons {
+  getButtonState(axes: readonly number[], buttons: readonly GamepadButton[]): PS4ContollerButtons {
     const { buttonsMapping } = this;
     const ps4Buttons = {
       ...emptyPS4ContollerButtons,
     };
 
-    for (const [key, index] of Object.entries(buttonsMapping)) {
-      ps4Buttons[key as keyof PS4ContollerButtons] = buttons[index].pressed;
+    for (const [key, mapping] of Object.entries(buttonsMapping)) {
+      if (!mapping) {
+        // Allow some buttons to not be mapped
+        continue;
+      }
+
+      if (mapping.type === 'button') {
+        ps4Buttons[key as keyof PS4ContollerButtons] = buttons[mapping.index].pressed;
+      } else if (mapping.type === 'axe') {
+        ps4Buttons[key as keyof PS4ContollerButtons] = mapping.pressedOn === axes[mapping.index];
+      }
     }
 
     return ps4Buttons;
@@ -155,7 +170,7 @@ export default class GamepadService extends Service {
   }
 
   getMappedAxeValue(
-    mapping: AxeMapping,
+    mapping: AxeMap,
     axes: readonly number[],
     buttons: readonly GamepadButton[],
   ): number {
@@ -167,12 +182,16 @@ export default class GamepadService extends Service {
       value = axes[mapping.index];
     }
 
+    if (mapping.normalizeToInt) {
+      value = (value + 1) / 2; // on ubuntu R2, L2 are axes & we want a value like buttons from 0 to 1
+    }
+
     return Math.abs(value) < axeThreshold ? 0 : value;
   }
 
   @action
-  handleButtonEvent(buttons: readonly GamepadButton[]) {
-    const ps4Buttons = this.getButtonState(buttons);
+  handleButtonEvent(axes: readonly number[], buttons: readonly GamepadButton[]) {
+    const ps4Buttons = this.getButtonState(axes, buttons);
 
     for (const idx in ps4Buttons) {
       if (
@@ -244,11 +263,11 @@ export default class GamepadService extends Service {
       this.axes = this.getAxesState(gp.axes, gp.buttons);
     }
     if (!this.buttons) {
-      this.buttons = this.getButtonState(gp.buttons);
+      this.buttons = this.getButtonState(gp.axes, gp.buttons);
     }
 
     this.handleJoystickEvent(gp.axes, gp.buttons);
-    this.handleButtonEvent(gp.buttons);
+    this.handleButtonEvent(gp.axes, gp.buttons);
 
     requestAnimationFrame(this.gameLoop);
   }

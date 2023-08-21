@@ -105,7 +105,6 @@ export default class ApplicationController extends Controller {
 
   @action
   changeDrivingMode(locomotionMode: LocomotionMode) {
-    debugger;
     this.locomotionMode = locomotionMode;
     this.sendCommand();
   }
