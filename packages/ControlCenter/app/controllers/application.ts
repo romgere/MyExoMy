@@ -4,17 +4,27 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 import type RoverConnexionService from '@robot/control-center/services/rover-connexion';
-import type { ControlCommand } from '@robot/shared//events';
+import type GamepadService from '@robot/control-center/services/gamepad';
+import type { ControlCommand } from '@robot/shared/events';
 
 type ControlCommandButton = ControlCommand['buttons'];
 
 export default class ApplicationController extends Controller {
   @service declare roverConnexion: RoverConnexionService;
+  @service declare gamepad: GamepadService;
 
   joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
   @tracked roverAddress = 'ws://rover.local:3000';
+
+  constructor(...args: ConstructorParameters<typeof Controller>) {
+    super(...args);
+    // bind
+    this.gamepad.on('joyEnd', () => console.log('joyEnd'));
+    this.gamepad.on('joyMove', (v) => console.log('joyMove', v.trigger));
+    this.gamepad.on('buttonChange', (v) => console.log('buttonChange', v));
+  }
 
   startSending() {
     if (!this.interval) {
