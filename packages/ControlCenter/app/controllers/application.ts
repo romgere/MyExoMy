@@ -4,12 +4,12 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import LocomotionMode from '@robot/shared/locomotion-modes';
 
-import type RoverConnexionService from '@robot/control-center/services/rover-connexion';
+import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type GamepadService from '@robot/control-center/services/gamepad';
 import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
 
 export default class ApplicationController extends Controller {
-  @service declare roverConnexion: RoverConnexionService;
+  @service declare roverConnection: RoverConnectionService;
   @service declare gamepad: GamepadService;
 
   locomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
@@ -41,7 +41,7 @@ export default class ApplicationController extends Controller {
 
   @action
   sendCommand(toggleMotors: boolean = false) {
-    this.roverConnexion.sendControlCommand({
+    this.roverConnection.sendControlCommand({
       axes: this.joystickData,
       locomotionMode: this.locomotionMode,
       toggleMotors,
@@ -50,7 +50,7 @@ export default class ApplicationController extends Controller {
 
   @action
   sendUpdateCameraSettingsCommand() {
-    this.roverConnexion.sendUpdateCameraSettingsCommand();
+    this.roverConnection.sendUpdateCameraSettingsCommand();
   }
 
   @action
@@ -121,12 +121,12 @@ export default class ApplicationController extends Controller {
 
   @action
   connect() {
-    this.roverConnexion.connect(`ws://${this.roverAddress}`);
+    this.roverConnection.connect(`ws://${this.roverAddress}`);
   }
 
   @action
   disconnect() {
-    this.roverConnexion.disconnect();
+    this.roverConnection.disconnect();
   }
 
   @action
