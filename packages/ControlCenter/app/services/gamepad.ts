@@ -10,7 +10,7 @@ interface EventTypes {
   buttonChange: (buttons: PS4ContollerButtons) => void;
 }
 
-type PS4ContollerButtons = {
+export type PS4ContollerButtons = {
   cross: boolean;
   square: boolean;
   circle: boolean;
@@ -36,7 +36,7 @@ type PS4ContollerButtons = {
   pad: boolean;
 };
 
-type PS4ContollerAxes = {
+export type PS4ContollerAxes = {
   leftStick: [number, number];
   rightStick: [number, number];
   trigger: [number, number]; // [L2, R2]

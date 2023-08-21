@@ -5,6 +5,7 @@ import { tracked } from '@glimmer/tracking';
 
 import type RoverConnexionService from '@robot/control-center/services/rover-connexion';
 import type GamepadService from '@robot/control-center/services/gamepad';
+import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
 import type { ControlCommand } from '@robot/shared/events';
 
 type ControlCommandButton = ControlCommand['buttons'];
@@ -13,16 +14,17 @@ export default class ApplicationController extends Controller {
   @service declare roverConnexion: RoverConnexionService;
   @service declare gamepad: GamepadService;
 
-  joystickData: [number, number] = [0, 0];
+  // Virtual joystick
+  vJoystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
-  @tracked roverAddress = 'ws://rover.local:3000';
+  @tracked roverAddress = 'rover.local:3000';
 
   constructor(...args: ConstructorParameters<typeof Controller>) {
     super(...args);
     // bind
-    this.gamepad.on('joyEnd', () => console.log('joyEnd'));
-    this.gamepad.on('joyMove', (v) => console.log('joyMove', v.trigger));
+    this.gamepad.on('joyEnd', this.onJoyEnd);
+    this.gamepad.on('joyMove', this.onJoyMove);
     this.gamepad.on('buttonChange', (v) => console.log('buttonChange', v));
   }
 
@@ -35,14 +37,14 @@ export default class ApplicationController extends Controller {
   stopSending() {
     clearInterval(this?.interval);
     this.interval = undefined;
-    this.joystickData = [0, 0];
+    this.vJoystickData = [0, 0];
     this.sendCommand();
   }
 
   @action
   sendCommand(buttons: Partial<ControlCommandButton> = {}) {
     this.roverConnexion.sendControlCommand({
-      axes: this.joystickData,
+      axes: this.vJoystickData,
       buttons: {
         locomotionMode1: false,
         locomotionMode2: false,
@@ -60,8 +62,40 @@ export default class ApplicationController extends Controller {
   }
 
   @action
-  onJoyMove(data: [number, number]) {
-    this.joystickData = data;
+  onVJoyMove(data: [number, number]) {
+    this.vJoystickData = data;
+    this.startSending();
+  }
+
+  @action
+  onVJoyEnd() {
+    this.stopSending();
+  }
+
+  @action
+  onJoyMove(axes: PS4ContollerAxes) {
+    // Ackerman mode
+    if (axes.leftStick[0] || axes.leftStick[1]) {
+      this.sendCommand({
+        locomotionMode2: true,
+      });
+      this.vJoystickData = [-axes.leftStick[0], -axes.leftStick[1]];
+    }
+    // Crabbing
+    else if (axes.rightStick[0] || axes.rightStick[1]) {
+      this.sendCommand({
+        locomotionMode3: true,
+      });
+      this.vJoystickData = [-axes.rightStick[0], -axes.rightStick[1]];
+    }
+    // sport turn
+    else if (axes.trigger[0] || axes.trigger[1]) {
+      this.sendCommand({
+        locomotionMode1: true,
+      });
+      this.vJoystickData = [axes.trigger[0] ? axes.trigger[0] : -axes.trigger[1], 0];
+    }
+
     this.startSending();
   }
 
@@ -107,7 +141,7 @@ export default class ApplicationController extends Controller {
 
   @action
   connect() {
-    this.roverConnexion.connect(this.roverAddress);
+    this.roverConnexion.connect(`ws://${this.roverAddress}`);
   }
 
   @action

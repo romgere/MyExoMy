@@ -1,6 +1,6 @@
 {{page-title "My Exomy Control App"}}
 
-<Video class="video_output--full-screen" />
+<Video @roverAddress={{this.roverAddress}} class="video_output--full-screen" />
 
 <div class="main-container">
   <div class="flex-container">
@@ -42,6 +42,6 @@
   </div>
 </div>
 <VirtualJoystick
-  @onJoyMove={{this.onJoyMove}}
-  @onJoyEnd={{this.onJoyEnd}}
+  @onJoyMove={{this.onVJoyMove}}
+  @onJoyEnd={{this.onVJoyEnd}}
 />
