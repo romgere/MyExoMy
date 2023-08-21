@@ -81,6 +81,11 @@ body {
           flex: 0 1 auto;
           align-self: auto;
           margin-top: 2rem;
+
+          &.selected {
+            background-color: gray;
+            color: aqua;
+          }
         }
       }
     }

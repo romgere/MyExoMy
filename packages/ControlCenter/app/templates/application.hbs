@@ -7,23 +7,20 @@
     <div class="sidebar">
       <label class="video-text">Controls</label>
       <div class="control-container">
+        {{#each-in this.LocomotionMode as |mode|}}
+          <button
+            type="button"
+            class={{if (eq this.locomotionMode mode) "selected"}}
+            {{on "click" (fn this.changeDrivingMode mode)}}
+          >
+            {{mode}}
+          </button>
+        {{/each-in}}
         <div class="control-container--btn">
-          <button type="button" {{on "click" this.crabbing}}>CRABBING</button>
+          <button type="button" {{on "click" this.motors}}>Toggle Motors</button>
         </div>
         <div class="control-container--btn">
-          <button type="button" {{on "click" this.spotTurn}}>SPOT TURN</button>
-        </div>
-        <div class="control-container--btn">
-          <button type="button" {{on "click" this.ackermann}}>ACKERMANN</button>
-        </div>
-        <div class="control-container--btn">
-          <button type="button" {{on "click" this.fakeAckermann}}>FAKE ACKERMANN</button>
-        </div>
-        <div class="control-container--btn">
-          <button type="button" {{on "click" this.motors}}>MOTORS</button>
-        </div>
-        <div class="control-container--btn">
-          <button type="button" {{on "click" this.sendUpdateCameraSettingsCommand}}>TEST CAMERA HOT RELOAD</button>
+          <button type="button" {{on "click" this.sendUpdateCameraSettingsCommand}}>Camera Test</button>
         </div>
       </div>
     </div>

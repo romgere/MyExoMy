@@ -12,7 +12,11 @@ export default class ApplicationController extends Controller {
   @service declare roverConnection: RoverConnectionService;
   @service declare gamepad: GamepadService;
 
-  locomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
+  LocomotionMode = LocomotionMode;
+
+  @tracked locomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
+  lastDefaultLocomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
+
   joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
@@ -23,7 +27,16 @@ export default class ApplicationController extends Controller {
     // bind
     this.gamepad.on('joyEnd', this.onJoyEnd);
     this.gamepad.on('joyMove', this.onJoyMove);
-    this.gamepad.on('buttonChange', (v) => console.log('buttonChange', v));
+    this.gamepad.on('buttonChange', (buttons) => {
+      if (buttons.leftStick) {
+        this.locomotionMode =
+          this.locomotionMode === LocomotionMode.ACKERMANN
+            ? LocomotionMode.FAKE_ACKERMANN
+            : LocomotionMode.ACKERMANN;
+
+        this.lastDefaultLocomotionMode = this.locomotionMode;
+      }
+    });
   }
 
   startSending() {
@@ -66,9 +79,9 @@ export default class ApplicationController extends Controller {
 
   @action
   onJoyMove(axes: PS4ContollerAxes) {
-    // Ackerman mode
+    // Ackerman mode (or fake Ackerman)
     if (axes.leftStick[0] || axes.leftStick[1]) {
-      this.locomotionMode = LocomotionMode.ACKERMANN;
+      this.locomotionMode = this.lastDefaultLocomotionMode;
       this.joystickData = [-axes.leftStick[0], -axes.leftStick[1]];
     }
     // Crabbing
@@ -88,6 +101,13 @@ export default class ApplicationController extends Controller {
   @action
   onJoyEnd() {
     this.stopSending();
+  }
+
+  @action
+  changeDrivingMode(locomotionMode: LocomotionMode) {
+    debugger;
+    this.locomotionMode = locomotionMode;
+    this.sendCommand();
   }
 
   @action
