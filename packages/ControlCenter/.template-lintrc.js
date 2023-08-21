@@ -3,7 +3,9 @@
 module.exports = {
   extends: 'recommended',
   rules: {
-    // 'no-bare-strings': true,
+    'no-invalid-interactive': {
+      ignoredTags: ['sl-button'],
+    },
   },
   overrides: [
     {

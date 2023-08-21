@@ -23,8 +23,13 @@ export default class ConnectController extends Controller {
     this.roverAddress = (e.target as HTMLInputElement).value;
   }
 
+  @tracked connecting = false;
+
   @action
   async connect() {
+
+    this.connecting = true;
+
     try {
       if (await this.roverConnection.pingRover(this.roverAddress)) {
         this.lastError = undefined;
@@ -35,8 +40,15 @@ export default class ConnectController extends Controller {
         });
       }
     } catch (e) {
-      this.lastError = `Error during rover ping : ${e}`;
+      this.lastError = `${e}`;
+    } finally {
+      this.connecting = false;
     }
+  }
+
+  @action
+  preventDefault(event: Event) {
+    event.preventDefault();
   }
 }
 

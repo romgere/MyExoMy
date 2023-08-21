@@ -1,7 +1,7 @@
-<div class="cnx-status cnx-status--{{if @connected "connected" "disconnected"}}">
+<sl-badge variant={{if @connected "success" "danger"}}>
   {{#if @connected}}
     Connected
   {{else}}
     Disconnected
   {{/if}}
-</div>
+</sl-badge>

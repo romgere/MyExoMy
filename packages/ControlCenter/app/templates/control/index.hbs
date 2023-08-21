@@ -1,40 +1,32 @@
-<Video @roverAddress={{this.roverAddress}} class="video_output--full-screen" />
-
-<div class="main-container">
-  <div class="flex-container">
-    <div class="sidebar">
-      <label class="video-text">Controls</label>
-      <div class="control-container">
-        {{#each-in this.LocomotionMode as |mode|}}
-          <button
-            type="button"
-            class={{if (eq this.locomotionMode mode) "selected"}}
-            {{on "click" (fn this.changeDrivingMode mode)}}
-          >
-            {{mode}}
-          </button>
-        {{/each-in}}
-        <div class="control-container--btn">
-          <button type="button" {{on "click" this.motors}}>Toggle Motors</button>
-        </div>
-        <div class="control-container--btn">
-          <button type="button" {{on "click" this.sendUpdateCameraSettingsCommand}}>Camera Test</button>
-        </div>
-      </div>
-    </div>
-    <div class="main">
-      <div class="connection-status video-text">
-        Connection status: <ConnexionStatus @connected={{this.roverConnection.connected}} />
-        {{#if this.roverConnection.connected}}
-          <button {{on "click" this.disconnect}} type="button">Disconnect</button>
-        {{else}}
-          <button {{on "click" this.connect}} type="button">Connect</button>
-        {{/if}}
-      </div>
-    </div>
+<sl-split-panel position="80" class="main-split-panel">
+  <div slot="start">
+    <Video @roverAddress={{this.roverAddress}} class="rover-video" />
+    <VirtualJoystick
+      @onJoyMove={{this.onVJoyMove}}
+      @onJoyEnd={{this.onVJoyEnd}}
+    />
   </div>
-</div>
-<VirtualJoystick
-  @onJoyMove={{this.onVJoyMove}}
-  @onJoyEnd={{this.onVJoyEnd}}
-/>
+  <div slot="end">
+    <div>
+      Connection : <ConnexionStatus @connected={{this.roverConnection.connected}} />
+      {{#if this.roverConnection.connected}}
+        <sl-button size="small" variant="neutral" {{on "click" this.disconnect}}>Disconnect</sl-button>
+      {{else}}
+        <sl-button size="small" variant="primary" {{on "click" this.connect}}>Connect</sl-button>
+      {{/if}}
+    </div>
+    <sl-divider />
+    <div>
+      <sl-select label="Driving mode"  value={{this.locomotionMode}} {{on "sl-change" this.changeDrivingMode}}>
+          <sl-icon name="car-front" slot="prefix"></sl-icon>
+        {{#each-in this.LocomotionMode as |mode|}}
+          <sl-option value={{mode}}>{{mode}}</sl-option>
+        {{/each-in}}
+      </sl-select>
+    </div>
+    <sl-divider />
+    <sl-button type="button" {{on "click" this.motors}}>Toggle Motors</sl-button>
+    <sl-button type="button" {{on "click" this.sendUpdateCameraSettingsCommand}}>Camera Test</sl-button>
+
+    </div>
+</sl-split-panel>

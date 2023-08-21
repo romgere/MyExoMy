@@ -64,6 +64,7 @@
     "@typescript-eslint/parser": "^6.3.0",
     "broccoli-asset-rev": "^3.0.0",
     "concurrently": "^8.0.1",
+    "copy-webpack-plugin": "^11.0.0",
     "ember-auto-import": "^2.6.3",
     "ember-cli": "~4.12.1",
     "ember-cli-app-version": "^6.0.0",
@@ -116,6 +117,7 @@
     "edition": "octane"
   },
   "dependencies": {
+    "@shoelace-style/shoelace": "^2.7.0",
     "eventemitter3": "^5.0.1",
     "nipplejs": "^0.10.1",
     "socket.io-client": "^4.7.2"

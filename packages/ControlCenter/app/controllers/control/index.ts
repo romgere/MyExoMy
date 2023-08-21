@@ -8,6 +8,10 @@ import type RoverConnectionService from '@robot/control-center/services/rover-co
 import type GamepadService from '@robot/control-center/services/gamepad';
 import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
 
+
+import type SlChangeEvent from '@shoelace-style/shoelace/dist/events/sl-change';
+import type SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
+
 export default class ControlController extends Controller {
   @service declare roverConnection: RoverConnectionService;
   @service declare gamepad: GamepadService;
@@ -107,7 +111,8 @@ export default class ControlController extends Controller {
   }
 
   @action
-  changeDrivingMode(locomotionMode: LocomotionMode) {
+  changeDrivingMode(event: SlChangeEvent) {
+    const locomotionMode = (event.target as SlSelect).value as LocomotionMode;
     this.locomotionMode = locomotionMode;
     this.sendCommand();
   }
