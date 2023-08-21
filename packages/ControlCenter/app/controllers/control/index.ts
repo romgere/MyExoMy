@@ -8,7 +8,7 @@ import type RoverConnectionService from '@robot/control-center/services/rover-co
 import type GamepadService from '@robot/control-center/services/gamepad';
 import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
 
-export default class ApplicationController extends Controller {
+export default class ControlController extends Controller {
   @service declare roverConnection: RoverConnectionService;
   @service declare gamepad: GamepadService;
 
@@ -20,11 +20,14 @@ export default class ApplicationController extends Controller {
   joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
-  @tracked roverAddress = 'rover.local:3000';
+  get roverAddress(): string {
+    return this.model as string; // this come from application's model
+  }
 
   constructor(...args: ConstructorParameters<typeof Controller>) {
     super(...args);
-    // bind
+
+    // bind to gamepad event
     this.gamepad.on('joyEnd', this.onJoyEnd);
     this.gamepad.on('joyMove', this.onJoyMove);
     this.gamepad.on('buttonChange', (buttons) => {
@@ -147,15 +150,10 @@ export default class ApplicationController extends Controller {
   disconnect() {
     this.roverConnection.disconnect();
   }
-
-  @action
-  updateRoverAddress(e: InputEvent) {
-    this.roverAddress = (e.target as HTMLInputElement).value;
-  }
 }
 
 declare module '@ember/controller' {
   interface Registry {
-    application: ApplicationController;
+    'control/index': ControlController;
   }
 }

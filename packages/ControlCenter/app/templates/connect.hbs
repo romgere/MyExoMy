@@ -1,0 +1,6 @@
+{{!-- template-lint-disable require-input-label --}}
+<input type="text" value={{this.roverAddress}} {{on "input" this.updateRoverAddress}} />
+<button {{on "click" this.connect}} type="button">Connect</button>
+{{#if this.lastError}}
+  <p class="connexion-error">{{this.lastError}}</p>
+{{/if}}
