@@ -28,8 +28,12 @@ class CameraService extends Service {
   cameraStarted = false;
   clientResponses: Response[] = [];
 
+  broadcastFrameDataCb: CameraService['broadcastFrameData'];
+
   constructor(config: ExomyConfig, eventBroker: EventBroker, httpsServer: HttpServer) {
     super(config, eventBroker, httpsServer);
+
+    this.broadcastFrameDataCb = this.broadcastFrameData.bind(this);
 
     this.camera = new StreamCamera({
       ...defaultCameraSettings,
@@ -46,8 +50,14 @@ class CameraService extends Service {
 
   async startCamera() {
     await this.camera.startCapture();
-    this.camera.on('frame', this.broadcastFrameData.bind(this));
+    this.camera.on('frame', this.broadcastFrameDataCb);
     this.cameraStarted = true;
+  }
+
+  async stopCamera() {
+    this.camera.off('frame', this.broadcastFrameDataCb);
+    await this.camera.stopCapture();
+    this.cameraStarted = false;
   }
 
   async updateCameraSettings(config: CameraConfig) {
@@ -64,12 +74,6 @@ class CameraService extends Service {
     if (this.clientResponses.length) {
       await this.startCamera();
     }
-  }
-
-  async stopCamera() {
-    this.camera.off('frame', this.broadcastFrameData.bind(this));
-    await this.camera.stopCapture();
-    this.cameraStarted = false;
   }
 
   async onGetStream(req: Request, res: Response) {
