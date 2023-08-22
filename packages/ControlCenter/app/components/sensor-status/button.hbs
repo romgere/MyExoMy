@@ -1,0 +1,12 @@
+<sl-tooltip content={{@tooltip}} placement="bottom">
+  <sl-button
+    ...attributes
+    variant={{this.variant}}
+    outline={{or (not @enable) (not @critical)}}
+    size="small"
+    disabled
+    class="no-disabled-visually sensor-status"
+  >
+    {{yield}}
+  </sl-button>
+</sl-tooltip>

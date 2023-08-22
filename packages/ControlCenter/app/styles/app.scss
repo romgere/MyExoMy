@@ -1,7 +1,8 @@
+@import 'spacing.scss';
+
 body {
   margin: 0
 }
-
 
 
 .main-split-panel {
@@ -52,4 +53,78 @@ body {
   [slot="end"] {
     align-items: center;
   }
+}
+
+.flex {
+  display: flex;
+
+  &.flex-space-around {
+    justify-content: space-around;
+  }
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+}
+
+// Simple grid
+.row {
+  display: flex;
+  flex-wrap: wrap;
+
+  &.row-center {
+    justify-content: center;
+  }
+
+
+  .col {
+    text-align: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 1;
+
+    margin: 10px;
+    padding: 10px;
+
+    &.col-1 {
+      max-width: calc(100% / 12);
+    }
+
+    &.col-2 {
+      max-width: calc(100% / 12 * 2);
+    }
+
+    &.col-3 {
+      max-width: calc(100% / 12 * 3);
+    }
+
+    &.col-4 {
+      max-width: calc(100% / 12 * 4);
+    }
+
+    &.col-5 {
+      max-width: calc(100% / 12 * 5);
+    }
+
+    &.col-6 {
+      max-width: calc(100% / 2);
+    }
+  }
+}
+
+// Shoelace customization
+sl-badge[size="medium"] {
+  font-size: 1.2rem;
+}
+
+sl-icon[size="medium"] {
+  font-size: 1.2rem;
+}
+
+sl-icon[size="large"] {
+  font-size: 1.5rem;
+}
+
+sl-button.no-disabled-visually::part(base) {
+  opacity: 1;
 }

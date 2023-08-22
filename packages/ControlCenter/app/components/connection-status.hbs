@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col">
+    <sl-icon size="large" name="robot" /><br>
+    <ConnectionStatus::StatusBadge @connected={{this.roverConnection.connected}} />
+  </div>
+  <div class="col">
+    <sl-icon size="large" name="controller" /><br>
+    <ConnectionStatus::StatusBadge @connected={{this.gamepad.gamepadConnected}} />
+  </div>
+  <div class="col">
+    <sl-icon size="large" name="wifi" /><br>
+    <sl-tooltip content="xxx KB/s" placement="bottom">
+      <sl-badge size="medium" variant="neutral">
+        Unknow
+      </sl-badge>
+    </sl-tooltip>
+  </div>
+</div>

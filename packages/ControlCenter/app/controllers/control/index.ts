@@ -7,7 +7,6 @@ import LocomotionMode from '@robot/shared/locomotion-modes';
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type GamepadService from '@robot/control-center/services/gamepad';
 import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
-
 import type SlChangeEvent from '@shoelace-style/shoelace/dist/events/sl-change';
 import type SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 import type { ControlRouteModel } from '@robot/control-center/routes/control';
