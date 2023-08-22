@@ -8,6 +8,7 @@ import '@shoelace-style/shoelace/dist/components/divider/divider';
 import '@shoelace-style/shoelace/dist/components/badge/badge';
 import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
+import '@shoelace-style/shoelace/dist/components/resize-observer/resize-observer';
 
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 setBasePath('/assets/shoelace');

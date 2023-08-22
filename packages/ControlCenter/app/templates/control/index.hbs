@@ -1,10 +1,12 @@
 <sl-split-panel position="80" class="main-split-panel">
   <div slot="start">
-    <Video @roverAddress={{this.roverAddress}} @testMode={{this.testMode}} class="rover-video" />
-    <VirtualJoystick
-      @onJoyMove={{this.onVJoyMove}}
-      @onJoyEnd={{this.onVJoyEnd}}
-    />
+    <div class="video-container">
+      <VirtualJoystick
+        @onJoyMove={{this.onVJoyMove}}
+        @onJoyEnd={{this.onVJoyEnd}}
+      />
+      <Video @roverAddress={{this.roverAddress}} @testMode={{this.testMode}} class="rover-video" />
+    </div>
   </div>
   <div slot="end">
     <div>
