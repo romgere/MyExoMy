@@ -12,9 +12,17 @@
     <sl-icon name="robot" slot="prefix"></sl-icon>
   </sl-input>
 
+
+  <sl-button slot="footer" {{on "click" this.testMode}}>
+    Test mode
+  </sl-button>
+
   <sl-button slot="footer" variant="primary" loading={{this.connecting}} {{on "click" this.connect}}>
     Connect
   </sl-button>
+
+
+
 
   {{#if this.lastError}}
     <sl-alert variant="danger" open>

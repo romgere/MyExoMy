@@ -27,7 +27,6 @@ export default class ConnectController extends Controller {
 
   @action
   async connect() {
-
     this.connecting = true;
 
     try {
@@ -44,6 +43,15 @@ export default class ConnectController extends Controller {
     } finally {
       this.connecting = false;
     }
+  }
+
+  @action
+  testMode() {
+    this.router.transitionTo('control.index', {
+      queryParams: {
+        testMode: '1',
+      },
+    });
   }
 
   @action
