@@ -1,11 +1,16 @@
 <sl-split-panel position="80" class="main-split-panel">
   <div slot="start">
-    <div class="video-container">
-      <VirtualJoystick
-        @onJoyMove={{this.onVJoyMove}}
-        @onJoyEnd={{this.onVJoyEnd}}
-      />
-      <Video @roverAddress={{this.roverAddress}} @testMode={{this.testMode}} class="rover-video" />
+    <div class="display-container">
+      {{#if this.showVJoy}}
+        <VirtualJoystick
+          @onJoyMove={{this.onVJoyMove}}
+          @onJoyEnd={{this.onVJoyEnd}}
+        />
+      {{/if}}
+      <div class="video-container">
+        <Video @roverAddress={{this.roverAddress}} @testMode={{this.testMode}} class="rover-video" />
+        <Hud @hidden={{not this.showHud}} />
+      </div>
     </div>
   </div>
   <div slot="end">
@@ -26,9 +31,16 @@
         {{/each-in}}
       </sl-select>
     </div>
+
     <sl-divider />
     <sl-button type="button" {{on "click" this.motors}}>Toggle Motors</sl-button>
     <sl-button type="button" {{on "click" this.sendUpdateCameraSettingsCommand}}>Camera Test</sl-button>
 
-    </div>
+    <sl-divider />
+    <sl-switch checked={{this.showHud}} {{on "sl-change" this.toggleHud}}>HUD</sl-switch>
+    <br>
+    <sl-switch checked={{this.showVJoy}} {{on "sl-change" this.toggleVirtualJoystick}}>Virtual joystick</sl-switch>
+
+
+  </div>
 </sl-split-panel>

@@ -14,14 +14,18 @@ module.exports = function (defaults) {
           new CopyPlugin({
             patterns: [
               {
-                from: path.resolve(__dirname, '../../node_modules/@shoelace-style/shoelace/dist'),
-                to: path.resolve(__dirname, 'public/assets/shoelace'),
+                from: path.resolve(
+                  __dirname,
+                  '../../node_modules/@shoelace-style/shoelace/dist/assets',
+                ),
+                // For some reason copying to dist does not work...
+                to: path.resolve(__dirname, 'public/assets/shoelace/assets'),
               },
             ],
           }),
         ],
       },
-    }
+    },
   });
 
   return app.toTree();

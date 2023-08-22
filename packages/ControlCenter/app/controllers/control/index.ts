@@ -24,6 +24,9 @@ export default class ControlController extends Controller {
   joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
+  @tracked showHud = true;
+  @tracked showVJoy = true;
+
   get roverAddress() {
     return (this.model as ControlRouteModel).roverAddress;
   }
@@ -158,6 +161,16 @@ export default class ControlController extends Controller {
   @action
   disconnect() {
     this.roverConnection.disconnect();
+  }
+
+  @action
+  toggleHud() {
+    this.showHud = !this.showHud;
+  }
+
+  @action
+  toggleVirtualJoystick() {
+    this.showVJoy = !this.showVJoy;
   }
 }
 

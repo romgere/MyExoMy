@@ -11,16 +11,32 @@ body {
     display: flex;
     overflow: hidden;
 
-    .video-container {
+    .display-container {
       align-self: flex-start;
       flex: max-content;
       height: 100%;
       position: relative;
 
-      .rover-video {
+      .video-container {
         width: 100%;
         bottom: 0px;
         position: absolute;
+
+        .rover-video {
+          width: 100%;
+          position: relative;
+          left: 0;
+          bottom: 0;
+        }
+
+        .hud {
+          width: 70%;
+          height: 70%;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
       }
 
       .virtual-joystick-container {

@@ -24,7 +24,7 @@ export default class VirtualJoystick extends Component<VirtualJoystickArgs> {
 
   nippleOptions: JoystickManagerOptions = {
     threshold: 0.1,
-    position: { left: '50%', top: '90%' },
+    position: { left: '50%', bottom: '7rem' },
     mode: 'static',
     size: 150,
     color: 'black',
@@ -40,6 +40,8 @@ export default class VirtualJoystick extends Component<VirtualJoystickArgs> {
 
   @action
   createNipple() {
+    this.manager?.destroy();
+
     if (!this.zone) {
       return;
     }
@@ -69,7 +71,6 @@ export default class VirtualJoystick extends Component<VirtualJoystickArgs> {
 
   @action
   handleResize() {
-    this.manager?.destroy();
     debounce(this.createNipple, 100);
   }
 }
