@@ -1,5 +1,6 @@
 import path from 'path';
 
+import type { EventsName } from '@robot/shared/events.js';
 // 0 fl-||-fr 1
 //      ||
 // 2 cl-||-cr 3
@@ -40,5 +41,10 @@ export const maxAngleChange = 30;
 
 export const motor_watchdog_timeout = 5000;
 
+export const pi_sensor_update_interval = 500;
+
 // List rover event that are allowed to be sent by socket
-export const socketAllowedEvents = ['controlCommand', 'updateCameraSettings'];
+export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];
+
+// List rover event that are "proxified" to socker (sent to socket)
+export const socketProxifiedEvents: EventsName[] = ['piSensor'];

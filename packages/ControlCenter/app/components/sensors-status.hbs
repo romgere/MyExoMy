@@ -1,4 +1,8 @@
 <div class="flex flex-space-around">
+  <sl-input label="Temp." size="small" value={{this.roverSensor.temperatureString}} disabled />
+</div>
+<sl-divider />
+<div class="flex flex-space-around">
   <SensorStatus::Button
     @enable={{this.roverSensor.underVoltage}}
     @critical={{true}}

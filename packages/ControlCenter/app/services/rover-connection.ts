@@ -2,15 +2,21 @@ import Service from '@ember/service';
 import { io } from 'socket.io-client';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { EventEmitter } from 'eventemitter3';
 
 import type { Socket } from 'socket.io-client';
-import type { ControlCommand } from '@robot/shared/events';
+import type { ControlCommand, EventsTypesMapping } from '@robot/shared/events';
 import type { CameraConfig } from '@robot/shared/camera';
 
 export default class RoverConnexionService extends Service {
   socket?: Socket;
 
   @tracked connected = false;
+  private eventEmitter = new EventEmitter<EventsTypesMapping>();
+
+  // proxy event emitter on/off methods
+  on = this.eventEmitter.on.bind(this.eventEmitter) as typeof this.eventEmitter.on;
+  off = this.eventEmitter.on.bind(this.eventEmitter) as typeof this.eventEmitter.on;
 
   async pingRover(address: string): Promise<true> {
     try {
@@ -35,10 +41,21 @@ export default class RoverConnexionService extends Service {
       console.log('connected to rover.');
       this.connected = true;
     });
+
     this.socket.on('disconnect', () => {
       console.log('disconnected from rover.');
       this.connected = false;
     });
+
+    // proxy event to our event Emitter
+    this.socket.onAny((eventName, ...args) => {
+      this.eventEmitter.emit(eventName, ...args);
+    });
+
+    // on('piSensor', function (data) {
+    //   debugger;
+    //   console.log('piSensor', data);
+    // });
   }
 
   sendControlCommand(data: ControlCommand) {
