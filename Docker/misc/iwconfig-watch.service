@@ -1,0 +1,12 @@
+[Unit]
+Description=Raspberry network Monitor
+After=multi-user.target
+
+[Service]
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStart=/bin/bash /usr/bin/iwconfig-watch.sh
+StandardOutput=file:/tmp/iwconfig.watch
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
