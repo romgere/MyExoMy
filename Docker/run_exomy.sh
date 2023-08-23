@@ -44,6 +44,11 @@ else
     exit
 fi
 
+
+echo "installing services..."
+sudo sh ./misc/install-services.sh
+echo "services installed."
+
 # Build docker image from Dockerfile in directory 
 directory=$( dirname "$0" )
 docker build -t $image_name $directory
@@ -64,6 +69,7 @@ echo "using ${MY_EXOMY_FOLDER} as EXOMY FOLDER"
 docker run \
     -it \
     -v ${MY_EXOMY_FOLDER}:/root/rover-app \
+    --mount type=bind,source=/tmp/iwconfig.watch,target=/tmp/iwconfig.watch,readonly \
     -p 3000:3000 \
     --privileged \
     ${options} \

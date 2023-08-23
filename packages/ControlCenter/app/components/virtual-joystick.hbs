@@ -1,1 +1,5 @@
-<div ...attributes {{this.mountNipple}}></div>
+<sl-resize-observer {{on "sl-resize" this.handleResize}}>
+  <div class="virtual-joystick-container">
+    <div {{this.mountNipple}}></div>
+  </div>
+</sl-resize-observer>

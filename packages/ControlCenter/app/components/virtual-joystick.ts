@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { modifier } from 'ember-modifier';
 import nipplejs from 'nipplejs';
 import { action } from '@ember/object';
+import { debounce } from '@ember/runloop';
 
 import type {
   JoystickManager,
@@ -23,21 +24,36 @@ export default class VirtualJoystick extends Component<VirtualJoystickArgs> {
 
   nippleOptions: JoystickManagerOptions = {
     threshold: 0.1,
-    position: { left: '50%', bottom: '10rem' },
+    position: { left: '50%', bottom: '7rem' },
     mode: 'static',
     size: 150,
     color: 'black',
   };
 
+  zone?: HTMLDivElement;
+
   mountNipple = modifier((element: HTMLDivElement) => {
+    this.zone = element;
+    // Delay the creation of joystick to ensure flex element has been sized when joystick "calculate size/position stuff"
+    setTimeout(this.createNipple, 100);
+  });
+
+  @action
+  createNipple() {
+    this.manager?.destroy();
+
+    if (!this.zone) {
+      return;
+    }
+
     this.manager = nipplejs.create({
       ...this.nippleOptions,
-      zone: element,
+      zone: this.zone,
     });
 
     this.manager.on('move', this.onJoyMove.bind(this));
     this.manager.on('end', this.onJoyEnd.bind(this));
-  });
+  }
 
   @action
   onJoyMove(_: EventData, nipple: JoystickOutputData) {
@@ -51,5 +67,10 @@ export default class VirtualJoystick extends Component<VirtualJoystickArgs> {
   onJoyEnd() {
     this.args.onJoyMove([0, 0]);
     this.args.onJoyEnd();
+  }
+
+  @action
+  handleResize() {
+    debounce(this.createNipple, 100);
   }
 }

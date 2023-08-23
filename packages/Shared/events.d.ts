@@ -2,6 +2,7 @@
 import { MotorSpeed, MotorAngle } from './types.js';
 import type LocomotionMode from './locomotion-modes.js';
 import type { CameraConfig } from './camera.js';
+import type { IWData } from './iwconfig.js';
 
 export type RoverCommand = {
   connected: boolean;
@@ -22,9 +23,30 @@ export type ControlCommand = {
   toggleMotors: boolean;
 };
 
-export type EventsNameTypesMapping = {
-  roverCommand: (cmd: RoverCommand) => void;
-  motorCommand: (cmd: MotorCommand) => void;
-  controlCommand: (cmd: ControlCommand) => void;
-  updateCameraSettings: (cmd: CameraConfig) => void;
+export type PiSensorEvent = {
+  underVoltage: boolean;
+  armFreqCapped: boolean;
+  throttled: boolean;
+  softTemperatureLimit: boolean;
+  underVoltageOccurred: boolean;
+  armFreqCappedOccurred: boolean;
+  throttledOccurred: boolean;
+  softTemperatureLimitOccurred: boolean;
+  temperature: number;
+  iwData: IWData;
+};
+
+export type EventsTypesMapping = {
+  roverCommand: [cmd: RoverCommand];
+  motorCommand: [cmd: MotorCommand];
+  controlCommand: [cmd: ControlCommand];
+  updateCameraSettings: [cmd: CameraConfig];
+  piSensor: [data: PiSensorEvent];
+};
+export type EventsName = keyof EventsTypesMapping;
+
+export type EventsTypesHandlersMapping = EventsTypesToFunctionMapping<EventsTypesMapping>;
+
+type EventsTypesToFunctionMapping<T extends Record<string, unknown[]>> = {
+  [Property in keyof T]: (...args: T[Property]) => void;
 };

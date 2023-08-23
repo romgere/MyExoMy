@@ -1,0 +1,65 @@
+<div class="flex flex-space-around">
+  <sl-input label="Temp." size="small" value={{this.roverSensor.temperatureString}} disabled />
+</div>
+<sl-divider />
+<div class="flex flex-space-around">
+  <SensorStatus::Button
+    @enable={{this.roverSensor.underVoltage}}
+    @critical={{true}}
+    @tooltip="Under-voltage detected"
+  >
+    Voltage
+  </SensorStatus::Button>
+  <SensorStatus::Button
+    @enable={{this.roverSensor.armFreqCapped}}
+    @critical={{true}}
+    @tooltip="ARM frequency Capped"
+  >
+    ARM Freq.
+  </SensorStatus::Button>
+  <SensorStatus::Button
+    @enable={{this.roverSensor.throttled}}
+    @critical={{true}}
+    @tooltip="Currently throttled"
+  >
+    Throttled
+  </SensorStatus::Button>
+  <SensorStatus::Button
+    @enable={{this.roverSensor.softTemperatureLimit}}
+    @critical={{true}}
+    @tooltip="Soft temperature limit active"
+  >
+    Temperature
+  </SensorStatus::Button>
+</div>
+<div class="flex flex-space-around mt-4">
+
+  <SensorStatus::Button
+    @enable={{this.roverSensor.underVoltageOccurred}}
+    @critical={{false}}
+    @tooltip="Under-voltage has occurred"
+  >
+    <em>Voltage*</em>
+  </SensorStatus::Button>
+  <SensorStatus::Button
+    @enable={{this.roverSensor.armFreqCappedOccurred}}
+    @critical={{false}}
+    @tooltip="Arm frequency capping has occurred"
+  >
+    <em>ARM Freq.*</em>
+  </SensorStatus::Button>
+  <SensorStatus::Button
+    @enable={{this.roverSensor.throttledOccurred}}
+    @critical={{false}}
+    @tooltip="Throttling has occurred"
+  >
+    <em>Throttled*</em>
+  </SensorStatus::Button>
+  <SensorStatus::Button
+    @enable={{this.roverSensor.softTemperatureLimitOccurred}}
+    @critical={{false}}
+    @tooltip="Soft temperature limit occurred"
+  >
+    <em>Temperature*</em>
+  </SensorStatus::Button>
+</div>

@@ -7,6 +7,9 @@ import LocomotionMode from '@robot/shared/locomotion-modes';
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type GamepadService from '@robot/control-center/services/gamepad';
 import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
+import type SlChangeEvent from '@shoelace-style/shoelace/dist/events/sl-change';
+import type SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
+import type { ControlRouteModel } from '@robot/control-center/routes/control';
 
 export default class ControlController extends Controller {
   @service declare roverConnection: RoverConnectionService;
@@ -20,8 +23,15 @@ export default class ControlController extends Controller {
   joystickData: [number, number] = [0, 0];
   interval?: NodeJS.Timeout;
 
-  get roverAddress(): string {
-    return this.model as string; // this come from application's model
+  @tracked showHud = true;
+  @tracked showVJoy = true;
+
+  get roverAddress() {
+    return (this.model as ControlRouteModel).roverAddress;
+  }
+
+  get testMode() {
+    return (this.model as ControlRouteModel).testMode;
   }
 
   constructor(...args: ConstructorParameters<typeof Controller>) {
@@ -107,7 +117,8 @@ export default class ControlController extends Controller {
   }
 
   @action
-  changeDrivingMode(locomotionMode: LocomotionMode) {
+  changeDrivingMode(event: SlChangeEvent) {
+    const locomotionMode = (event.target as SlSelect).value as LocomotionMode;
     this.locomotionMode = locomotionMode;
     this.sendCommand();
   }
@@ -149,6 +160,16 @@ export default class ControlController extends Controller {
   @action
   disconnect() {
     this.roverConnection.disconnect();
+  }
+
+  @action
+  toggleHud() {
+    this.showHud = !this.showHud;
+  }
+
+  @action
+  toggleVirtualJoystick() {
+    this.showVJoy = !this.showVJoy;
   }
 }
 
