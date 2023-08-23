@@ -1,0 +1,25 @@
+<sl-icon size="large" name={{this.icon}} /><br>
+<sl-tooltip placement="bottom">
+  <div slot="content">
+    {{#if this.roverSensor.currentIwData}}
+      <ul class="network-badge-tooltip">
+        <li><label>Mode :</label><span>{{this.roverSensor.currentIwData.Mode}}</span></li>
+        <li><label>Frequency :</label><span>{{this.roverSensor.currentIwData.Frequency}}</span></li>
+        <li><label>Bit rate :</label><span>{{this.roverSensor.currentIwData.BitRate}}</span></li>
+        <li><label>Tx power :</label><span>{{this.roverSensor.currentIwData.TxPower}}</span></li>
+        <li><label>Link quality :</label><span>{{this.roverSensor.currentIwData.LinkQuality}}</span></li>
+        <li><label>Signal level :</label><span>{{this.roverSensor.currentIwData.SignalLevel}}</span></li>
+      </ul>
+    {{else}}
+      No data...
+    {{/if}}
+  </div>
+
+  <sl-badge size="medium" variant={{this.badgeVariant}}>
+    {{#if this.roverSensor.currentIwData}}
+      {{this.roverSensor.currentIwData.BitRate}} - {{this.roverSensor.currentIwData.LinkQuality}}
+    {{else}}
+      Not data
+    {{/if}}
+  </sl-badge>
+</sl-tooltip>

@@ -8,11 +8,6 @@
     <ConnectionStatus::StatusBadge @connected={{this.gamepad.gamepadConnected}} />
   </div>
   <div class="col">
-    <sl-icon size="large" name="wifi" /><br>
-    <sl-tooltip content="xxx KB/s" placement="bottom">
-      <sl-badge size="medium" variant="neutral">
-        Unknow
-      </sl-badge>
-    </sl-tooltip>
+    <ConnectionStatus::NetworkBadge />
   </div>
 </div>

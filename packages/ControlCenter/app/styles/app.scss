@@ -67,6 +67,22 @@ body {
   }
 }
 
+.network-badge-tooltip {
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  label {
+    margin-right: var(--sl-spacing-x-small);
+  }
+
+  span {
+    font-weight: bold;
+    float: right;
+  }
+}
+
 // Simple grid
 .row {
   display: flex;
@@ -75,7 +91,6 @@ body {
   &.row-center {
     justify-content: center;
   }
-
 
   .col {
     text-align: center;
