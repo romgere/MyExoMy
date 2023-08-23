@@ -20,6 +20,6 @@ RUN npm install yarn -g
 WORKDIR /root
 
 COPY ./entrypoint.sh /
-COPY ./clean-monorepo.js /
+COPY ./misc/clean-monorepo.js /
 
 ENTRYPOINT ["/entrypoint.sh"]

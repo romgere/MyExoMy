@@ -46,7 +46,7 @@ fi
 
 
 echo "installing services..."
-sudo sh ./misc/install-service.sh
+sudo sh ./misc/install-services.sh
 echo "services installed."
 
 # Build docker image from Dockerfile in directory 

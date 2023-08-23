@@ -2,6 +2,7 @@
 import { MotorSpeed, MotorAngle } from './types.js';
 import type LocomotionMode from './locomotion-modes.js';
 import type { CameraConfig } from './camera.js';
+import type { IWData } from './iwconfig.js';
 
 export type RoverCommand = {
   connected: boolean;
@@ -32,6 +33,7 @@ export type PiSensorEvent = {
   throttledOccurred: boolean;
   softTemperatureLimitOccurred: boolean;
   temperature: number;
+  iwData: IWData;
 };
 
 export type EventsTypesMapping = {

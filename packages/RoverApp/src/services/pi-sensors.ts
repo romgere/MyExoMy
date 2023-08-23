@@ -2,6 +2,9 @@
 import Service from './-base.js';
 import { spawn } from 'child_process';
 import { pi_sensor_update_interval } from '@robot/rover-app/const.js';
+import fs from 'fs-extra';
+import parseIwconfig from '@robot/rover-app/helpers/iwconfig-parser.js';
+import logger from '@robot/rover-app/lib/logger.js';
 
 import type { PiSensorEvent } from '@robot/shared/events.js';
 
@@ -33,12 +36,24 @@ class PiSensorsService extends Service {
     });
   }
 
+  async getIWConfig() {
+    try {
+      const file = await fs.readFile('/tmp/iwconfig.watch', 'utf8');
+      return parseIwconfig(file);
+    } catch (e) {
+      logger.error('unable to get iwconfig data', e);
+      return {};
+    }
+  }
+
   async updateSensors() {
     const throttledString = await this.getVcgencmd('get_throttled');
     const throttledValue = parseInt(throttledString.replace('throttled=', ''), 16);
 
     const tempString = await this.getVcgencmd('measure_temp');
     const tempValue = parseFloat(tempString.replace('temp=', '').replace("'C", ''));
+
+    const iwData = await this.getIWConfig();
 
     const event: PiSensorEvent = {
       underVoltage: Boolean((throttledValue >> UNDERVOLTED) & 1),
@@ -50,6 +65,7 @@ class PiSensorsService extends Service {
       throttledOccurred: Boolean((throttledValue >> HAS_THROTTLED) & 1),
       softTemperatureLimitOccurred: Boolean((throttledValue >> HAS_SOFT_TEMPLIMIT) & 1),
       temperature: tempValue,
+      iwData,
     };
 
     this.eventBroker.emit('piSensor', event);
