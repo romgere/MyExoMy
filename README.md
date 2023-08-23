@@ -1,12 +1,29 @@
 This is inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
-**TODO** :
+# TODO
 
-- Update docker / readme to not run Web GUI on Raspberry (& not install it)
-- Allow command to live update some settings (camera settings, ...)
-- Send some usefull information from Rover (Wifi strengh, ...)
+- add sensor to rover & send values to UI (Lidar, Proximity, Magnetic, Gyro, ...)
+- secure rover connection
 - handle 4G hat, GPS position & init SMS
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage
+
+# What changed
+
+Here is a brief summary of what's change comparing to [original ExoMy project](https://esa-prl.github.io/ExoMy/) :
+
+- Move rover code & UI app in this single mono-repo
+- Get rid of ROS & convert rover code to native typescript files
+- Use [Ember.js](https://emberjs.com/) framework to build more robust control application
+- Add feature to rover :
+  - Add cheap servo workaround
+  - Send some measure from raspberry PI (Network quality, vcgencmd infos, ...)
+  - Allow live camera settings update
+  - Add some HTTP response (ping) to better deal with rover connection.
+- Native ROS gamepad support has been replaced by using gamepad Api on UI app.
+- Improvement of control app UI
+- Convert all SolidWorks files to FreeCAD files
+- More to come, see [todo](#todo)
+
 
 # My ExoMy Project Structure
 
