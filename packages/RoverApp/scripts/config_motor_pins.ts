@@ -59,7 +59,7 @@ async function updateConfigFile() {
 
   // Update motors pin value
   for (const motor of motors) {
-    if (motor.motorType && motor.motorPosition) {
+    if (motor.motorType && motor.motorPosition !== undefined) {
       config[motor.motorType].pins[motor.motorPosition] = motor.pinNumber;
     }
   }
@@ -159,7 +159,7 @@ All other controls will be explained in the process.
   console.log(
     'Now we will step through all the motors and check whether they have been assigned correctly.',
   );
-  console.log('Press ctrl+c if something is wrong and start the script again.');
+  console.log('Press ctrl+c if something is wrong and start the script again.\n\n\n');
 
   for (const motor of motors) {
     if (!motor.motorPosition) {
