@@ -33,9 +33,9 @@ export default class RoverSensor extends Service {
   // Result of `vcgencmd get_throttled`
   @tracked underVoltage = false;
   @tracked armFreqCapped = false;
-  @tracked throttled = true;
+  @tracked throttled = false;
   @tracked softTemperatureLimit = false;
-  @tracked underVoltageOccurred = true;
+  @tracked underVoltageOccurred = false;
   @tracked armFreqCappedOccurred = false;
   @tracked throttledOccurred = false;
   @tracked softTemperatureLimitOccurred = false;
