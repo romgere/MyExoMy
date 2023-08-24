@@ -27,7 +27,8 @@ export default class ControlController extends Controller {
   interval?: NodeJS.Timeout;
 
   @tracked showHud = true;
-  @tracked showVJoy = true;
+  @tracked fullHud = true;
+  @tracked showVJoy = false;
 
   get roverAddress() {
     return (this.model as ControlRouteModel).roverAddress;
@@ -170,6 +171,11 @@ export default class ControlController extends Controller {
   @action
   toggleHud() {
     this.showHud = !this.showHud;
+  }
+
+  @action
+  toggleFullHud() {
+    this.fullHud = !this.fullHud;
   }
 
   @action
