@@ -1,7 +1,12 @@
+<h2 class="center"><sl-icon name="thermometer-half" class="mr-2" /> Temperature</h2>
 <div class="flex flex-space-around">
-  <sl-input label="Temp." size="small" value={{this.roverSensor.temperatureString}} disabled />
+  <sl-input label="Pi Temp." size="small" value={{this.roverSensor.piTemperatureString}} disabled />
+  <sl-input label="Body Temp." size="small" value={{this.roverSensor.bodyTemperatureString}} disabled />
 </div>
+
 <sl-divider />
+
+<h2 class="center"><sl-icon name="exclamation-triangle"  class="mr-2" /> Alerts</h2>
 <div class="flex flex-space-around">
   <SensorStatus::Button
     @enable={{this.roverSensor.underVoltage}}

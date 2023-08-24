@@ -1,5 +1,5 @@
 // This contains all the events name & event args used to communicate through nodes
-import { MotorSpeed, MotorAngle } from './types.js';
+import { MotorSpeed, MotorAngle, Coord3D } from './types.js';
 import type LocomotionMode from './locomotion-modes.js';
 import type { CameraConfig } from './camera.js';
 import type { IWData } from './iwconfig.js';
@@ -36,12 +36,18 @@ export type PiSensorEvent = {
   iwData: IWData;
 };
 
+export type ExternalSensorEvent = {
+  gyro: Coord3D;
+  temperature: number;
+};
+
 export type EventsTypesMapping = {
   roverCommand: [cmd: RoverCommand];
   motorCommand: [cmd: MotorCommand];
   controlCommand: [cmd: ControlCommand];
   updateCameraSettings: [cmd: CameraConfig];
   piSensor: [data: PiSensorEvent];
+  externalSensor: [data: ExternalSensorEvent];
 };
 export type EventsName = keyof EventsTypesMapping;
 

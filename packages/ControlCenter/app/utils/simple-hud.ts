@@ -1,5 +1,5 @@
 // https://github.com/SB3NDER/simple-hud
-type HUDData = {
+export type HUDData = {
   pitch: number;
   roll: number;
   heading: number;
@@ -11,6 +11,21 @@ type HUDData = {
   altitude: number;
   throtle: number;
 };
+
+export const defaultHudData = {
+  pitch: 0,
+  roll: 0,
+  heading: 0,
+  flight: {
+    pitch: 0,
+    heading: 0,
+  },
+  speed: 0,
+  altitude: 0,
+  throtle: 0,
+};
+
+type HUDDataCallback = () => HUDData;
 
 type HUDStyle = {
   lineWidth: number;
@@ -46,8 +61,8 @@ class Settings {
     this._pixelPerDeg = val * (Math.PI / 180);
   }
 
-  uncagedMode: boolean = false; // align pitch ladders to flight path
-  rollRadius: 'none' | 'exact' | 'center' = 'none'; // 'none' / 'exact' / 'center'
+  uncagedMode: boolean = true; // align pitch ladders to flight path
+  rollRadius: 'none' | 'exact' | 'center' = 'exact'; // 'none' / 'exact' / 'center'
   timezone?: string; // default local time, ex. 'America/Los_Angeles' or 'Asia/Tokyo'
   scale: number = 1; // resolution scale
 }
@@ -60,8 +75,9 @@ export default class HUD {
   settings: Settings;
   style: HUDStyle;
   size: { width: number; height: number };
+  cb: HUDDataCallback;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, cb: HUDDataCallback) {
     this.canvas = canvas;
     const ctx = this.canvas.getContext('2d');
 
@@ -69,22 +85,12 @@ export default class HUD {
       throw 'Error getting canvas 2D context';
     }
 
+    this.cb = cb;
     this.ctx = ctx;
 
     this.running = false;
 
-    this.data = {
-      pitch: 0,
-      roll: 0,
-      heading: 0,
-      flight: {
-        pitch: 0,
-        heading: 0,
-      },
-      speed: 0,
-      altitude: 0,
-      throtle: 0,
-    };
+    this.data = defaultHudData;
 
     this.settings = new Settings();
 
@@ -97,7 +103,7 @@ export default class HUD {
       font: {
         style: 'normal',
         variant: 'normal',
-        weight: 'bold',
+        weight: 'normal',
         family: 'Arial',
         scale: 1,
       },
@@ -108,7 +114,7 @@ export default class HUD {
         offset: 1.8,
       },
       scale: 1, // ui scale
-      stepWidth: 8,
+      stepWidth: 12,
     };
 
     // set virtual size(res)
@@ -138,6 +144,9 @@ export default class HUD {
   }
 
   draw() {
+    // update data from call back before drawing
+    this.data = this.cb();
+
     const scale = window.devicePixelRatio * this.style.scale * this.settings.scale;
 
     if (

@@ -13,13 +13,13 @@ export default class Control extends Route {
   @service declare roverConnection: RoverConnectionService;
   @service declare router: RouterService;
 
-  async model(params: { roverAddress: string; testMode: boolean }): Promise<ControlRouteModel> {
+  async model(params: { roverAddress: string; testMode: string }): Promise<ControlRouteModel> {
     // No rover address yet, redirect to "connect" route
     if (!params.roverAddress && !params.testMode) {
       this.router.transitionTo('connect');
     }
 
-    if (params.testMode) {
+    if (params.testMode === '1') {
       return {
         roverAddress: 'test.mode',
         testMode: true,

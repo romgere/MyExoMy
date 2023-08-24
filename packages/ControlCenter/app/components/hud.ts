@@ -1,14 +1,27 @@
 import Component from '@glimmer/component';
 import { modifier } from 'ember-modifier';
-import HUD from '../utils/simple-hud';
+import HUD, { defaultHudData } from '../utils/simple-hud';
+import { service } from '@ember/service';
+
+import type { HUDData } from '../utils/simple-hud';
+import type RoverSensorService from '@robot/control-center/services/rover-sensor';
 
 interface HudComponentArgs {}
 
 export default class HudComponent extends Component<HudComponentArgs> {
+  @service declare roverSensor: RoverSensorService;
   hud?: HUD;
 
+  get hudData(): HUDData {
+    return {
+      ...defaultHudData,
+      pitch: -this.roverSensor.smoothedGyro.z * (Math.PI / 180),
+      roll: -this.roverSensor.smoothedGyro.y * (Math.PI / 180),
+    };
+  }
+
   mountHud = modifier((element: HTMLCanvasElement) => {
-    this.hud = new HUD(element);
+    this.hud = new HUD(element, () => this.hudData);
     this.hud.start();
   });
 }
