@@ -15,6 +15,9 @@ export default class ControlController extends Controller {
   @service declare roverConnection: RoverConnectionService;
   @service declare gamepad: GamepadService;
 
+  queryParams = ['autoConnect'];
+  autoConnect: string = '1';
+
   LocomotionMode = LocomotionMode;
 
   @tracked locomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
@@ -155,11 +158,13 @@ export default class ControlController extends Controller {
   @action
   connect() {
     this.roverConnection.connect(`ws://${this.roverAddress}`);
+    this.autoConnect = '1';
   }
 
   @action
   disconnect() {
     this.roverConnection.disconnect();
+    this.autoConnect = '0';
   }
 
   @action

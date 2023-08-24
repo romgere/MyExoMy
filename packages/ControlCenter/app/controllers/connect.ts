@@ -35,6 +35,8 @@ export default class ConnectController extends Controller {
         this.router.transitionTo('control.index', {
           queryParams: {
             roverAddress: this.roverAddress,
+            autoConnect: '1',
+            testMode: undefined,
           },
         });
       }
@@ -50,6 +52,8 @@ export default class ConnectController extends Controller {
     this.router.transitionTo('control.index', {
       queryParams: {
         testMode: '1',
+        autoConnect: undefined,
+        roverAddress: undefined,
       },
     });
   }
