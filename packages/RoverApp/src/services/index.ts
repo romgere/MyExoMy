@@ -4,6 +4,7 @@ import MotorService from './motor.js';
 import ControlService from './control.js';
 import CameraService from './camera.js';
 import PiSensorService from './pi-sensors.js';
+import ExternalSensorService from './external-sensors.js';
 
 export default [
   SocketServerService,
@@ -12,4 +13,5 @@ export default [
   ControlService,
   CameraService,
   PiSensorService,
+  ExternalSensorService,
 ];

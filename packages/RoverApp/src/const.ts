@@ -39,12 +39,13 @@ export const wheelY = 20.0;
 export const maxSteeringAngle = 45;
 export const maxAngleChange = 30;
 
+// Timing
 export const motor_watchdog_timeout = 5000;
-
 export const pi_sensor_update_interval = 500;
+export const external_sensor_update_interval = 50;
 
 // List rover event that are allowed to be sent by socket
 export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];
 
 // List rover event that are "proxified" to socker (sent to socket)
-export const socketProxifiedEvents: EventsName[] = ['piSensor'];
+export const socketProxifiedEvents: EventsName[] = ['piSensor', 'externalSensor'];
