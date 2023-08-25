@@ -1,4 +1,6 @@
-import { degrees } from './math.js';
+function degrees(radians: number) {
+  return radians * (180 / Math.PI);
+}
 
 function get_distance(a: number, b: number) {
   return Math.sqrt(a * a + b * b);

@@ -2,6 +2,7 @@ import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import { getGyroX, getGyroY, getGyroZ } from '@robot/control-center/utils/gyro';
 
 import type { IWData } from '@robot/shared/iwconfig';
 import type { Coord3D } from '@robot/shared/types';
@@ -12,6 +13,7 @@ import type RoverConnectionService from '@robot/control-center/services/rover-co
 // Given we received new data every 50ms
 // 10 = we average values received from the last 500ms but introduce a 500 ms latency on UI
 const gyroHistoryLength = 10;
+const gyroAccelerationScaleFactor = 16384.0; // scale factors of accelerometer
 
 export default class RoverSensor extends Service {
   @service declare roverConnection: RoverConnectionService;
@@ -40,16 +42,61 @@ export default class RoverSensor extends Service {
   @action
   onExternalSensorEvent(data: ExternalSensorEvent) {
     this.bodyTemperature = data.gyro.temperature;
-    this.gyro = data.gyro.data;
+
+    // Compute rover orientation according to accelerometer values (from gyroscope sensor)
+    const orientation = this.computeRoverOrientation(data);
 
     // Push data to gyro history
-    this.gyroHistory.push(data.gyro.data);
+    this.gyroHistory.push(orientation);
     if (this.gyroHistory.length > gyroHistoryLength) {
       this.gyroHistory.splice(1, this.gyroHistory.length - gyroHistoryLength);
     }
 
     this.magneto = data.magneto.data;
   }
+
+  computeRoverOrientation(data: ExternalSensorEvent) {
+    const { x: accelX, y: accelY, z: accelZ } = data.gyro.accel;
+
+    // scaled accelerometer values
+    const accelXScaled = accelX / gyroAccelerationScaleFactor;
+    const accelYScaled = accelY / gyroAccelerationScaleFactor;
+    const accelZScaled = accelZ / gyroAccelerationScaleFactor;
+
+    return {
+      x: getGyroY(accelXScaled, accelYScaled, accelZScaled),
+      y: getGyroX(accelXScaled, accelYScaled, accelZScaled),
+      z: getGyroZ(accelXScaled, accelYScaled, accelZScaled),
+    };
+  }
+
+  // test() {
+  //   // Signs choosen so that, when axis is down, the value is + 1g
+  //   float accl_x = -event_accl.acceleration.x;
+  //   float accl_y = event_accl.acceleration.y;
+  //   float accl_z = event_accl.acceleration.z;
+
+  // // Signs should be choosen so that, when the axis is down, the value is + positive.
+  // // But that doesn't seem to work ?...
+  // float magn_x = event_magn.magnetic.x - hardiron_x;
+  // float magn_y = -event_magn.magnetic.y - hardiron_y;
+  // float magn_z = -event_magn.magnetic.z - hardiron_z;
+
+  // // Freescale solution
+  // roll = atan2(accl_y, accl_z);
+  // pitch = atan(-accl_x / (accl_y * sin(roll) + accl_z * cos(roll)));
+
+  // float magn_fy_fs = magn_z * sin(roll) - magn_y*cos(roll);
+  // float magn_fx_fs = magn_x * cos(pitch) + magn_y * sin(pitch) * sin(roll) + magn_z * sin(pitch) * cos(roll);
+
+  // yaw = atan2(magn_fy_fs, magn_fx_fs);
+
+  // roll = roll * RAD_CONV;
+  // pitch = pitch * RAD_CONV;
+  // yaw = yaw * RAD_CONV;
+
+  // heading = yawToHeading(yaw)
+  // }
 
   // Result of `vcgencmd get_throttled`
   @tracked underVoltage = false;

@@ -34,11 +34,13 @@ class ExternalSensorsService extends Service {
     const mTemp = await this.magneto.readTemperature();
 
     const gTemp = await this.gyro.getTemperatureSensor();
-    const gyro = await this.gyro.getGyroSensor();
+    const gyro = await this.gyro.getGyroscopeValues();
+    const accel = await this.gyro.getAccelerometerValues();
 
     this.eventBroker.emit('externalSensor', {
       gyro: {
-        data: gyro,
+        gyro,
+        accel,
         temperature: gTemp,
       },
       magneto: {
