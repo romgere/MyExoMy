@@ -13,7 +13,8 @@
     "script:config_motor_pins": "tsx scripts/config_motor_pins.ts",
     "script:config_motors_pwm": "tsx scripts/config_motors_pwm.ts",
     "script:motor_test": "tsx scripts/motor_test.ts",
-    "script:stop_motors": "tsx scripts/stop_motors.ts"
+    "script:stop_motors": "tsx scripts/stop_motors.ts",
+    "script:hardiron_calibration": "tsx scripts/hardiron_calibration.ts"
   },
   "files": [],
   "author": "Jérôme Mestres",

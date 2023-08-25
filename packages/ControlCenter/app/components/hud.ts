@@ -15,8 +15,9 @@ export default class HudComponent extends Component<HudComponentArgs> {
   get hudData(): HUDData {
     return {
       ...defaultHudData,
-      pitch: -this.roverSensor.smoothedGyro.z * (Math.PI / 180),
-      roll: -this.roverSensor.smoothedGyro.y * (Math.PI / 180),
+      pitch: this.roverSensor.smoothedOrientation.pitch * (Math.PI / 180),
+      roll: this.roverSensor.smoothedOrientation.roll * (Math.PI / 180),
+      heading: this.roverSensor.smoothedOrientation.heading * (Math.PI / 180),
     };
   }
 
