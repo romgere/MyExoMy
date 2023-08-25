@@ -39,14 +39,16 @@ export default class RoverSensor extends Service {
 
   @action
   onExternalSensorEvent(data: ExternalSensorEvent) {
-    this.bodyTemperature = data.temperature;
-    this.gyro = data.gyro;
+    this.bodyTemperature = data.gyro.temperature;
+    this.gyro = data.gyro.data;
 
     // Push data to gyro history
-    this.gyroHistory.push(data.gyro);
+    this.gyroHistory.push(data.gyro.data);
     if (this.gyroHistory.length > gyroHistoryLength) {
       this.gyroHistory.splice(1, this.gyroHistory.length - gyroHistoryLength);
     }
+
+    this.magneto = data.magneto.data;
   }
 
   // Result of `vcgencmd get_throttled`
@@ -62,11 +64,13 @@ export default class RoverSensor extends Service {
   // Result of `vcgencmd measure_temp`
   @tracked piTemperature = 0;
 
-  // Temperature from gyroscope sensor (in rover body)
+  // Temperature from gyroscope sensor (in rover body, based on gyro sensor)
   @tracked bodyTemperature = 0;
 
   @tracked gyro: Coord3D = { x: 0, y: 0, z: 0 };
   @tracked gyroHistory: Coord3D[] = []; // Store a short gyro data history, used to smooth data
+
+  @tracked magneto: Coord3D = { x: 0, y: 0, z: 0 };
 
   @tracked iwData?: IWData;
   @tracked iwInterface = 'wlan0';

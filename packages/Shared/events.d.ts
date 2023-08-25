@@ -37,8 +37,14 @@ export type PiSensorEvent = {
 };
 
 export type ExternalSensorEvent = {
-  gyro: Coord3D;
-  temperature: number;
+  gyro: {
+    data: Coord3D;
+    temperature: number;
+  };
+  magneto: {
+    data: Coord3D;
+    temperature: number;
+  };
 };
 
 export type EventsTypesMapping = {

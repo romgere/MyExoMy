@@ -30,31 +30,21 @@ class ExternalSensorsService extends Service {
 
   // Aggregate all external sensor values & send a single "externalSensor" event
   async sendExtenalSensorEvent() {
-    // const m = await this.magneto.getEvent();
+    const magneto = await this.magneto.getEvent();
+    const mTemp = await this.magneto.readTemperature();
 
-    // // Calculate the angle of the vector y,x
-    // let heading = (Math.atan2(m.y, m.x) * 180) / Math.PI;
-    // // Normalize to 0-360
-    // if (heading < 0) {
-    //   heading = 360 + heading;
-    // }
-
-    // console.log('magneto', {
-    //   x: m.x.toFixed(2),
-    //   y: m.y.toFixed(2),
-    //   z: m.z.toFixed(2),
-    //   heading: heading.toFixed(1),
-    // });
-
-    // const t = await this.magneto.readTemperature();
-    // console.log('temperature', t.toFixed(2));
-
-    const temperature = await this.gyro.getTemperatureSensor();
+    const gTemp = await this.gyro.getTemperatureSensor();
     const gyro = await this.gyro.getGyroSensor();
 
     this.eventBroker.emit('externalSensor', {
-      gyro,
-      temperature,
+      gyro: {
+        data: gyro,
+        temperature: gTemp,
+      },
+      magneto: {
+        data: magneto,
+        temperature: mTemp,
+      },
     });
   }
 }
