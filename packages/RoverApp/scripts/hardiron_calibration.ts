@@ -4,6 +4,8 @@ import MagnetometerSensor from '@robot/rover-app/lib/sensors/magnetometer.js';
 
 const gyro = new GyroscopeSensor();
 const magneto = new MagnetometerSensor();
+await magneto.setContinuousMode(true);
+await magneto.setDataRate(255);
 
 let lastDisplayTime = 0;
 let AccelMinX = 0,

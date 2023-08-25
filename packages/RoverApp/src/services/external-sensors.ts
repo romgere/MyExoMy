@@ -21,6 +21,8 @@ class ExternalSensorsService extends Service {
     // Init sensors
     await this.gyro.init();
     await this.magneto.init();
+    await this.magneto.setContinuousMode(true);
+    await this.magneto.setDataRate(255);
 
     this.internal = setInterval(
       this.sendExtenalSensorEvent.bind(this),
@@ -31,7 +33,8 @@ class ExternalSensorsService extends Service {
   // Aggregate all external sensor values & send a single "externalSensor" event
   async sendExtenalSensorEvent() {
     const magneto = await this.magneto.getEvent();
-    const mTemp = await this.magneto.readTemperature();
+    // can't read temperature when continuous mode is on
+    const mTemp = 0; // await this.magneto.readTemperature();
 
     const gTemp = await this.gyro.getTemperatureSensor();
     const gyro = await this.gyro.getGyroscopeValues();
