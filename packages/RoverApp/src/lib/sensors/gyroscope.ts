@@ -1,6 +1,7 @@
 // inspired from SEN-MPU6050_Manual (https://joy-it.net/files/files/Produkte/SEN-MPU6050/SEN-MPU6050_Beispielcode.zip)
 import { readWord, writeByte } from '@robot/rover-app/helpers/i2c-promise.js';
 import { getGyroY, getGyroX, getGyroZ } from '@robot/rover-app/helpers/gyro.js';
+import { openSync } from 'i2c-bus';
 
 import type { I2CBus } from 'i2c-bus';
 
@@ -10,8 +11,8 @@ const acceleration_scale_factor = 16384.0; // scale factors of accelerometer
 export default class GyroscopeSensor {
   i2cbus: I2CBus;
 
-  constructor(i2cbus: I2CBus) {
-    this.i2cbus = i2cbus;
+  constructor() {
+    this.i2cbus = openSync(1);
   }
 
   async init() {
