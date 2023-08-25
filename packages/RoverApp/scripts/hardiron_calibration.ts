@@ -22,6 +22,7 @@ let MagMinZ = 0,
   MagMaxZ = 0;
 
 async function main() {
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const gyroData = await gyro.getAccelerometerValues();
     const magnetoData = await magneto.getEvent();
