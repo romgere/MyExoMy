@@ -2,20 +2,16 @@ import Service from './-base.js';
 import { external_sensor_update_interval } from '@robot/rover-app/const.js';
 import GyroscopeSensor from '@robot/rover-app/lib/sensors/gyroscope.js';
 import MagnetometerSensor from '@robot/rover-app/lib/sensors/magnetometer.js';
+import LidarSensor from '@robot/rover-app/lib/sensors/lidar.js';
 
 class ExternalSensorsService extends Service {
   static serviceName = 'external-sensors';
 
   internal?: NodeJS.Timeout;
 
-  gyro: GyroscopeSensor;
-  magneto: MagnetometerSensor;
-
-  constructor(...args: ConstructorParameters<typeof Service>) {
-    super(...args);
-    this.gyro = new GyroscopeSensor();
-    this.magneto = new MagnetometerSensor();
-  }
+  gyro = new GyroscopeSensor();
+  magneto = new MagnetometerSensor();
+  lidar = new LidarSensor();
 
   async init() {
     // Init sensors
@@ -40,6 +36,8 @@ class ExternalSensorsService extends Service {
     const gyro = await this.gyro.getGyroscopeValues();
     const accel = await this.gyro.getAccelerometerValues();
 
+    const lidar = await this.lidar.getData();
+
     this.eventBroker.emit('externalSensor', {
       gyro: {
         gyro,
@@ -49,6 +47,12 @@ class ExternalSensorsService extends Service {
       magneto: {
         data: magneto,
         temperature: mTemp,
+      },
+      lidar: {
+        temperature: lidar.temp,
+        distance: lidar.dist,
+        flux: lidar.flux,
+        error: lidar.status,
       },
     });
   }

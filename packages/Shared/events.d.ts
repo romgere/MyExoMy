@@ -46,6 +46,12 @@ export type ExternalSensorEvent = {
     data: Coord3D;
     temperature: number;
   };
+  lidar: {
+    temperature: number;
+    distance: number;
+    flux: number;
+    error: number;
+  };
 };
 
 export type EventsTypesMapping = {
