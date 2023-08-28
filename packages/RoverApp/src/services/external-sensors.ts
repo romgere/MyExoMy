@@ -3,6 +3,7 @@ import { external_sensor_update_interval } from '@robot/rover-app/const.js';
 import GyroscopeSensor from '@robot/rover-app/lib/sensors/gyroscope.js';
 import MagnetometerSensor from '@robot/rover-app/lib/sensors/magnetometer.js';
 import LidarSensor from '@robot/rover-app/lib/sensors/lidar.js';
+import ProximitySensor from '@robot/rover-app/lib/sensors/proximity.js';
 
 class ExternalSensorsService extends Service {
   static serviceName = 'external-sensors';
@@ -12,6 +13,7 @@ class ExternalSensorsService extends Service {
   gyro = new GyroscopeSensor();
   magneto = new MagnetometerSensor();
   lidar = new LidarSensor();
+  proximity = new ProximitySensor();
 
   async init() {
     // Init sensors
@@ -19,6 +21,7 @@ class ExternalSensorsService extends Service {
     await this.magneto.init();
     await this.magneto.setContinuousMode(true);
     await this.magneto.setDataRate(255);
+    await this.proximity.init();
 
     this.internal = setInterval(
       this.sendExtenalSensorEvent.bind(this),
@@ -55,6 +58,11 @@ class ExternalSensorsService extends Service {
         error: lidar.status,
       },
     });
+
+    console.log('getProximity', await this.proximity.getProximity());
+    console.log('getAmbientLight', await this.proximity.getAmbientLight());
+    console.log('getWhiteLight', await this.proximity.getWhiteLight());
+    console.log('getLux', await this.proximity.getLux());
   }
 }
 
