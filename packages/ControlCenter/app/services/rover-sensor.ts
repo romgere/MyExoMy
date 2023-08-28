@@ -14,6 +14,8 @@ import type RoverConnectionService from '@robot/control-center/services/rover-co
 // Given we received new data every 50ms
 // 10 = we average values received from the last 500ms but introduce a 500 ms latency on UI
 const gyroHistoryLength = 10;
+// Same for lidar
+const lidarHistoryLength = 10;
 
 export default class RoverSensor extends Service {
   @service declare roverConnection: RoverConnectionService;
@@ -51,6 +53,12 @@ export default class RoverSensor extends Service {
     if (this.orientationHistory.length > gyroHistoryLength) {
       this.orientationHistory.splice(1, this.orientationHistory.length - gyroHistoryLength);
     }
+
+    // Push data to lidar history
+    this.lidarDistanceHistory.push(data.lidar.distance);
+    if (this.lidarDistanceHistory.length > lidarHistoryLength) {
+      this.lidarDistanceHistory.splice(1, this.lidarDistanceHistory.length - lidarHistoryLength);
+    }
   }
 
   // Result of `vcgencmd get_throttled`
@@ -70,6 +78,9 @@ export default class RoverSensor extends Service {
   @tracked bodyTemperature = 0;
 
   @tracked orientationHistory: Orientation[] = []; // Store a short gyro data history, used to smooth data
+
+  // Distance returned from the lidar
+  @tracked lidarDistanceHistory: number[] = []; // Store a short history, used to smooth data
 
   @tracked iwData?: IWData;
   @tracked iwInterface = 'wlan0';
@@ -113,6 +124,13 @@ export default class RoverSensor extends Service {
       yaw: Math.floor(sum.yaw / size),
       heading: Math.floor(sum.heading / size),
     };
+  }
+
+  get smoothedLidarDistance(): number {
+    const size = this.lidarDistanceHistory.length;
+    const sum = this.lidarDistanceHistory.reduce<number>((acc, v) => acc + v, 0);
+
+    return Math.floor(sum / size);
   }
 
   // Add :

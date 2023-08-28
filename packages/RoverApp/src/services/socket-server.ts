@@ -26,6 +26,11 @@ class SocketServerService extends Service {
     // Proxy io event to eventBroker class
     this.io.on('connection', (socket) => {
       socket.onAny((event, ...args) => {
+        if (event === 'ping') {
+          socket.emit('pong');
+          return;
+        }
+
         if (!socketAllowedCommand.includes(event)) {
           this.logger.error(`Bad "${event}" event received ignoring.`, ...args);
           return;

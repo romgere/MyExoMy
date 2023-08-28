@@ -8,6 +8,9 @@ import type { Socket } from 'socket.io-client';
 import type { ControlCommand, EventsTypesMapping } from '@robot/shared/events';
 import type { CameraConfig } from '@robot/shared/camera';
 
+// Interval to check latency with our rover
+const latency_check_interval = 500;
+
 export default class RoverConnexionService extends Service {
   socket?: Socket;
 
@@ -40,15 +43,21 @@ export default class RoverConnexionService extends Service {
     this.socket.on('connect', () => {
       console.log('connected to rover.');
       this.connected = true;
+      this.startLatency();
     });
 
     this.socket.on('disconnect', () => {
       console.log('disconnected from rover.');
       this.connected = false;
+      this.stopLatency();
     });
 
     // proxy event to our event Emitter
     this.socket.onAny((eventName, ...args) => {
+      if (eventName === 'pong') {
+        this.handleLatencyResponse();
+        return;
+      }
       this.eventEmitter.emit(eventName, ...args);
     });
 
@@ -56,6 +65,42 @@ export default class RoverConnexionService extends Service {
     //   debugger;
     //   console.log('piSensor', data);
     // });
+  }
+
+  @tracked
+  roverLatency?: number;
+
+  latencyInterval?: NodeJS.Timeout;
+  lastPingTiming?: number;
+  latency: number = 0;
+
+  @action
+  startLatency() {
+    this.latencyInterval = setInterval(this.sendLatency, latency_check_interval);
+  }
+
+  @action
+  stopLatency() {
+    if (this.latencyInterval) {
+      clearInterval(this.latencyInterval);
+    }
+  }
+
+  @action
+  sendLatency() {
+    if (this.connected && this.socket && !this.lastPingTiming) {
+      this.lastPingTiming = new Date().getTime();
+      this.socket.emit('ping');
+    }
+  }
+
+  @action
+  handleLatencyResponse() {
+    const responseTiming = new Date().getTime();
+    const { lastPingTiming } = this;
+    this.lastPingTiming = undefined;
+
+    this.latency = responseTiming - (lastPingTiming as number);
   }
 
   sendControlCommand(data: ControlCommand) {

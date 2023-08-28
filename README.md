@@ -2,7 +2,8 @@ This is inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
 # TODO
 
-- add sensor to rover & send values to UI (Lidar, Proximity, Magnetic, Gyro, ...)
+- add sensor to rover & send values to UI (~~Lidar~~, Proximity, ~~Magnetometer~~, ~~Gyroscope~~)
+- update rover head & body to handle new stuff
 - secure rover connection
 - handle 4G hat, GPS position & init SMS
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage
