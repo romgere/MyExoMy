@@ -10,6 +10,7 @@ export type HUDData = {
   speed: number;
   altitude: number;
   throtle: number;
+  date: string;
 };
 
 export const defaultHudData = {
@@ -23,6 +24,7 @@ export const defaultHudData = {
   speed: 0,
   altitude: 0,
   throtle: 0,
+  date: new Date().toLocaleDateString(),
 };
 
 type HUDDataCallback = () => HUDData;
@@ -849,20 +851,7 @@ export default class HUD {
     this.ctx.textAlign = 'left';
     this.ctx.textBaseline = 'top';
 
-    const now = new Date();
-
-    this.ctx.fillText(
-      now.toLocaleTimeString(undefined, {
-        timeZone: this.settings.timezone,
-        hour12: false,
-        hourCycle: 'h23',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      }),
-      0,
-      0,
-    );
+    this.ctx.fillText(this.data.date, 0, 0);
 
     this.ctx.translate(-x, -y);
   }
