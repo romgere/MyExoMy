@@ -18,6 +18,7 @@ export default class HudComponent extends Component<HudComponentArgs> {
       pitch: this.roverSensor.smoothedOrientation.pitch * (Math.PI / 180),
       roll: this.roverSensor.smoothedOrientation.roll * (Math.PI / 180),
       heading: this.roverSensor.smoothedOrientation.heading * (Math.PI / 180),
+      altitude: this.roverSensor.smoothedLidarDistance,
     };
   }
 
