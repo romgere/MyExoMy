@@ -52,6 +52,7 @@ export type ExternalSensorEvent = {
     flux: number;
     error: number;
   };
+  proximity: number;
 };
 
 export type EventsTypesMapping = {

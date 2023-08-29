@@ -84,6 +84,13 @@ class ExternalSensorsService extends Service {
       logger.error("Can't read lidar data", e);
     }
 
+    let proximity = 0;
+    try {
+      proximity = await this.proximity.getProximity();
+    } catch (e) {
+      logger.error("Can't read proximity data", e);
+    }
+
     this.eventBroker.emit('externalSensor', {
       gyro: {
         gyro,
@@ -100,12 +107,8 @@ class ExternalSensorsService extends Service {
         flux: lidar.flux,
         error: lidar.status,
       },
+      proximity,
     });
-
-    console.log('getProximity', await this.proximity.getProximity());
-    console.log('getAmbientLight', await this.proximity.getAmbientLight());
-    // console.log('getWhiteLight', await this.proximity.getWhiteLight());
-    // console.log('getLux', await this.proximity.getLux());
   }
 }
 
