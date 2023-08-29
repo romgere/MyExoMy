@@ -8,16 +8,11 @@ const lidar_addr = 0x10; // address of lidar module (LiDAR TF-LUNA)
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Register Names and Numbers
-const TFL_DIST_LO = 0x00; //R Unit: cm
-const TFL_DIST_HI = 0x01; //R
-const TFL_FLUX_LO = 0x02; //R
-const TFL_FLUX_HI = 0x03; //R
-const TFL_TEMP_LO = 0x04; //R Unit: 0.01 Celsius
-const TFL_TEMP_HI = 0x05; //R
-const TFL_TICK_LO = 0x06; //R Timestamp
-const TFL_TICK_HI = 0x07; //R
-const TFL_ERR_LO = 0x08; //R
-const TFL_ERR_HI = 0x09; //R
+const TFL_DIST = 0x00; //R Unit: cm
+const TFL_FLUX = 0x02; //R
+const TFL_TEMP = 0x04; //R Unit: 0.01 Celsius
+const TFL_TICK = 0x06; //R Timestamp
+
 const TFL_VER_REV = 0x0a; //R
 const TFL_VER_MIN = 0x0b; //R
 const TFL_VER_MAJ = 0x0c; //R
@@ -34,8 +29,7 @@ const TFL_SET_I2C_ADDR = 0x22; //W/R -- Range 0x08,0x77.
 const TFL_SET_TRIG_MODE = 0x23; //W/R -- 0-continuous, 1-trigger
 const TFL_TRIGGER = 0x24; //W  --  1-trigger once
 const TFL_DISABLE = 0x25; //W/R -- 0-disable, 1-enable
-const TFL_FPS_LO = 0x26; //W/R -- lo byte
-const TFL_FPS_HI = 0x27; //W/R -- hi byte
+const TFL_FPS = 0x26; //W/R
 const TFL_HARD_RESET = 0x29; //W  --  1-restore factory settings
 
 /////// FPS (Low Power Mode) ///////
@@ -67,6 +61,14 @@ export enum TFL_STATUS {
   TFL_FLOOD = 12, // Ambient Light saturation
 }
 
+export type LidarData = {
+  status: TFL_STATUS;
+  error: boolean;
+  dist: number;
+  flux: number;
+  temp: number;
+};
+
 export default class GyroscopeSensor {
   i2cbus: PromisifiedBus;
 
@@ -74,14 +76,20 @@ export default class GyroscopeSensor {
   soft_reset_reg = new I2CRegister(lidar_addr, TFL_SOFT_RESET);
   set_i2c_addr_reg = new I2CRegister(lidar_addr, TFL_SET_I2C_ADDR);
   disable_reg = new I2CRegister(lidar_addr, TFL_DISABLE);
-  fps_lo_reg = new I2CRegister(lidar_addr, TFL_FPS_LO);
-  fps_hi_reg = new I2CRegister(lidar_addr, TFL_FPS_HI);
+  fps_reg = new I2CRegister(lidar_addr, TFL_FPS, 2);
   hard_reset_reg = new I2CRegister(lidar_addr, TFL_HARD_RESET);
   set_trig_mode_reg = new I2CRegister(lidar_addr, TFL_SET_TRIG_MODE);
   trigger_reg = new I2CRegister(lidar_addr, TFL_TRIGGER);
 
-  tick_lo = new I2CRegister(lidar_addr, TFL_TICK_LO);
-  tick_hi = new I2CRegister(lidar_addr, TFL_TICK_HI);
+  ver_rev = new I2CRegister(lidar_addr, TFL_VER_REV);
+  ver_min = new I2CRegister(lidar_addr, TFL_VER_MIN);
+  ver_maj = new I2CRegister(lidar_addr, TFL_VER_MAJ);
+
+  tick = new I2CRegister(lidar_addr, TFL_TICK, 2);
+
+  dist = new I2CRegister(lidar_addr, TFL_DIST, 2);
+  flux = new I2CRegister(lidar_addr, TFL_FLUX, 2);
+  temp = new I2CRegister(lidar_addr, TFL_TEMP, 2);
 
   constructor() {
     this.i2cbus = openSync(1).promisifiedBus();
@@ -91,17 +99,9 @@ export default class GyroscopeSensor {
   async getData() {
     let tfStatus = TFL_STATUS.TFL_OK;
 
-    // Read register from  `TFL_DIST_LO` to `TFL_TEMP_HI`
-    // TODO: refactor BusIORegister to allow multi-bytes register ?
-    const buffer = Buffer.alloc(6);
-    await this.i2cbus.readI2cBlock(lidar_addr, TFL_DIST_LO, 6, buffer);
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Step 2 - Shift data from read array into the three variables
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    const dist = buffer[0] + (buffer[1] << 8);
-    const flux = buffer[2] + (buffer[3] << 8);
-    let temp = buffer[4] + (buffer[5] << 8);
+    const dist = await this.dist.read();
+    const flux = await this.flux.read();
+    let temp = await this.temp.read();
 
     // Convert temperature from hundredths of a degree to a whole number
     temp = temp / 100;
@@ -129,7 +129,7 @@ export default class GyroscopeSensor {
       dist,
       flux,
       temp,
-    };
+    } as LidarData;
   }
 
   async saveSettings() {
@@ -159,23 +159,12 @@ export default class GyroscopeSensor {
 
   //  = = = = = =    SET FRAME RATE   = = = = = =
   async setFrameRate(frm: number) {
-    const buffer = Buffer.alloc(2);
-    // Recast the address of the unsigned integer `frm`
-    // as a pointer to an unsigned byte `p_frm` ...
-    buffer.writeInt16BE(frm);
-
-    // ... then address the pointer as an array.
-    this.fps_lo_reg.write(buffer[0]);
-    this.fps_hi_reg.write(buffer[1]);
+    await this.fps_reg.write(frm);
   }
 
   //  = = = = = =    GET FRAME RATE   = = = = = =
   async getFrameRate() {
-    const buffer = Buffer.alloc(2);
-    buffer[0] = await this.fps_lo_reg.read();
-    buffer[1] = await this.fps_hi_reg.read();
-
-    return buffer.readInt16BE();
+    return await this.fps_reg.read();
   }
 
   //  = = = =   HARD RESET to Factory Defaults  = = = =
@@ -204,11 +193,7 @@ export default class GyroscopeSensor {
   //  = =  GET DEVICE TIME (in milliseconds) = = =
   //  Pass back time as an unsigned 16-bit variable
   async getTime() {
-    const buffer = Buffer.alloc(2);
-    buffer[0] = await this.tick_lo.read();
-    buffer[1] = await this.tick_hi.read();
-
-    return buffer.readInt16BE();
+    return await this.tick.read();
   }
 
   //  = =  GET PRODUCTION CODE (Serial Number) = = =
@@ -226,8 +211,8 @@ export default class GyroscopeSensor {
   // The 3 byte array variable `tfVer` declared in the
   // example sketch decays to the array pointer `p_ver`.
   async getFirmwareVersion() {
-    const buffer = Buffer.alloc(3);
-    await this.i2cbus.readI2cBlock(lidar_addr, TFL_VER_REV, 3, buffer);
-    return buffer.join('.');
+    return [await this.ver_rev.read(), await this.ver_min.read(), await this.ver_maj.read()].join(
+      '.',
+    );
   }
 }

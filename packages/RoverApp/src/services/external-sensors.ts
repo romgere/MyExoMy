@@ -4,6 +4,10 @@ import GyroscopeSensor from '@robot/rover-app/lib/sensors/gyroscope.js';
 import MagnetometerSensor from '@robot/rover-app/lib/sensors/magnetometer.js';
 import LidarSensor from '@robot/rover-app/lib/sensors/lidar.js';
 import ProximitySensor from '@robot/rover-app/lib/sensors/proximity.js';
+import logger from '@robot/rover-app/lib/logger.js';
+
+import type { Coord3D } from '@robot/shared/types.js';
+import type { LidarData } from '@robot/rover-app/lib/sensors/lidar.js';
 
 class ExternalSensorsService extends Service {
   static serviceName = 'external-sensors';
@@ -17,11 +21,21 @@ class ExternalSensorsService extends Service {
 
   async init() {
     // Init sensors
+    logger.info('init gyro...');
     await this.gyro.init();
+
+    logger.info('init magneto...');
     await this.magneto.init();
     await this.magneto.setContinuousMode(true);
     await this.magneto.setDataRate(255);
-    await this.proximity.init();
+
+    logger.info('init proximity...');
+    // await this.proximity.init();
+
+    logger.info('init lidar...');
+    logger.log('lidar version', await this.lidar.getFirmwareVersion());
+
+    logger.info('all sensor initialized.');
 
     this.internal = setInterval(
       this.sendExtenalSensorEvent.bind(this),
@@ -31,15 +45,42 @@ class ExternalSensorsService extends Service {
 
   // Aggregate all external sensor values & send a single "externalSensor" event
   async sendExtenalSensorEvent() {
-    const magneto = await this.magneto.getEvent();
-    // can't read temperature when continuous mode is on
-    const mTemp = 0; // await this.magneto.readTemperature();
+    let magneto: Coord3D = { x: 0, y: 0, z: 0 };
+    let mTemp = 0;
 
-    const gTemp = await this.gyro.getTemperatureSensor();
-    const gyro = await this.gyro.getGyroscopeValues();
-    const accel = await this.gyro.getAccelerometerValues();
+    try {
+      magneto = await this.magneto.getEvent();
+      // can't read temperature when continuous mode is on
+      mTemp = 0; // await this.magneto.readTemperature();
+    } catch (e) {
+      logger.error("Can't read magnetometer data", e);
+    }
 
-    const lidar = await this.lidar.getData();
+    let gTemp = 0;
+    let gyro: Coord3D = { x: 0, y: 0, z: 0 };
+    let accel: Coord3D = { x: 0, y: 0, z: 0 };
+
+    try {
+      gTemp = await this.gyro.getTemperatureSensor();
+      gyro = await this.gyro.getGyroscopeValues();
+      accel = await this.gyro.getAccelerometerValues();
+    } catch (e) {
+      logger.error("Can't read gyroscope data", e);
+    }
+
+    let lidar: LidarData = {
+      status: 0,
+      error: true,
+      dist: 0,
+      flux: 0,
+      temp: 0,
+    };
+
+    try {
+      lidar = await this.lidar.getData();
+    } catch (e) {
+      logger.error("Can't read lidar data", e);
+    }
 
     this.eventBroker.emit('externalSensor', {
       gyro: {
@@ -59,10 +100,10 @@ class ExternalSensorsService extends Service {
       },
     });
 
-    console.log('getProximity', await this.proximity.getProximity());
-    console.log('getAmbientLight', await this.proximity.getAmbientLight());
-    console.log('getWhiteLight', await this.proximity.getWhiteLight());
-    console.log('getLux', await this.proximity.getLux());
+    // console.log('getProximity', await this.proximity.getProximity());
+    // console.log('getAmbientLight', await this.proximity.getAmbientLight());
+    // console.log('getWhiteLight', await this.proximity.getWhiteLight());
+    // console.log('getLux', await this.proximity.getLux());
   }
 }
 

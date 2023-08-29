@@ -13,10 +13,10 @@ export default class I2CRegister {
   i2cbus: PromisifiedBus;
   address: number;
   registerAddress: number;
-  size: 1 | 2;
+  size: number;
   lsbFirst: boolean; // True = LE, False = BE
 
-  constructor(address: number, registerAddress: number, size: 1 | 2 = 1, lsbFirst = true) {
+  constructor(address: number, registerAddress: number, size: number = 1, lsbFirst = true) {
     this.i2cbus = openSync(1).promisifiedBus();
     this.address = address;
     this.registerAddress = registerAddress;
@@ -26,23 +26,28 @@ export default class I2CRegister {
 
   async write(value: number) {
     const buffer = Buffer.alloc(this.size);
-    if (this.size === 1) {
-      buffer.writeUInt8(value);
-    } else if (this.size === 2) {
-      this.lsbFirst ? buffer.writeUInt16LE(value) : buffer.writeUInt16BE(value);
+
+    for (let i = 0; i < this.size; i++) {
+      const idx = this.lsbFirst ? this.size - i - 1 : i;
+      buffer[idx] = value & 0xff;
+      value >>= 8;
     }
 
     return await this.i2cbus.writeI2cBlock(this.address, this.registerAddress, this.size, buffer);
   }
 
   async read() {
-    const res = Buffer.alloc(this.size);
-    await this.i2cbus.readI2cBlock(this.address, this.registerAddress, this.size, res);
-    return this.size === 1
-      ? res.readUInt8()
-      : this.lsbFirst
-      ? res.readUInt16LE()
-      : res.readUInt16BE();
+    const buffer = Buffer.alloc(this.size);
+    await this.i2cbus.readI2cBlock(this.address, this.registerAddress, this.size, buffer);
+
+    let value = 0;
+    for (let i = 0; i < this.size; i++) {
+      value <<= 8;
+      const idx = this.lsbFirst ? this.size - i - 1 : i;
+      value |= buffer[idx] & 0xff;
+    }
+
+    return value;
   }
 
   // https://github.com/adafruit/Adafruit_BusIO/blob/master/Adafruit_BusIO_Register.cpp#L300-L335
@@ -58,7 +63,7 @@ export default class I2CRegister {
   async readBits(startBit: number, size: number) {
     let value = 0;
     for (let i = 0; i < size; i++) {
-      value <<= 8;
+      value <<= 1;
       const shift = this.lsbFirst ? size - i - 1 : i;
       value |= (await this.readBit(startBit + shift)) ? 1 : 0;
     }
