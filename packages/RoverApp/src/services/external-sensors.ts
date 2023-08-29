@@ -30,7 +30,9 @@ class ExternalSensorsService extends Service {
     await this.magneto.setDataRate(255);
 
     logger.info('init proximity...');
-    // await this.proximity.init();
+    await this.proximity.init();
+    await this.proximity.enableProximity(true);
+    await this.proximity.setProximityHighResolution(true);
 
     logger.info('init lidar...');
     logger.log('lidar version', await this.lidar.getFirmwareVersion());
@@ -100,8 +102,8 @@ class ExternalSensorsService extends Service {
       },
     });
 
-    // console.log('getProximity', await this.proximity.getProximity());
-    // console.log('getAmbientLight', await this.proximity.getAmbientLight());
+    console.log('getProximity', await this.proximity.getProximity());
+    console.log('getAmbientLight', await this.proximity.getAmbientLight());
     // console.log('getWhiteLight', await this.proximity.getWhiteLight());
     // console.log('getLux', await this.proximity.getLux());
   }

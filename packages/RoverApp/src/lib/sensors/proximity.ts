@@ -134,11 +134,6 @@ export default class ProximitySensor {
       logger.error('No VCNL4040 detected');
       return false;
     }
-
-    this.enableProximity(true);
-    this.enableWhiteLight(true);
-    this.enableAmbientLight(true);
-    this.setProximityHighResolution(true);
   }
 
   // Gets the current proximity sensor value.
