@@ -59,6 +59,8 @@ export default class RoverSensor extends Service {
     if (this.lidarDistanceHistory.length > lidarHistoryLength) {
       this.lidarDistanceHistory.splice(1, this.lidarDistanceHistory.length - lidarHistoryLength);
     }
+
+    this.proximity = data.proximity;
   }
 
   // Result of `vcgencmd get_throttled`
@@ -84,6 +86,8 @@ export default class RoverSensor extends Service {
 
   @tracked iwData?: IWData;
   @tracked iwInterface = 'wlan0';
+
+  @tracked proximity = 0;
 
   get piTemperatureString() {
     return `${this.piTemperature} °c`;

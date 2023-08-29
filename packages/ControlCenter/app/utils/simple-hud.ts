@@ -9,7 +9,7 @@ export type HUDData = {
   };
   speed: number;
   altitude: number;
-  throtle: number;
+  throttle: number;
   date: string;
 };
 
@@ -23,7 +23,7 @@ export const defaultHudData = {
   },
   speed: 0,
   altitude: 0,
-  throtle: 0,
+  throttle: 0,
   date: new Date().toLocaleDateString(),
 };
 
@@ -271,8 +271,8 @@ export default class HUD {
       // hard coded from drawVerticalScale()
       const yDif = 20 * this.style.font.scale + 4;
 
-      // throtle
-      this.drawThrotle(border, this.size.height / 2 - yDif);
+      // throttle
+      this.drawThrottle(border, this.size.height / 2 - yDif);
 
       // time
       this.drawTime(border, this.size.height / 2 + yDif);
@@ -806,7 +806,7 @@ export default class HUD {
     this.ctx.restore();
   }
 
-  drawThrotle(x: number, y: number) {
+  drawThrottle(x: number, y: number) {
     this.setFontScale(16, 'px');
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
@@ -817,13 +817,13 @@ export default class HUD {
     const start = 0.5 * Math.PI;
 
     const radius = this.ctx.measureText('100%').width / 2 + border;
-    const angle = start + range * this.data.throtle;
+    const angle = start + range * this.data.throttle;
 
     const trX = x + radius + indexLenght;
     const trY = y - radius - indexLenght;
     this.ctx.translate(trX, trY);
 
-    this.ctx.fillText(Math.round(this.data.throtle * 100) + '%', 0, 0);
+    this.ctx.fillText(Math.round(this.data.throttle * 100) + '%', 0, 0);
 
     this.ctx.beginPath();
     this.ctx.arc(0, 0, radius, start, angle);
