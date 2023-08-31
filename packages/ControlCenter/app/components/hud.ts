@@ -22,7 +22,7 @@ export default class HudComponent extends Component<HudComponentArgs> {
       heading: this.roverSensor.smoothedOrientation.heading * (Math.PI / 180),
       altitude: this.roverSensor.smoothedLidarDistance,
       date: `${this.roverConnection.latency} ms`,
-      throttle: this.roverSensor.proximity < 100 ? this.roverSensor.proximity / 100 : 1, // just for fun for now
+      throttle: this.roverSensor.proximity.FR < 100 ? this.roverSensor.proximity.FR / 100 : 1, // just for fun for now
     };
   }
 

@@ -4,10 +4,18 @@ import GyroscopeSensor from '@robot/rover-app/lib/sensors/gyroscope.js';
 import MagnetometerSensor from '@robot/rover-app/lib/sensors/magnetometer.js';
 import LidarSensor from '@robot/rover-app/lib/sensors/lidar.js';
 import ProximitySensor from '@robot/rover-app/lib/sensors/proximity.js';
+import I2CMultiplexer from '@robot/rover-app/lib/sensors/i2c-multiplexer.js';
 import logger from '@robot/rover-app/lib/logger.js';
 
 import type { Coord3D } from '@robot/shared/types.js';
+import type { ProximitySensorPosition } from '@robot/shared/events.js';
 import type { LidarData } from '@robot/rover-app/lib/sensors/lidar.js';
+
+type ProximitySensors = {
+  position: ProximitySensorPosition;
+  sensor: ProximitySensor;
+  multiplexerAddress: number;
+};
 
 class ExternalSensorsService extends Service {
   static serviceName = 'external-sensors';
@@ -17,7 +25,14 @@ class ExternalSensorsService extends Service {
   gyro = new GyroscopeSensor();
   magneto = new MagnetometerSensor();
   lidar = new LidarSensor();
-  proximity = new ProximitySensor();
+  proximity: ProximitySensors[] = [
+    { position: 'RR', multiplexerAddress: 0, sensor: new ProximitySensor() },
+    { position: 'RL', multiplexerAddress: 1, sensor: new ProximitySensor() },
+    { position: 'FR', multiplexerAddress: 2, sensor: new ProximitySensor() },
+    { position: 'FL', multiplexerAddress: 3, sensor: new ProximitySensor() },
+  ];
+
+  multiplexer = new I2CMultiplexer();
 
   async init() {
     // Init sensors
@@ -29,10 +44,14 @@ class ExternalSensorsService extends Service {
     await this.magneto.setContinuousMode(true);
     await this.magneto.setDataRate(255);
 
-    logger.info('init proximity...');
-    await this.proximity.init();
-    await this.proximity.enableProximity(true);
-    await this.proximity.setProximityHighResolution(true);
+    logger.info('init proximity sensors...');
+    for (const prox of this.proximity) {
+      logger.info(`init proximity sensor #${prox.multiplexerAddress}...`);
+      await this.multiplexer.select(prox.multiplexerAddress);
+      await prox.sensor.init();
+      await prox.sensor.enableProximity(true);
+      await prox.sensor.setProximityHighResolution(true);
+    }
 
     logger.info('init lidar...');
     logger.log('lidar version', await this.lidar.getFirmwareVersion());
@@ -84,11 +103,14 @@ class ExternalSensorsService extends Service {
       logger.error("Can't read lidar data", e);
     }
 
-    let proximity = 0;
-    try {
-      proximity = await this.proximity.getProximity();
-    } catch (e) {
-      logger.error("Can't read proximity data", e);
+    const proximity: Record<ProximitySensorPosition, number> = { FR: 0, FL: 0, RR: 0, RL: 0 };
+    for (const prox of this.proximity) {
+      try {
+        await this.multiplexer.select(prox.multiplexerAddress);
+        proximity[prox.position] = await prox.sensor.getProximity();
+      } catch (e) {
+        logger.error("Can't read proximity data", e);
+      }
     }
 
     this.eventBroker.emit('externalSensor', {
