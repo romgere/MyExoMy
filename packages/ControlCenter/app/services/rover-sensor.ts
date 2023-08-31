@@ -9,6 +9,7 @@ import type { Orientation } from '@robot/control-center/utils/orientation';
 import type { IWData } from '@robot/shared/iwconfig';
 import type { PiSensorEvent, ExternalSensorEvent } from '@robot/shared/events';
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
+import type { ProximitySensorPosition } from '@robot/shared/events.js';
 
 // Defined how many gyro data entries we use to smooth values
 // Given we received new data every 50ms
@@ -59,6 +60,8 @@ export default class RoverSensor extends Service {
     if (this.lidarDistanceHistory.length > lidarHistoryLength) {
       this.lidarDistanceHistory.splice(1, this.lidarDistanceHistory.length - lidarHistoryLength);
     }
+
+    this.proximity = data.proximity;
   }
 
   // Result of `vcgencmd get_throttled`
@@ -84,6 +87,8 @@ export default class RoverSensor extends Service {
 
   @tracked iwData?: IWData;
   @tracked iwInterface = 'wlan0';
+
+  @tracked proximity: Record<ProximitySensorPosition, number> = { FR: 0, FL: 0, RR: 0, RL: 0 };
 
   get piTemperatureString() {
     return `${this.piTemperature} °c`;

@@ -36,6 +36,8 @@ export type PiSensorEvent = {
   iwData: IWData;
 };
 
+export type ProximitySensorPosition = 'RR' | 'RL' | 'FR' | 'FL';
+
 export type ExternalSensorEvent = {
   gyro: {
     gyro: Coord3D;
@@ -52,6 +54,7 @@ export type ExternalSensorEvent = {
     flux: number;
     error: number;
   };
+  proximity: Record<ProximitySensorPosition, number>;
 };
 
 export type EventsTypesMapping = {
