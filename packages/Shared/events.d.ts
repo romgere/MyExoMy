@@ -57,7 +57,6 @@ export type ExternalSensorEvent = {
   proximity: Record<ProximitySensorPosition, number>;
 };
 
-
 export type EventsTypesMapping = {
   roverCommand: [cmd: RoverCommand];
   motorCommand: [cmd: MotorCommand];

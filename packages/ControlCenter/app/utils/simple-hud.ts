@@ -1,4 +1,8 @@
+import type { ProximitySensorPosition } from '@robot/shared/events';
+
 // https://github.com/SB3NDER/simple-hud
+type ProximityValue = 0 | 1 | 2 | 3 | 4;
+
 export type HUDData = {
   pitch: number;
   roll: number;
@@ -11,9 +15,10 @@ export type HUDData = {
   altitude: number;
   throttle: number;
   date: string;
+  proximity: Record<ProximitySensorPosition, ProximityValue>;
 };
 
-export const defaultHudData = {
+export const defaultHudData: HUDData = {
   pitch: 0,
   roll: 0,
   heading: 0,
@@ -25,6 +30,7 @@ export const defaultHudData = {
   altitude: 0,
   throttle: 0,
   date: new Date().toLocaleDateString(),
+  proximity: { FR: 0, FL: 3, RR: 1, RL: 0 },
 };
 
 type HUDDataCallback = () => HUDData;
@@ -202,6 +208,8 @@ export default class HUD {
       );
     });
 
+    this.drawProximity();
+
     // pitch
 
     if (this.settings.uncagedMode) {
@@ -321,7 +329,7 @@ export default class HUD {
   drawFlightPath(x: number, y: number) {
     this.ctx.translate(x, y);
 
-    const r = 12;
+    const r = 8;
 
     // square
     this.ctx.beginPath();
@@ -332,7 +340,7 @@ export default class HUD {
     this.ctx.closePath();
 
     // lines
-    const line = 9;
+    const line = 16;
 
     // right line
     this.ctx.moveTo(r, 0);
@@ -346,9 +354,59 @@ export default class HUD {
     this.ctx.moveTo(-r, 0);
     this.ctx.lineTo(-r - line, 0);
 
+    // bottom top line
+    this.ctx.moveTo(0, r);
+    this.ctx.lineTo(0, r + line);
+
     this.ctx.stroke();
 
     this.ctx.translate(-x, -y);
+  }
+
+  drawProximity() {
+    this.ctx.lineWidth = this.style.lineWidth * 2;
+
+    for (const [key, value] of Object.entries(this.data.proximity)) {
+      for (let i = 0; i < value; i++) {
+        this.drawProximityLine(4 - i, key as ProximitySensorPosition);
+      }
+    }
+
+    this.ctx.lineWidth = this.style.lineWidth;
+    this.ctx.strokeStyle = this.style.color;
+  }
+
+  drawProximityLine(index: number, position: ProximitySensorPosition) {
+    this.ctx.beginPath();
+    const proxPadding = 7 * index;
+    const d = Math.PI / 10;
+    let start, end;
+    if (position === 'RR') {
+      start = 0 + d;
+      end = Math.PI / 2 - d;
+    } else if (position === 'RL') {
+      start = Math.PI / 2 + d;
+      end = Math.PI - d;
+    } else if (position === 'FR') {
+      start = Math.PI * 1.5 + d;
+      end = Math.PI * 2 - d;
+    } else {
+      start = Math.PI + d;
+      end = Math.PI * 1.5 - d;
+    }
+
+    if (index === 1) {
+      this.ctx.strokeStyle = 'red';
+    } else if (index === 2) {
+      this.ctx.strokeStyle = 'orange';
+    } else if (index === 3) {
+      this.ctx.strokeStyle = 'yellow';
+    } else if (index === 4) {
+      this.ctx.strokeStyle = this.style.color;
+    }
+
+    this.ctx.arc(0, 0, 8 + proxPadding, start, end);
+    this.ctx.stroke();
   }
 
   drawHorizonLadder(x: number, y: number) {

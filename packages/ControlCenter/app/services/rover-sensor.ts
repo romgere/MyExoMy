@@ -62,7 +62,6 @@ export default class RoverSensor extends Service {
     }
 
     this.proximity = data.proximity;
-    console.log('prox', this.proximity);
   }
 
   // Result of `vcgencmd get_throttled`
