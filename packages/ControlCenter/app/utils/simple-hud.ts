@@ -1,4 +1,9 @@
 import type { ProximitySensorPosition } from '@robot/shared/events';
+import { MotorSpeed, MotorAngle } from '@robot/shared/types';
+
+function radians(degrees: number) {
+  return degrees * (Math.PI / 180);
+}
 
 // https://github.com/SB3NDER/simple-hud
 type ProximityValue = 0 | 1 | 2 | 3 | 4;
@@ -11,10 +16,10 @@ export type HUDData = {
     pitch: number;
     heading: number;
   };
-  speed: number;
-  altitude: number;
-  throttle: number;
-  date: string;
+  distance: number;
+  throttle: MotorSpeed;
+  direction: MotorAngle;
+  info1: string;
   proximity: Record<ProximitySensorPosition, ProximityValue>;
 };
 
@@ -26,10 +31,11 @@ export const defaultHudData: HUDData = {
     pitch: 0,
     heading: 0,
   },
-  speed: 0,
-  altitude: 0,
-  throttle: 0,
-  date: new Date().toLocaleDateString(),
+  distance: 0,
+  // speed: 0,
+  throttle: [0, 0, 0, 0, 0, 0] as MotorSpeed,
+  direction: [0, 0, 0, 0, 0, 0] as MotorAngle,
+  info1: 'hello',
   proximity: { FR: 0, FL: 3, RR: 1, RL: 0 },
 };
 
@@ -47,7 +53,7 @@ type HUDStyle = {
   };
   hasShadow: boolean;
   shadow: {
-    lineWidth: number;
+    blur: number;
     color: string;
     offset: number;
   };
@@ -117,9 +123,9 @@ export default class HUD {
       },
       hasShadow: true,
       shadow: {
-        lineWidth: 2.5,
-        color: 'rgba(0, 0, 0, 0.6)',
-        offset: 1.8,
+        blur: 2,
+        color: 'black',
+        offset: 2,
       },
       scale: 1, // ui scale
       stepWidth: 12,
@@ -190,6 +196,11 @@ export default class HUD {
       return;
     }
 
+    this.ctx.shadowOffsetX = this.style.shadow.offset;
+    this.ctx.shadowOffsetY = this.style.shadow.offset;
+    this.ctx.shadowColor = this.style.shadow.color;
+    this.ctx.shadowBlur = this.style.shadow.blur;
+
     // set the attributes
     this.ctx.lineWidth = this.style.lineWidth;
     this.ctx.strokeStyle = this.style.color;
@@ -201,12 +212,10 @@ export default class HUD {
     this.ctx.translate(this.size.width / 2, this.size.height / 2);
 
     // flight path
-    this.drawWithShadow(() => {
-      this.drawFlightPath(
-        this.data.flight.heading * this.settings._pixelPerRad,
-        -(this.data.flight.pitch * this.settings._pixelPerRad),
-      );
-    });
+    this.drawFlightPath(
+      this.data.flight.heading * this.settings._pixelPerRad,
+      -(this.data.flight.pitch * this.settings._pixelPerRad),
+    );
 
     this.drawProximity();
 
@@ -222,69 +231,72 @@ export default class HUD {
     }
 
     // ladders
-    this.drawWithShadow(() => {
-      this.ctx.rotate(this.data.roll); // ladders roll transformation
-      this.ctx.translate(0, this.data.pitch * this.settings._pixelPerRad); // ladders pitch transformation
+    this.ctx.rotate(this.data.roll); // ladders roll transformation
+    this.ctx.translate(0, this.data.pitch * this.settings._pixelPerRad); // ladders pitch transformation
 
-      this.drawHorizonLadder(0, 0); // artificial horizon ladder
+    this.drawHorizonLadder(0, 0); // artificial horizon ladder
 
-      const pitchDegStep = 10;
+    const pitchDegStep = 10;
 
-      // top ladders
-      for (let deg = pitchDegStep; deg <= 90; deg += pitchDegStep) {
-        this.drawPitchLadder(0, -(deg * this.settings._pixelPerDeg), deg);
-      }
+    // top ladders
+    for (let deg = pitchDegStep; deg <= 90; deg += pitchDegStep) {
+      this.drawPitchLadder(0, -(deg * this.settings._pixelPerDeg), deg);
+    }
 
-      // bottom ladders
-      for (let deg = -pitchDegStep; deg >= -90; deg -= pitchDegStep) {
-        this.drawPitchLadder(0, -(deg * this.settings._pixelPerDeg), deg);
-      }
-    });
+    // bottom ladders
+    for (let deg = -pitchDegStep; deg >= -90; deg -= pitchDegStep) {
+      this.drawPitchLadder(0, -(deg * this.settings._pixelPerDeg), deg);
+    }
 
-    this.ctx.setTransform(scale, 0, 0, scale, 0, 0); // reset trasformation
+    this.ctx.setTransform(scale, 0, 0, scale, 0, 0); // reset transformation
 
     // fixed ui
 
     const border = 16;
 
     // speed
-    this.drawWithShadow(() => {
-      this.drawVerticalScale(border, this.size.height / 2, this.data.speed, '9999', 41, false);
-    });
+    // this.drawVerticalScale(border, this.size.height / 2, this.data.speed, '9999', 41, false);
 
-    // altitude
-    this.drawWithShadow(() => {
-      this.drawVerticalScale(
-        this.size.width - border,
-        this.size.height / 2,
-        this.data.altitude,
-        '99999',
-        41,
-        true,
-      );
-    });
+    // distance (Lidar)
+    this.drawVerticalScale(
+      this.size.width - border,
+      this.size.height / 2,
+      this.data.distance,
+      'xxx',
+      41,
+      true,
+    );
 
     // heading
-    this.drawWithShadow(() => {
-      this.drawHeading(this.size.width / 2, border, 61, false);
-    });
+    this.drawHeading(this.size.width / 2, border, 61, false);
 
     // roll
-    this.drawWithShadow(() => {
-      this.drawRoll(this.size.width / 2, this.size.height - border, 51, 260, true);
-    });
+    this.drawRoll(this.size.width / 2, this.size.height - border, 51, 260, true);
 
     // others
-    this.drawWithShadow(() => {
-      // hard coded from drawVerticalScale()
-      const yDif = 20 * this.style.font.scale + 4;
 
-      // throttle
-      this.drawThrottle(border, this.size.height / 2 - yDif);
+    // hard coded from drawVerticalScale()
+    const yDif = 20 * this.style.font.scale + 4;
 
-      // time
-      this.drawTime(border, this.size.height / 2 + yDif);
-    });
+    // info 1
+    this.drawInfo1(this.size.width - border, this.size.height / 2 + yDif);
+
+    // "throttle"
+    const leftX = border,
+      rightX = border * 4;
+    const yOffset = 60;
+    const centerY = this.size.height / 2,
+      topY = centerY - yOffset,
+      bottomY = centerY + yOffset;
+    const [speedFL, speedFR, speedCL, speedCR, speedRL, speedRR] = this.data.throttle;
+    const [angleFL, angleFR, angleCL, angleCR, angleRL, angleRR] = this.data.direction;
+
+    this.drawMotor(leftX, topY, speedFL, angleFL);
+    this.drawMotor(leftX, centerY, speedCL, angleCL);
+    this.drawMotor(leftX, bottomY, speedRL, angleRL);
+    this.drawMotor(rightX, topY, speedFR, angleFR, true);
+    this.drawMotor(rightX, centerY, speedCR, angleCR, true);
+    this.drawMotor(rightX, bottomY, speedRR, angleRR, true);
 
     requestAnimationFrame(this.draw.bind(this));
   }
@@ -306,24 +318,6 @@ export default class HUD {
   setFontScale(size: number, unit: string) {
     size *= this.style.font.scale;
     this.setFont(size, unit);
-  }
-
-  drawWithShadow(drawCall: () => void) {
-    if (this.style.hasShadow) {
-      this.ctx.save();
-
-      // set attributes
-      this.ctx.lineWidth = this.style.shadow.lineWidth;
-      this.ctx.strokeStyle = this.style.shadow.color;
-      this.ctx.fillStyle = this.style.shadow.color;
-
-      this.ctx.translate(this.style.shadow.offset, this.style.shadow.offset);
-      drawCall();
-
-      this.ctx.restore();
-    }
-
-    drawCall();
   }
 
   drawFlightPath(x: number, y: number) {
@@ -864,52 +858,108 @@ export default class HUD {
     this.ctx.restore();
   }
 
-  drawThrottle(x: number, y: number) {
-    this.setFontScale(16, 'px');
+  drawMotor(
+    x: number,
+    y: number,
+    motorSpeed: number,
+    motorAngle: number,
+    rightMotor: boolean = false,
+  ) {
+    this.setFontScale(12, 'px');
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
 
     const border = 8;
-    const indexLenght = 6;
-    const range = 1.5 * Math.PI;
-    const start = 0.5 * Math.PI;
+    const indexLength = 6;
+    const range = Math.PI / 2;
+    const start = rightMotor ? 0 : Math.PI;
 
-    const radius = this.ctx.measureText('100%').width / 2 + border;
-    const angle = start + range * this.data.throttle;
+    const radius = this.ctx.measureText('-100%').width / 2 + border;
+    const angle = start + range * (motorSpeed / 100) * (rightMotor ? -1 : 1);
 
-    const trX = x + radius + indexLenght;
-    const trY = y - radius - indexLenght;
+    const trX = x + radius + indexLength;
+    const trY = y - radius - indexLength;
     this.ctx.translate(trX, trY);
 
-    this.ctx.fillText(Math.round(this.data.throttle * 100) + '%', 0, 0);
-
+    // Draw arrow line
+    this.ctx.globalAlpha = 0.3;
+    this.ctx.lineWidth = 6;
+    const angleIndexSize = 35;
+    const arrowSize = 10;
+    this.ctx.strokeStyle = 'white';
+    this.ctx.save();
+    this.ctx.rotate(radians(motorAngle));
     this.ctx.beginPath();
-    this.ctx.arc(0, 0, radius, start, angle);
-    this.ctx.lineTo(
-      (radius + indexLenght) * Math.cos(angle),
-      (radius + indexLenght) * Math.sin(angle),
-    );
+    this.ctx.moveTo(0, -angleIndexSize / 2);
+    this.ctx.lineTo(0, angleIndexSize / 2);
+
+    // Draw arrow pointer
+    if (motorSpeed > 0) {
+      this.ctx.moveTo(0, -angleIndexSize / 2);
+      this.ctx.lineTo(-arrowSize, -angleIndexSize / 2 + arrowSize);
+      this.ctx.moveTo(0 - 2, -angleIndexSize / 2 - 2);
+      this.ctx.lineTo(+arrowSize, -angleIndexSize / 2 + arrowSize);
+    } else if (motorSpeed < 0) {
+      this.ctx.moveTo(0, angleIndexSize / 2);
+      this.ctx.lineTo(-arrowSize, angleIndexSize / 2 - arrowSize);
+      this.ctx.moveTo(0 - 2, angleIndexSize / 2 + 2);
+      this.ctx.lineTo(+arrowSize, angleIndexSize / 2 - arrowSize);
+    }
+
     this.ctx.stroke();
-
-    this.ctx.globalAlpha = 0.5;
-
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, radius, angle, start + range);
-    this.ctx.stroke();
-
+    this.ctx.restore();
+    this.ctx.rotate(0);
+    this.ctx.strokeStyle = this.style.color;
+    this.ctx.lineWidth = this.style.lineWidth;
     this.ctx.globalAlpha = 1;
+
+    this.ctx.beginPath();
+    this.ctx.rotate(0);
+    this.ctx.fillText(Math.round(motorSpeed) + '%', 0, 0);
+
+    // Half circle
+    this.ctx.globalAlpha = 0.75;
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = 'white';
+    this.ctx.arc(0, 0, radius, Math.PI / 2, 1.5 * Math.PI, rightMotor);
+    this.ctx.stroke();
+    this.ctx.strokeStyle = this.style.color;
+    this.ctx.globalAlpha = 1;
+
+    const throttleColor = `rgb(${Math.abs(motorSpeed / 100) * 255}, ${
+      (1 - Math.abs(motorSpeed / 100)) * 255
+    },${(1 - Math.abs(motorSpeed / 100)) * 150})`;
+
+    // Throttle
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = throttleColor;
+    this.ctx.lineWidth = this.style.lineWidth * 1.5;
+    if (motorSpeed) {
+      const counterWise = (rightMotor && motorSpeed >= 0) || (!rightMotor && motorSpeed <= 0);
+      this.ctx.arc(0, 0, radius, start, angle, counterWise);
+      this.ctx.lineTo(
+        (radius + indexLength) * Math.cos(angle),
+        (radius + indexLength) * Math.sin(angle),
+      );
+    } else {
+      this.ctx.moveTo(rightMotor ? radius : -radius, 0);
+      this.ctx.lineTo((rightMotor ? radius : -radius) + indexLength * (rightMotor ? 1 : -1), 0);
+    }
+    this.ctx.stroke();
+    this.ctx.lineWidth = this.style.lineWidth;
+    this.ctx.strokeStyle = this.style.color;
 
     this.ctx.translate(-trX, -trY);
   }
 
-  drawTime(x: number, y: number) {
+  drawInfo1(x: number, y: number) {
     this.ctx.translate(x, y);
 
     this.setFontScale(16, 'px');
-    this.ctx.textAlign = 'left';
+    this.ctx.textAlign = 'right';
     this.ctx.textBaseline = 'top';
 
-    this.ctx.fillText(this.data.date, 0, 0);
+    this.ctx.fillText(this.data.info1, 0, 0);
 
     this.ctx.translate(-x, -y);
   }

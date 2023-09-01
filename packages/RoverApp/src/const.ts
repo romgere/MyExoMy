@@ -41,11 +41,12 @@ export const maxAngleChange = 30;
 
 // Timing
 export const motor_watchdog_timeout = 5000;
+export const motor_event_update_interval = 100;
 export const pi_sensor_update_interval = 500;
 export const external_sensor_update_interval = 50;
 
-// List rover event that are allowed to be sent by socket
+// List rover event that are allowed to be received from websocket (from command app)
 export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];
 
-// List rover event that are "proxified" to socker (sent to socket)
-export const socketProxifiedEvents: EventsName[] = ['piSensor', 'externalSensor'];
+// List rover event that are "proxified" to websocket (sent to websocket to control app)
+export const socketProxifiedEvents: EventsName[] = ['piSensor', 'externalSensor', 'motorStatus'];

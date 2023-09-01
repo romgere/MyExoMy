@@ -40,14 +40,16 @@ export default class HudComponent extends Component<HudComponentArgs> {
       pitch: this.roverSensor.smoothedOrientation.pitch * (Math.PI / 180),
       roll: this.roverSensor.smoothedOrientation.roll * (Math.PI / 180),
       heading: this.roverSensor.smoothedOrientation.heading * (Math.PI / 180),
-      altitude: this.roverSensor.smoothedLidarDistance,
-      date: `${this.roverConnection.latency} ms`,
+      distance: this.roverSensor.smoothedLidarDistance,
+      info1: `${this.roverConnection.latency} ms`,
       proximity: {
         FR: proximitySensorToHudProximity(this.roverSensor.proximity.FR),
         FL: proximitySensorToHudProximity(this.roverSensor.proximity.FL),
         RL: proximitySensorToHudProximity(this.roverSensor.proximity.RL),
         RR: proximitySensorToHudProximity(this.roverSensor.proximity.RR),
       },
+      throttle: this.roverSensor.motorStatus.motorSpeeds,
+      direction: this.roverSensor.motorStatus.motorAngles,
     };
   }
 
