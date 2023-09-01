@@ -7,7 +7,7 @@ import OrientationHelper from '@robot/control-center/utils/orientation';
 import type { Orientation } from '@robot/control-center/utils/orientation';
 
 import type { IWData } from '@robot/shared/iwconfig';
-import type { PiSensorEvent, ExternalSensorEvent } from '@robot/shared/events';
+import type { PiSensorEvent, ExternalSensorEvent, MotorStatus } from '@robot/shared/events';
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type { ProximitySensorPosition } from '@robot/shared/events.js';
 
@@ -25,6 +25,7 @@ export default class RoverSensor extends Service {
     super(...args);
     this.roverConnection.on('piSensor', this.onPiSensorEvent);
     this.roverConnection.on('externalSensor', this.onExternalSensorEvent);
+    this.roverConnection.on('motorStatus', this.onMotorStatusEvent);
   }
 
   @action
@@ -64,6 +65,11 @@ export default class RoverSensor extends Service {
     this.proximity = data.proximity;
   }
 
+  @action
+  onMotorStatusEvent(data: MotorStatus) {
+    this.motorStatus = data;
+  }
+
   // Result of `vcgencmd get_throttled`
   @tracked underVoltage = false;
   @tracked armFreqCapped = false;
@@ -89,6 +95,11 @@ export default class RoverSensor extends Service {
   @tracked iwInterface = 'wlan0';
 
   @tracked proximity: Record<ProximitySensorPosition, number> = { FR: 0, FL: 0, RR: 0, RL: 0 };
+
+  @tracked motorStatus: MotorStatus = {
+    motorSpeeds: [0, 0, 0, 0, 0, 0],
+    motorAngles: [0, 0, 0, 0, 0, 0],
+  };
 
   get piTemperatureString() {
     return `${this.piTemperature} °c`;

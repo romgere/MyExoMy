@@ -41,7 +41,7 @@ export const maxAngleChange = 30;
 
 // Timing
 export const motor_watchdog_timeout = 5000;
-export const motor_event_update_interval = 250;
+export const motor_event_update_interval = 100;
 export const pi_sensor_update_interval = 500;
 export const external_sensor_update_interval = 50;
 
