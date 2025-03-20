@@ -2,6 +2,7 @@
 *.pyc
 *.fcstd1
 *.FCStd1
+*.FCBak
 
 Robot/config/exomy.yaml
 node_modules/
