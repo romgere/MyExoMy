@@ -1,12 +1,8 @@
-This is inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
+# Romgere's Exomy
 
-# TODO
+Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
-- add sensor to rover & send values to UI (~~Lidar~~, Proximity, ~~Magnetometer~~, ~~Gyroscope~~)
-- update rover head & body to handle new stuff
-- secure rover connection
-- handle 4G hat, GPS position & init SMS
-- plug arduino to raspberry with I2C & start with sending LiPO battery voltage
+![Rover viewed in freecad](./Misc/Assets/rover-freecad.png)
 
 # What changed
 
@@ -20,11 +16,23 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
   - Send some measure from raspberry PI (Network quality, vcgencmd infos, ...)
   - Allow live camera settings update
   - Add some HTTP response (ping) to better deal with rover connection.
+  - add sensor to rover & display values in UI (Lidar, Proximity, Magnetometer, Gyroscope)
 - Native ROS gamepad support has been replaced by using gamepad Api on UI app.
 - Improvement of control app UI
-- Convert all SolidWorks files to FreeCAD files
+- Convert all SolidWorks files to FreeCAD files & do a complete rewrite of the rover parts (see [Mechanical design Readme](./MechanicalDesign/README.md))
 - More to come, see [todo](#todo)
 
+# TODO
+
+- Mechanical parts
+  - support/bridge for additional sensors
+  - support for proximity sensor (fixed on bogies)
+  - large battery holder
+- Convert mast to a 2D moving camera holder
+- Export some list & link to used component (battery, 4g hat, sensor) & ensure other can build the rover
+- secure rover connection
+- handle 4G hat, GPS position & init SMS
+- plug arduino to raspberry with I2C & start with sending LiPO battery voltage ?
 
 # My ExoMy Project Structure
 
