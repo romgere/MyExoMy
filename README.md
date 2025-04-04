@@ -4,6 +4,14 @@ Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy p
 
 ![Rover viewed in freecad](./Misc/Assets/rover-freecad.png)
 
+## Do Not Print Yet
+
+_April 2025_
+
+You should wait a bit before printing, as new parts are still "Work In Progress".
+
+Part re-design is still in progress, I'm printing new parts & updating what's needed (this notice will be remove as soon as a sucessfully rover has been printed)
+
 # What changed
 
 Here is a brief summary of what's change comparing to [original ExoMy project](https://esa-prl.github.io/ExoMy/) :
@@ -25,7 +33,6 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 # TODO
 
 - Mechanical parts
-  - support/bridge for additional sensors
   - support for proximity sensor (fixed on bogies)
   - large battery holder
 - Convert mast to a 2D moving camera holder
