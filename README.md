@@ -17,8 +17,9 @@ Part re-design is still in progress, I'm printing new parts & updating what's ne
 Here is a brief summary of what's change comparing to [original ExoMy project](https://esa-prl.github.io/ExoMy/) :
 
 - Move rover code & UI app in this single mono-repo
-- Get rid of ROS & convert rover code to native typescript files
-- Use [Ember.js](https://emberjs.com/) framework to build more robust control application
+- Code source re-write :
+  - Rover: Get rid of ROS & convert rover code typescript.
+  - Control app: Rewrite with [Ember.js](https://emberjs.com/) framework, add feature (Game controller support, new rover feature support, ...)
 - Add feature to rover :
   - Add cheap servo workaround
   - Send some measure from raspberry PI (Network quality, vcgencmd infos, ...)
