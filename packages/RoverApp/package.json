@@ -23,6 +23,9 @@
     "type": "git",
     "url": "git://github.com/romgere/MyExoMy"
   },
+  "engines": {
+    "node": "18.* | 20.*"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
