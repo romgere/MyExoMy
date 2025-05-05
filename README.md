@@ -25,10 +25,21 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 # TODO
 
-- Convert mast to a 2D moving camera holder
-- Export some list & link to used component (battery, 4g hat, sensor) & ensure other can build the rover
-- secure rover connection
+## Software
+
+- Update Rover Soft with new physical size (update ackerman settings, etc...)
+- Make UI able to "live change" the camera settings
+- Improve Latency & payload/socket.io data size in general (better de/serialization)
+- Secure rover connection
 - handle 4G hat, GPS position & init SMS
+
+## Hardware
+
+- Convert mast to a 2D moving camera holder
+
+## Various
+
+- Export some list & link to used component (battery, 4g hat, sensor) & ensure other can build the rover
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage ?
 
 # Know issues
