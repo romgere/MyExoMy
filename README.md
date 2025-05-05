@@ -4,14 +4,6 @@ Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy p
 
 ![Rover viewed in freecad](./Misc/Assets/rover-freecad.png)
 
-## Do Not Print Yet
-
-_April 2025_
-
-You should wait a bit before printing, as new parts are still "Work In Progress".
-
-Part re-design is still in progress, I'm printing new parts & updating what's needed (this notice will be remove as soon as a sucessfully rover has been printed)
-
 # What changed
 
 Here is a brief summary of what's change comparing to [original ExoMy project](https://esa-prl.github.io/ExoMy/) :
@@ -33,14 +25,17 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 # TODO
 
-- Mechanical parts
-  - support for proximity sensor (fixed on bogies)
-  - large battery holder
 - Convert mast to a 2D moving camera holder
 - Export some list & link to used component (battery, 4g hat, sensor) & ensure other can build the rover
 - secure rover connection
 - handle 4G hat, GPS position & init SMS
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage ?
+
+# Know issues
+
+- Soft have not been updated according to new rover size (ackerman settings or such)
+- Proximity sensors boxes need a re-design (proximity sensor lifght signal hit box & result in poor "far object" detection)
+- New body height is still a bit small (servo connectors are a bit bended by top)
 
 # My ExoMy Project Structure
 
