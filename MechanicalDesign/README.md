@@ -6,8 +6,6 @@ Overall size has been increase by ~150%.
 
 A lot of 3rd party parts (switch, cable, Zip tie ...) has been removed from assembly files.
 
-Some of the part are slowly redisign natively in freecad to allow easy modification.
-
 To open "assembly" files "A2Plus" addon is needed.
 
 ## Folder description

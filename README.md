@@ -9,8 +9,9 @@ Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy p
 Here is a brief summary of what's change comparing to [original ExoMy project](https://esa-prl.github.io/ExoMy/) :
 
 - Move rover code & UI app in this single mono-repo
-- Get rid of ROS & convert rover code to native typescript files
-- Use [Ember.js](https://emberjs.com/) framework to build more robust control application
+- Code source re-write :
+  - Rover: Get rid of ROS & convert rover code typescript.
+  - Control app: Rewrite with [Ember.js](https://emberjs.com/) framework, add feature (Game controller support, new rover feature support, ...)
 - Add feature to rover :
   - Add cheap servo workaround
   - Send some measure from raspberry PI (Network quality, vcgencmd infos, ...)
@@ -24,15 +25,17 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 # TODO
 
-- Mechanical parts
-  - support/bridge for additional sensors
-  - support for proximity sensor (fixed on bogies)
-  - large battery holder
 - Convert mast to a 2D moving camera holder
 - Export some list & link to used component (battery, 4g hat, sensor) & ensure other can build the rover
 - secure rover connection
 - handle 4G hat, GPS position & init SMS
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage ?
+
+# Know issues
+
+- Soft have not been updated according to new rover size (ackerman settings or such)
+- Proximity sensors boxes need a re-design (proximity sensor lifght signal hit box & result in poor "far object" detection)
+- New body height is still a bit small (servo connectors are a bit bended by top)
 
 # My ExoMy Project Structure
 
