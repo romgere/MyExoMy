@@ -21,11 +21,11 @@ export const joystickMapping: JoysticksMapping = {
       { type: 'axe', index: 1 },
     ],
     rightStick: [
+      { type: 'axe', index: 2 },
       { type: 'axe', index: 3 },
-      { type: 'axe', index: 4 },
     ],
     trigger: [
-      { type: 'axe', index: 2, normalizeToInt: true },
+      { type: 'axe', index: 4, normalizeToInt: true },
       { type: 'axe', index: 5, normalizeToInt: true },
     ],
   },
