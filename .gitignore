@@ -4,7 +4,7 @@
 *.FCStd1
 *.FCBak
 
-Robot/config/exomy.yaml
+packages/RoverApp/config/exomy.json
 node_modules/
 .DS_Store
 .DS_Store?

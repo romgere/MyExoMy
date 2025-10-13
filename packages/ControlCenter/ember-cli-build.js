@@ -4,7 +4,6 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-console.log('PLOP', path.resolve(__dirname, 'dist'));
 
 module.exports = function (defaults) {
   const app = new EmberApp(defaults, {

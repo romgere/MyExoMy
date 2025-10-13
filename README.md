@@ -27,7 +27,6 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 ## Software
 
-- Update Rover Soft with new physical size (update ackerman settings, etc...)
 - Make UI able to "live change" the camera settings
 - Improve Latency & payload/socket.io data size in general (better de/serialization)
 - Secure rover connection
@@ -44,7 +43,6 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 # Know issues
 
-- Soft have not been updated according to new rover size (ackerman settings or such)
 - Proximity sensors boxes need a re-design (proximity sensor lifght signal hit box & result in poor "far object" detection)
 - New body height is still a bit small (servo connectors are a bit bended by top)
 
@@ -126,6 +124,8 @@ Depending on the state of the project, different configurations of the docker co
 This configuration is used to run configuration scripts for the motors as described in the chapter final integration
 
 `sh ~/MyExoMy/Docker/run_exomy.sh -c`
+
+Then, you can run `yarn start` to start the rover app.
 
 #### Devel
 
