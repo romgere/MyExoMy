@@ -2,20 +2,30 @@ import logger from './logger.js';
 import { degrees, radians } from '@robot/rover-app/helpers/math.js';
 import {
   WheelPosition,
-  wheelX,
-  wheelY,
+  rearAxeMeasure,
+  frontAxeMeasure,
   maxSteeringAngle,
   maxAngleChange,
 } from '@robot/rover-app/const.js';
-const { atan, tan, PI, min, max, cos, abs, pow, sqrt } = Math;
+const { atan, tan, PI, min, max, cos, abs } = Math;
 
 import LocomotionMode from '@robot/shared/locomotion-modes.js';
 
 import type { MotorAngle, MotorSpeed } from '@robot/shared/types.js';
 import type { DrivingCommand, SteeringCommand } from '@robot/rover-app/types.js';
 
-const ackermannRMin = wheelY / tan((maxSteeringAngle * PI) / 180.0) + wheelX;
 const ackermannRMax = 250;
+
+// ackermann rear min radius
+const ackermannRRMin =
+  abs(rearAxeMeasure.distance) / tan((maxSteeringAngle * PI) / 180.0) + rearAxeMeasure.width / 2;
+
+// Front (fr = front radius)
+const ackermannFRMin =
+  abs(frontAxeMeasure.distance) / tan((maxSteeringAngle * PI) / 180.0) + frontAxeMeasure.width / 2;
+
+// Check minimum radius for front and back and set the bigger one for calculations (ExoMy can't turn narrower)
+const ackermannRMin = ackermannFRMin > ackermannRRMin ? ackermannFRMin : ackermannRRMin;
 
 // Rover class contains all the math and motor control algorithms to move the rover
 class Rover {
@@ -91,21 +101,34 @@ class Rover {
         return steeringAngles;
       }
 
-      const innerAngle = degrees(atan(wheelX / (abs(r) - wheelY)));
-      const outerAngle = degrees(atan(wheelX / (abs(r) + wheelY)));
+      // Rear
+      const rearInnerAngle = degrees(
+        atan(rearAxeMeasure.distance / (abs(r) - rearAxeMeasure.width / 2)),
+      );
+      const rearOuterAngle = degrees(
+        atan(rearAxeMeasure.distance / (abs(r) + rearAxeMeasure.width / 2)),
+      );
+
+      // Front
+      const frontInnerAngle = degrees(
+        atan(frontAxeMeasure.distance / (abs(r) - frontAxeMeasure.width / 2)),
+      );
+      const frontOuterAngle = degrees(
+        atan(frontAxeMeasure.distance / (abs(r) + frontAxeMeasure.width / 2)),
+      );
 
       if (steeringCommand > 90 || steeringCommand < -90) {
         // Steering to the right
-        steeringAngles[WheelPosition.FL] = outerAngle;
-        steeringAngles[WheelPosition.FR] = innerAngle;
-        steeringAngles[WheelPosition.RL] = -outerAngle;
-        steeringAngles[WheelPosition.RR] = -innerAngle;
+        steeringAngles[WheelPosition.FL] = frontOuterAngle;
+        steeringAngles[WheelPosition.FR] = frontInnerAngle;
+        steeringAngles[WheelPosition.RL] = -rearOuterAngle;
+        steeringAngles[WheelPosition.RR] = -rearInnerAngle;
       } else {
         // Steering to the left
-        steeringAngles[WheelPosition.FL] = -innerAngle;
-        steeringAngles[WheelPosition.FR] = -outerAngle;
-        steeringAngles[WheelPosition.RL] = innerAngle;
-        steeringAngles[WheelPosition.RR] = outerAngle;
+        steeringAngles[WheelPosition.FL] = -frontInnerAngle;
+        steeringAngles[WheelPosition.FR] = -frontOuterAngle;
+        steeringAngles[WheelPosition.RL] = rearInnerAngle;
+        steeringAngles[WheelPosition.RR] = rearOuterAngle;
       }
     } else if (this.locomotionMode == LocomotionMode.FAKE_ACKERMANN) {
       if (!drivingCommand) {
@@ -234,31 +257,54 @@ class Rover {
       if (radius == ackermannRMax) {
         motorSpeeds.fill(v);
       } else {
-        const rMax = radius + wheelX;
+        // radius (r) and speed (v) definition for left turn
+        const r1 =
+          (radius - frontAxeMeasure.width / 2) /
+          cos(
+            (degrees(atan(frontAxeMeasure.distance / (abs(radius) - frontAxeMeasure.width / 2))) *
+              PI) /
+              180.0,
+          );
+        const r2 =
+          (radius + frontAxeMeasure.width / 2) /
+          cos(
+            (degrees(atan(frontAxeMeasure.distance / (abs(radius) + frontAxeMeasure.width / 2))) *
+              PI) /
+              180.0,
+          );
+        const r3 = radius - frontAxeMeasure.width / 2;
+        const r4 = radius + frontAxeMeasure.width / 2;
+        const r5 =
+          (radius - rearAxeMeasure.width / 2) /
+          cos(
+            (degrees(atan(rearAxeMeasure.distance / (abs(radius) - rearAxeMeasure.width / 2))) *
+              PI) /
+              180.0,
+          );
+        const r6 =
+          (radius + rearAxeMeasure.width / 2) /
+          cos(
+            (degrees(atan(rearAxeMeasure.distance / (abs(radius) + rearAxeMeasure.width / 2))) *
+              PI) /
+              180.0,
+          );
 
-        const a = pow(wheelY, 2);
-        const b = pow(abs(radius) + wheelX, 2);
-        const c = pow(abs(radius) - wheelX, 2);
-        const rMaxFloat = rMax;
+        // Select the biggest radius from all 6 to keep maximum speed of motors below max speed of the motors
+        const referenceRadius = max(r1, r2, r3, r4, r5, r6);
 
-        const r1 = sqrt(a + b);
-        const r2 = rMaxFloat;
-        // let r3 = r1
-        const r4 = sqrt(a + c);
-        const r5 = abs(radius) - wheelX;
-        // let r6 = r4
-
-        const v1 = v;
-        const v2 = (v * r2) / r1;
-        const v3 = v1;
-        const v4 = (v * r4) / r1;
-        const v5 = (v * r5) / r1;
-        const v6 = v4;
+        const v1 = (v * r1) / referenceRadius;
+        const v2 = (v * r2) / referenceRadius;
+        const v3 = (v * r3) / referenceRadius;
+        const v4 = (v * r4) / referenceRadius;
+        const v5 = (v * r5) / referenceRadius;
+        const v6 = (v * r6) / referenceRadius;
 
         if (steeringCommand > 90 || steeringCommand < -90) {
-          motorSpeeds = [v1, v2, v3, v4, v5, v6];
+          // right steering
+          motorSpeeds = [v2, v1, v4, v3, v6, v5];
         } else {
-          motorSpeeds = [v6, v5, v4, v3, v2, v1];
+          // left steering
+          motorSpeeds = [v1, v2, v3, v4, v5, v6];
         }
       }
     } else if (this.locomotionMode === LocomotionMode.FAKE_ACKERMANN) {

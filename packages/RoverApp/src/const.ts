@@ -34,8 +34,15 @@ export const httpServerPort = 3000;
 export const httpServerCorsOrigin = '*';
 
 // Rover "physical" settings
-export const wheelX = 12.0;
-export const wheelY = 20.0;
+export const rearAxeMeasure = {
+  distance: 20, // distance from central axe (mm)
+  width: 25.3, // awe width
+};
+export const frontAxeMeasure = {
+  distance: 19.2, // distance from central axe (mm)
+  width: 25.3, // awe width
+};
+
 export const maxSteeringAngle = 45;
 export const maxAngleChange = 30;
 

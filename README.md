@@ -127,6 +127,8 @@ This configuration is used to run configuration scripts for the motors as descri
 
 `sh ~/MyExoMy/Docker/run_exomy.sh -c`
 
+Then, you can run `yarn start` to start the rover app.
+
 #### Devel
 
 This configuration is used to start the container for development purposes. It installs the source code and sources the environment. You can make modifications to the code and run your custom launch files.
