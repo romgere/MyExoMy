@@ -48,9 +48,10 @@ export const maxAngleChange = 30;
 
 // Timing
 export const motor_watchdog_timeout = 5000;
-export const motor_event_update_interval = 100;
-export const pi_sensor_update_interval = 500;
-export const external_sensor_update_interval = 50;
+export const motor_event_update_interval = 500;
+export const pi_sensor_update_interval = 1000;
+// Reading all sensor took ~10/15ms, too small value could lead to high latency rover commands
+export const external_sensor_update_interval = 500;
 
 // List rover event that are allowed to be received from websocket (from command app)
 export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];

@@ -17,7 +17,7 @@ const streamHeaders = {
 const defaultCameraSettings = {
   width: 1296,
   height: 972,
-  fps: 10,
+  fps: 5,
 };
 
 class CameraService extends Service {
