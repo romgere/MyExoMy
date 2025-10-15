@@ -4,7 +4,8 @@
   "workspaces": [
     "packages/ControlCenter",
     "packages/RoverApp",
-    "packages/Shared"
+    "packages/Shared",
+    "packages/i2c-bus"
   ],
   "scripts": {
     "lint": "yarn workspaces run lint"

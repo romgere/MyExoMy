@@ -1,12 +1,8 @@
 import Service from './-base.js';
 import Motors from '@robot/rover-app/lib/motors.js';
 import { motor_watchdog_timeout, motor_event_update_interval } from '@robot/rover-app/const.js';
-
-import type EventBroker from '@robot/rover-app/lib/event-broker.js';
-import type { ExomyConfig } from '@robot/rover-app/types.js';
 import { MotorSpeed, MotorAngle } from '@robot/shared/types.js';
 import type { MotorCommand } from '@robot/shared/events.js';
-import type HttpServer from '@robot/rover-app/lib/http-server.js';
 
 const defaultMotorSpeed: MotorSpeed = [0, 0, 0, 0, 0, 0];
 const defaultMotorAngle: MotorAngle = [0, 0, 0, 0, 0, 0];
@@ -22,16 +18,16 @@ class MotorService extends Service {
 
   eventTimer?: NodeJS.Timeout;
 
-  constructor(config: ExomyConfig, eventBroker: EventBroker, httpsServer: HttpServer) {
-    super(config, eventBroker, httpsServer);
-    this.motors = new Motors(config);
+  constructor(...args: ConstructorParameters<typeof Service>) {
+    super(...args);
+    this.motors = new Motors(this.config);
   }
 
   async init() {
     await this.motors.init();
     this.initWatchdog();
     this.startSendingMotorEvent();
-    this.eventBroker.on('motorCommand', this.onMotorCommand.bind(this));
+    this.on('motorCommand', this.onMotorCommand.bind(this));
   }
 
   onMotorCommand(cmd: MotorCommand) {
@@ -63,7 +59,7 @@ class MotorService extends Service {
   }
 
   sendMotorEvent() {
-    this.eventBroker.emit('motorStatus', {
+    this.emit('motorStatus', {
       motorSpeeds: this.currentMotorSpeed,
       motorAngles: this.currentMotorAngle,
     });

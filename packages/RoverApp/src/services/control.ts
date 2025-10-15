@@ -16,7 +16,7 @@ class ControlService extends Service {
   motorsEnabled = true;
 
   async init() {
-    this.eventBroker.on('controlCommand', this.onControlCommand.bind(this));
+    this.on('controlCommand', this.onControlCommand.bind(this));
   }
 
   onControlCommand(command: ControlCommand) {
@@ -44,7 +44,7 @@ class ControlService extends Service {
     //   -90
     const steering = (atan2(y, x) * 180.0) / PI;
 
-    this.eventBroker.emit('roverCommand', {
+    this.emit('roverCommand', {
       connected: true,
       motorsEnabled: this.motorsEnabled,
       locomotionMode: this.locomotionMode,

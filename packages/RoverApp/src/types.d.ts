@@ -21,3 +21,15 @@ export type ExomyConfig = {
   steer: ServoConfig;
   camera?: CameraConfig;
 };
+
+import type { EventsTypesMapping } from '@robot/shared/events.js';
+
+export type ServiceWorkerMessage<Events extends EventsTypesMapping, Name extends keyof Events> = {
+  name: Name;
+  payload: Events[Name];
+};
+
+export type ServiceWorkerData = {
+  config: ExomyConfig;
+  serviceName: string;
+};

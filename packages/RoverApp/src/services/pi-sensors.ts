@@ -68,7 +68,7 @@ class PiSensorsService extends Service {
       iwData,
     };
 
-    this.eventBroker.emit('piSensor', event);
+    this.emit('piSensor', event);
   }
 }
 

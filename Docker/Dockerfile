@@ -13,7 +13,7 @@ RUN apt-get install nano wget curl  -y
 RUN apt-get install make g++ -y
 
 # install node
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install nodejs -y
 RUN npm install yarn -g
 

@@ -8,15 +8,10 @@ import type { MotorAngle, MotorSpeed } from '@robot/shared/types.js';
  */
 class RobotService extends Service {
   static serviceName = 'robot';
-  rover: Rover;
-
-  constructor(...args: ConstructorParameters<typeof Service>) {
-    super(...args);
-    this.rover = new Rover();
-  }
+  rover = new Rover();
 
   async init() {
-    this.eventBroker.on('roverCommand', this.onRobotCommand.bind(this));
+    this.on('roverCommand', this.onRobotCommand.bind(this));
   }
 
   onRobotCommand(command: RoverCommand) {
@@ -33,7 +28,7 @@ class RobotService extends Service {
       motorSpeeds = this.rover.joystickToSpeed(0, 0);
     }
 
-    this.eventBroker.emit('motorCommand', { motorSpeeds, motorAngles });
+    this.emit('motorCommand', { motorSpeeds, motorAngles });
   }
 }
 

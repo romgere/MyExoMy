@@ -44,13 +44,13 @@ else
     exit
 fi
 
+directory=$( dirname "$0" )
 
 echo "installing services..."
-sudo sh ./misc/install-services.sh
+sudo sh $directory/misc/install-services.sh
 echo "services installed."
 
 # Build docker image from Dockerfile in directory 
-directory=$( dirname "$0" )
 docker build -t $image_name $directory
 
 # Stop any of the 3 containers if running
@@ -71,6 +71,7 @@ docker run \
     -v ${MY_EXOMY_FOLDER}:/root/rover-app \
     --mount type=bind,source=/tmp/iwconfig.watch,target=/tmp/iwconfig.watch,readonly \
     -p 3000:3000 \
+    -p 3001:3001 \
     --privileged \
     ${options} \
     --name "${container_name}" \

@@ -6,12 +6,23 @@ import CameraService from './camera.js';
 import PiSensorService from './pi-sensors.js';
 import ExternalSensorService from './external-sensors.js';
 
-export default [
-  SocketServerService,
-  RobotService,
-  MotorService,
-  ControlService,
-  CameraService,
-  PiSensorService,
-  ExternalSensorService,
-];
+export type ServicesClass =
+  | typeof SocketServerService
+  | typeof RobotService
+  | typeof MotorService
+  | typeof ControlService
+  | typeof CameraService
+  | typeof PiSensorService
+  | typeof ExternalSensorService;
+
+const serviceRegistry: Record<string, ServicesClass> = {
+  [SocketServerService.serviceName]: SocketServerService,
+  [RobotService.serviceName]: RobotService,
+  [MotorService.serviceName]: MotorService,
+  [ControlService.serviceName]: ControlService,
+  [CameraService.serviceName]: CameraService,
+  [PiSensorService.serviceName]: PiSensorService,
+  [ExternalSensorService.serviceName]: ExternalSensorService,
+};
+
+export default serviceRegistry;

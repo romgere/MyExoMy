@@ -61,22 +61,20 @@ export type ExternalSensorEvent = {
 
 export type EventsTypesMapping = {
   // External command (received from control app)
-  controlCommand: [cmd: ControlCommand]; // External command received from control center to move the rover
-  updateCameraSettings: [cmd: CameraConfig]; // External command received from control app to update camera settings
+  controlCommand: ControlCommand; // External command received from control center to move the rover
+  updateCameraSettings: CameraConfig; // External command received from control app to update camera settings
 
   // Internal event (live only inside rover-app)
-  roverCommand: [cmd: RoverCommand]; // Internal event sent by control service to rover service
-  motorCommand: [cmd: MotorCommand]; // Internal event sent by rover service to motor service
+  roverCommand: RoverCommand; // Internal event sent by control service to rover service
+  motorCommand: MotorCommand; // Internal event sent by rover service to motor service
 
   // External event (send to control app)
-  motorStatus: [data: MotorStatus]; // External event sent by motor service to control App with motors status
-  piSensor: [data: PiSensorEvent]; // External event sent by pi-sensor service to control app
-  externalSensor: [data: ExternalSensorEvent]; // External event sent by external-sensor service to control app
+  motorStatus: MotorStatus; // External event sent by motor service to control App with motors status
+  piSensor: PiSensorEvent; // External event sent by pi-sensor service to control app
+  externalSensor: ExternalSensorEvent; // External event sent by external-sensor service to control app
 };
 export type EventsName = keyof EventsTypesMapping;
 
-export type EventsTypesHandlersMapping = EventsTypesToFunctionMapping<EventsTypesMapping>;
-
-type EventsTypesToFunctionMapping<T extends Record<string, unknown[]>> = {
-  [Property in keyof T]: (...args: T[Property]) => void;
+export type EventsTypesHandlersMapping = {
+  [Property in keyof EventsTypesMapping]: (payload: EventsTypesMapping[Property]) => void;
 };

@@ -5,6 +5,8 @@
 *.FCBak
 
 packages/RoverApp/config/exomy.json
+packages/i2c-bus/build
+
 node_modules/
 .DS_Store
 .DS_Store?
