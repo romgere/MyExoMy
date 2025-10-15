@@ -8,6 +8,7 @@ import {
   defaultFps,
   defaultResolution,
   defaultRotation,
+  genericAdvancedRangeSettings,
   resolutions,
 } from '../utils/camera-const';
 import { SlChangeEvent, SlRadioGroup, SlRange, SlSelect, SlSwitch } from '@shoelace-style/shoelace';
@@ -18,33 +19,6 @@ interface Args {
   onClose: () => void;
   onApply: (settings: CameraConfig) => void;
 }
-
-type RangeSetting = {
-  min: string;
-  max: string;
-  default: number;
-  label: string;
-  unit?: string;
-  step?: number;
-  factor?: number;
-};
-
-const genericAdvancedRangeSettings: Record<string, RangeSetting> = {
-  bitRate: {
-    min: '1',
-    max: '25',
-    default: 17,
-    label: 'Bit-rate',
-    unit: 'Mbps',
-    factor: 1000000,
-    step: 0.5,
-  },
-  harpness: { min: '-100', max: '100', default: 0, label: 'Harpness' },
-  contrast: { min: '-100', max: '100', default: 0, label: 'Contrast' },
-  brightness: { min: '0', max: '100', default: 50, label: 'Brightness' },
-  saturation: { min: '-100', max: '100', default: 0, label: 'Saturation' },
-  exposureCompensation: { min: '-10', max: '10', default: 0, label: 'Exposure compensation' },
-};
 
 type GenericRangeValues = Record<keyof typeof genericAdvancedRangeSettings, number>;
 
