@@ -3,12 +3,16 @@
   <div>
     <label>Pi Temp.</label>
     <br />
-    <sl-badge variant='neutral'>{{this.roverSensor.piTemperatureString}}</sl-badge>
+    <sl-badge
+      variant={{this.piTemperatureBadgeVariant}}
+    >{{this.roverSensor.piTemperatureString}}</sl-badge>
   </div>
   <div>
     <label>Body Temp.</label>
     <br />
-    <sl-badge variant='neutral'>{{this.roverSensor.bodyTemperatureString}}</sl-badge>
+    <sl-badge
+      variant={{this.bodyTemperatureBadgeVariant}}
+    >{{this.roverSensor.bodyTemperatureString}}</sl-badge>
   </div>
 </div>
 
