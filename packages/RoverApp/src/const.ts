@@ -30,7 +30,11 @@ export const pwmFrequency = 50.0; // Hz
 
 export const configFilePath = path.resolve(process.cwd(), 'config/exomy.json');
 
+// Any changes on port bellow will need to be "replicate" on `Docker/run_exomy.sh` file
 export const httpServerPort = 3000;
+export const videoServerPort = 3001;
+
+// TODO secure connection
 export const httpServerCorsOrigin = '*';
 
 // Rover "physical" settings
@@ -52,6 +56,17 @@ export const motor_event_update_interval = 500;
 export const pi_sensor_update_interval = 1000;
 // Reading all sensor took ~10/15ms, too small value could lead to high latency rover commands
 export const external_sensor_update_interval = 500;
+
+// List of all events
+export const allEvents: EventsName[] = [
+  'controlCommand',
+  'updateCameraSettings',
+  'roverCommand',
+  'motorCommand',
+  'motorStatus',
+  'piSensor',
+  'externalSensor',
+];
 
 // List rover event that are allowed to be received from websocket (from command app)
 export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];

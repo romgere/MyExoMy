@@ -1,8 +1,13 @@
-import TypedEventEmitter, { EventMap } from 'typed-emitter';
 import EventEmitter from 'events';
 
-import type { EventsTypesHandlersMapping } from '@robot/shared/events.js';
+import type { EventsTypesMapping } from '@robot/shared/events.js';
 
-type TypedEmitter<T extends EventMap> = TypedEventEmitter.default<T>;
+type EventBrokerEventEmiter = {
+  on<E extends keyof EventsTypesMapping>(
+    eventName: E,
+    listener: (payload: EventsTypesMapping[E]) => void,
+  ): void;
+  emit<E extends keyof EventsTypesMapping>(eventName: E, payload: EventsTypesMapping[E]): void;
+};
 
-export default class EventBroker extends (EventEmitter as new () => TypedEmitter<EventsTypesHandlersMapping>) {}
+export default class EventBroker extends (EventEmitter as new () => EventBrokerEventEmiter) {}

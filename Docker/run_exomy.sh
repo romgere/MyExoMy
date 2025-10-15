@@ -71,6 +71,7 @@ docker run \
     -v ${MY_EXOMY_FOLDER}:/root/rover-app \
     --mount type=bind,source=/tmp/iwconfig.watch,target=/tmp/iwconfig.watch,readonly \
     -p 3000:3000 \
+    -p 3001:3001 \
     --privileged \
     ${options} \
     --name "${container_name}" \

@@ -141,7 +141,7 @@ class ExternalSensorsService extends Service {
       logger.error("Can't read proximity data", sensorsData[5].reason);
     }
 
-    this.eventBroker.emit('externalSensor', {
+    this.emit('externalSensor', {
       gyro: {
         gyro,
         accel,

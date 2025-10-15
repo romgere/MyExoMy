@@ -21,7 +21,7 @@ module.exports = {
     browser: true,
   },
   rules: {},
-  ignorePatterns: ['tests/fixtures/meshs'],
+  ignorePatterns: ['tests/fixtures/meshs', 'public'],
   overrides: [
     {
       files: [

@@ -20,13 +20,5 @@ export default class HttpServer {
         origin: httpServerCorsOrigin,
       }),
     );
-
-    this.expressApp.get('/', (req, res) => {
-      res.send('<h1>Hello from Exomy</h1>');
-    });
-
-    this.expressApp.get('/ping', (req, res) => {
-      res.send('rover-pong');
-    });
   }
 }

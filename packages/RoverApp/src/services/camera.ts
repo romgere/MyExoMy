@@ -1,10 +1,9 @@
 import Service from './-base.js';
 import { StreamCamera, Codec } from 'pi-camera-connect';
-
+import HttpServer from '@robot/rover-app/lib/http-server.js';
+import { videoServerPort } from '../const.js';
 import type { Request, Response } from 'express';
-import type EventBroker from '@robot/rover-app/lib/event-broker.js';
-import type { ExomyConfig, CameraConfig } from '@robot/rover-app/types.js';
-import type HttpServer from '@robot/rover-app/lib/http-server.js';
+import type { CameraConfig } from '@robot/rover-app/types.js';
 
 const boundary = 'totalmjpeg';
 const streamHeaders = {
@@ -15,47 +14,42 @@ const streamHeaders = {
 };
 
 const defaultCameraSettings = {
-  width: 1296,
-  height: 972,
-  fps: 5,
+  width: 640,
+  height: 480,
+  fps: 30,
 };
 
 class CameraService extends Service {
   static serviceName = 'camera';
 
-  camera: StreamCamera;
+  private camera: StreamCamera;
+  private httpServer = new HttpServer(videoServerPort);
+  private cameraStarted = false;
+  private clientResponses: Response[] = [];
 
-  cameraStarted = false;
-  clientResponses: Response[] = [];
-
-  broadcastFrameDataCb: CameraService['broadcastFrameData'];
-
-  constructor(config: ExomyConfig, eventBroker: EventBroker, httpsServer: HttpServer) {
-    super(config, eventBroker, httpsServer);
-
-    this.broadcastFrameDataCb = this.broadcastFrameData.bind(this);
+  constructor(...args: ConstructorParameters<typeof Service>) {
+    super(...args);
 
     this.camera = new StreamCamera({
       ...defaultCameraSettings,
-      ...(config.camera ?? {}),
+      ...(this.config.camera ?? {}),
       codec: Codec.MJPEG, // Force codec to MJPEG
     });
-
-    this.httpServer.expressApp.get('/videostream.mjpg', this.onGetStream.bind(this));
-
-    this.eventBroker.on('updateCameraSettings', this.updateCameraSettings.bind(this));
   }
 
-  async init() {}
+  async init() {
+    this.httpServer.expressApp.get('/', this.onGetStream.bind(this));
+    this.on('updateCameraSettings', this.updateCameraSettings.bind(this));
+  }
 
   async startCamera() {
     await this.camera.startCapture();
-    this.camera.on('frame', this.broadcastFrameDataCb);
+    this.camera.on('frame', this.broadcastFrameData);
     this.cameraStarted = true;
   }
 
   async stopCamera() {
-    this.camera.off('frame', this.broadcastFrameDataCb);
+    this.camera.off('frame', this.broadcastFrameData);
     await this.camera.stopCapture();
     this.cameraStarted = false;
   }
@@ -94,12 +88,13 @@ class CameraService extends Service {
     });
   }
 
-  broadcastFrameData(frame: Buffer) {
+  private broadcastFrameData = (frame: Buffer) => {
+    const frameSeparator = `--${boundary}\nContent-Type: image/jpg\nContent-length: ${frame.length}\n\n`;
     for (const res of this.clientResponses) {
-      res.write(`--${boundary}\nContent-Type: image/jpg\nContent-length: ${frame.length}\n\n`);
+      res.write(frameSeparator);
       res.write(frame);
     }
-  }
+  };
 }
 
 export default CameraService;

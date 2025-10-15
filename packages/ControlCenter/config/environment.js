@@ -19,7 +19,7 @@ module.exports = function (environment) {
     },
 
     APP: {
-      roverDefaultAddress: 'rover.local:3000',
+      roverDefaultAddress: 'rover.local',
     },
   };
 

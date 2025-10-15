@@ -1,39 +1,114 @@
 import readConfig from '@robot/rover-app/helpers/read-config.js';
 import EventBroker from '@robot/rover-app/lib/event-broker.js';
-import HttpServer from '@robot/rover-app/lib/http-server.js';
 import logger from '@robot/rover-app/lib/logger.js';
-import services from '@robot/rover-app/services/index.js';
-import { httpServerPort } from '@robot/rover-app/const.js';
+import serviceRegistry, { ServicesClass } from '@robot/rover-app/services/index.js';
+import { allEvents } from '@robot/rover-app/const.js';
+import { Worker } from 'worker_threads';
+import path from 'path';
+import { EventsTypesMapping } from '@robot/shared/events.js';
+import type {
+  ExomyConfig,
+  ServiceWorkerData,
+  ServiceWorkerMessage,
+} from '@robot/rover-app/types.js';
 
-import type Service from '@robot/rover-app/services/-base.js';
-import type { ExomyConfig } from '@robot/rover-app/types.js';
+const THREAD_SERVICE_WORKER_FILE = path.resolve(
+  process.cwd(),
+  'src/helpers/boot-service-worker.ts',
+);
 
-let config: ExomyConfig;
-let eventBroker: EventBroker;
-let httpServer: HttpServer;
+class RoverMain {
+  // private httpServer = new HttpServer(httpServerPort);
+  private eventBroker = new EventBroker();
+  private config: ExomyConfig;
+  private serviceInstances: Record<string, { worker: Worker; serviceClass: ServicesClass }> = {};
 
-const serviceInstances: Service[] = [];
+  constructor() {
+    this.config = readConfig();
+  }
 
-async function main() {
-  logger.info('Starting...');
+  startServices() {
+    for (const serviceName in serviceRegistry) {
+      // Start thread worker for each service
+      this.startServiceWorker(serviceName, this.config);
+    }
 
-  config = await readConfig();
-  eventBroker = new EventBroker();
+    // Register to all event from eventBroker & broadcast them to workers
+    allEvents.forEach((eventName) => {
+      this.eventBroker.on(eventName, (payload) => this.sendEventToWorkers(eventName, payload));
+    });
+  }
 
-  // Init our http server
-  httpServer = new HttpServer(httpServerPort);
+  private sendEventToWorkers<E extends keyof EventsTypesMapping>(
+    eventName: E,
+    payload: EventsTypesMapping[E],
+  ) {
+    Object.values(this.serviceInstances).forEach(({ worker }) => {
+      worker.postMessage({
+        name: eventName,
+        payload,
+      } satisfies ServiceWorkerMessage<EventsTypesMapping, E>);
+    });
+  }
 
-  // Instanciates & init services
-  for (const ServiceClass of services) {
-    logger.info(`Starting "${ServiceClass.serviceName}" service...`);
+  private onWorkerMessage = <E extends keyof EventsTypesMapping>(
+    messageFromWorker: ServiceWorkerMessage<EventsTypesMapping, E>,
+  ) => {
+    // proxy to event broker
+    const { name, payload } = messageFromWorker;
+    this.eventBroker.emit(name, payload);
+  };
 
-    const service = new ServiceClass(config, eventBroker, httpServer);
-    await service.init();
+  private onWorkerError(worker: Worker, serviceName: string, e: Error) {
+    logger.error(`Service ${serviceName}: error`, e);
 
-    logger.info(`"${ServiceClass.serviceName}" service started.`);
+    // TODO: restart service
+  }
 
-    serviceInstances.push(service);
+  private startServiceWorker(serviceName: string, config: ExomyConfig) {
+    if (this.serviceInstances[serviceName]) {
+      logger.error(`Service ${serviceName}: already stared!`);
+      return;
+    }
+
+    logger.info(`Service ${serviceName}: starting worker...`);
+
+    const worker = new Worker(THREAD_SERVICE_WORKER_FILE, {
+      workerData: {
+        config,
+        serviceName,
+      } satisfies ServiceWorkerData,
+      name: serviceName,
+    });
+
+    worker.on('online', () => {
+      logger.info(`Service ${serviceName}: worker online.`);
+    });
+
+    worker.on('message', this.onWorkerMessage);
+
+    worker.on('error', (e) => {
+      this.onWorkerError(worker, serviceName, e);
+    });
+
+    worker.on('exit', (code) => {
+      logger.info(`Service ${serviceName}: stopped (code: ${code})`);
+      if (code !== 0) {
+        this.onWorkerError(
+          worker,
+          serviceName,
+          new Error(`${serviceName} service worker stopped with exit code ${code}`),
+        );
+      }
+    });
+
+    this.serviceInstances[serviceName] = {
+      worker,
+      serviceClass: serviceRegistry[serviceName],
+    };
   }
 }
 
-await main();
+logger.info('Starting...');
+const roverMain = new RoverMain();
+roverMain.startServices();
