@@ -1,32 +1,33 @@
-<sl-dialog label="Connect to rover"  open {{on "sl-request-close" this.preventDefault}}>
+<sl-dialog label='Connect to rover' open {{on 'sl-request-close' this.preventDefault}}>
 
-  {{!-- template-lint-disable no-autofocus-attribute --}}
+  {{! template-lint-disable no-autofocus-attribute }}
   <sl-input
-    label="Enter rover address"
+    label='Enter rover address'
     value={{this.roverAddress}}
     disabled={{this.connecting}}
     autofocus
     filled
-    {{on "input" this.updateRoverAddress}}
+    {{on 'input' this.updateRoverAddress}}
   >
-    <sl-icon name="robot" slot="prefix"></sl-icon>
+    <sl-icon name='robot' slot='prefix'></sl-icon>
   </sl-input>
 
-
-  <sl-button slot="footer" {{on "click" this.testMode}}>
+  <sl-button slot='footer' {{on 'click' this.testMode}}>
     Test mode
   </sl-button>
 
-  <sl-button slot="footer" variant="primary" loading={{this.connecting}} {{on "click" this.connect}}>
+  <sl-button
+    slot='footer'
+    variant='primary'
+    loading={{this.connecting}}
+    {{on 'click' this.connect}}
+  >
     Connect
   </sl-button>
 
-
-
-
   {{#if this.lastError}}
-    <sl-alert variant="danger" open>
-      <sl-icon slot="icon" name="exclamation-octagon"></sl-icon>
+    <sl-alert variant='danger' open>
+      <sl-icon slot='icon' name='exclamation-octagon'></sl-icon>
       <strong>Connection error</strong><br />
       {{this.lastError}}
     </sl-alert>

@@ -10,6 +10,7 @@ import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
 import type SlChangeEvent from '@shoelace-style/shoelace/dist/events/sl-change';
 import type SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 import type { ControlRouteModel } from '@robot/control-center/routes/control';
+import { CameraConfig } from '@robot/shared/camera';
 
 export default class ControlController extends Controller {
   @service declare roverConnection: RoverConnectionService;
@@ -29,6 +30,7 @@ export default class ControlController extends Controller {
   @tracked showHud = true;
   @tracked fullHud = true;
   @tracked showVJoy = false;
+  @tracked showCameraSettingsModal = false;
 
   get roverAddress() {
     return (this.model as ControlRouteModel).roverAddress;
@@ -76,11 +78,6 @@ export default class ControlController extends Controller {
       locomotionMode: this.locomotionMode,
       toggleMotors,
     });
-  }
-
-  @action
-  sendUpdateCameraSettingsCommand() {
-    this.roverConnection.sendUpdateCameraSettingsCommand();
   }
 
   @action
@@ -181,6 +178,22 @@ export default class ControlController extends Controller {
   @action
   toggleVirtualJoystick() {
     this.showVJoy = !this.showVJoy;
+  }
+
+  @action
+  openCameraSettings() {
+    this.showCameraSettingsModal = true;
+  }
+
+  @action
+  closeCameraSettings() {
+    this.showCameraSettingsModal = false;
+  }
+
+  @action
+  onApplyCameraSettings(settings: CameraConfig) {
+    this.roverConnection.sendUpdateCameraSettingsCommand(settings);
+    this.closeCameraSettings();
   }
 }
 

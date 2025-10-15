@@ -1,14 +1,13 @@
 @import 'spacing.scss';
 
 body {
-  margin: 0
+  margin: 0;
 }
-
 
 .main-split-panel {
   height: 100vh;
 
-  [slot="start"] {
+  [slot='start'] {
     display: flex;
     overflow: hidden;
 
@@ -60,7 +59,7 @@ body {
     }
   }
 
-  [slot="end"] {
+  [slot='end'] {
     align-items: center;
   }
 }
@@ -141,16 +140,20 @@ body {
   text-align: center;
 }
 
+.right {
+  text-align: right;
+}
+
 // Shoelace customization
-sl-badge[size="medium"] {
+sl-badge[size='medium'] {
   font-size: 1.2rem;
 }
 
-sl-icon[size="medium"] {
+sl-icon[size='medium'] {
   font-size: 1.2rem;
 }
 
-sl-icon[size="large"] {
+sl-icon[size='large'] {
   font-size: 1.5rem;
 }
 

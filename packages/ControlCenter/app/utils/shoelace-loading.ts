@@ -11,6 +11,13 @@ import '@shoelace-style/shoelace/dist/components/option/option';
 import '@shoelace-style/shoelace/dist/components/resize-observer/resize-observer';
 import '@shoelace-style/shoelace/dist/components/switch/switch';
 import '@shoelace-style/shoelace/dist/components/tooltip/tooltip';
+import '@shoelace-style/shoelace/dist/components/range/range';
+import '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
+import '@shoelace-style/shoelace/dist/components/radio-button/radio-button';
+import '@shoelace-style/shoelace/dist/components/tab/tab';
+import '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
+import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
+import '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
 
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 setBasePath('/assets/shoelace');
