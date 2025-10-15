@@ -1,4 +1,4 @@
-<sl-split-panel position='80' class='main-split-panel'>
+<sl-split-panel position='80' class='main-split-panel' {{this.registerSplitPanel}}>
   <div slot='start'>
     <div class='display-container'>
       {{#if this.showVJoy}}
@@ -81,6 +81,24 @@
         <br /><br />
         <sl-switch checked={{this.showVideo}} {{on 'sl-change' this.toggleVideo}}>Video</sl-switch>
       </div>
+    </div>
+    <sl-divider />
+
+    <div class='flex flex-space-around'>
+
+      <sl-button
+        size='small'
+        variant='primary'
+        outline
+        {{on 'click' (fn this.setAspectRatio '4:3')}}
+      >4:3</sl-button>
+
+      <sl-button
+        size='small'
+        variant='primary'
+        outline
+        {{on 'click' (fn this.setAspectRatio '16:9')}}
+      >16:9</sl-button>
     </div>
     <sl-divider />
 
