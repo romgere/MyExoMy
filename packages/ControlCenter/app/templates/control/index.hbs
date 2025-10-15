@@ -38,17 +38,29 @@
 
     <div class='flex flex-space-around'>
       {{#if this.roverConnection.connected}}
-        <sl-button variant='primary' outline {{on 'click' this.disconnect}}>Disconnect</sl-button>
+        <sl-button
+          size='small'
+          variant='primary'
+          outline
+          {{on 'click' this.disconnect}}
+        >Disconnect</sl-button>
       {{else}}
-        <sl-button variant='primary' outline {{on 'click' this.connect}}>Connect</sl-button>
+        <sl-button
+          size='small'
+          variant='primary'
+          outline
+          {{on 'click' this.connect}}
+        >Connect</sl-button>
       {{/if}}
       <sl-button
+        size='small'
         variant='primary'
         outline
         disabled={{not this.roverConnection.connected}}
         {{on 'click' this.motors}}
       >Toggle Motors</sl-button>
       <sl-button
+        size='small'
         variant='primary'
         outline
         disabled={{not this.roverConnection.connected}}
@@ -60,15 +72,13 @@
     <div class='row row-center'>
       <div class='col col-6 left'>
         <sl-switch checked={{this.showHud}} {{on 'sl-change' this.toggleHud}}>HUD</sl-switch>
-      </div>
-      <div class='col col-6 left'>
+        <br /><br />
         <sl-switch checked={{this.fullHud}} {{on 'sl-change' this.toggleFullHud}}>Full HUD</sl-switch>
       </div>
       <div class='col col-6 left'>
         <sl-switch checked={{this.showVJoy}} {{on 'sl-change' this.toggleVirtualJoystick}}>Virtual
           joystick</sl-switch>
-      </div>
-      <div class='col col-6 left'>
+        <br /><br />
         <sl-switch checked={{this.showVideo}} {{on 'sl-change' this.toggleVideo}}>Video</sl-switch>
       </div>
     </div>
