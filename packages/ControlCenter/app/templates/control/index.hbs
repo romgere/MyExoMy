@@ -5,11 +5,13 @@
         <VirtualJoystick @onJoyMove={{this.onVJoyMove}} @onJoyEnd={{this.onVJoyEnd}} />
       {{/if}}
       <div class='video-container'>
-        <Video
-          @roverAddress={{this.roverAddress}}
-          @testMode={{this.testMode}}
-          class='rover-video'
-        />
+        {{#if this.showVideo}}
+          <Video
+            @roverAddress={{this.roverAddress}}
+            @testMode={{this.testMode}}
+            class='rover-video'
+          />
+        {{/if}}
         <Hud @hidden={{not this.showHud}} class={{if this.fullHud 'full-hud'}} />
       </div>
     </div>
@@ -56,15 +58,18 @@
     <sl-divider />
 
     <div class='row row-center'>
-      <div class='col col-6'>
+      <div class='col col-6 left'>
         <sl-switch checked={{this.showHud}} {{on 'sl-change' this.toggleHud}}>HUD</sl-switch>
       </div>
-      <div class='col col-6'>
+      <div class='col col-6 left'>
         <sl-switch checked={{this.fullHud}} {{on 'sl-change' this.toggleFullHud}}>Full HUD</sl-switch>
       </div>
-      <div class='col col-6'>
+      <div class='col col-6 left'>
         <sl-switch checked={{this.showVJoy}} {{on 'sl-change' this.toggleVirtualJoystick}}>Virtual
           joystick</sl-switch>
+      </div>
+      <div class='col col-6 left'>
+        <sl-switch checked={{this.showVideo}} {{on 'sl-change' this.toggleVideo}}>Video</sl-switch>
       </div>
     </div>
     <sl-divider />

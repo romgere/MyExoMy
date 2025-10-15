@@ -14,9 +14,10 @@ const streamHeaders = {
 };
 
 const defaultCameraSettings = {
-  width: 640,
-  height: 480,
-  fps: 30,
+  width: 1440,
+  height: 1080,
+  fps: 12,
+  bitRate: 8000000, // 1MB/s seems a good comprimise to save some bandwidth & keep correct quality
 };
 
 class CameraService extends Service {

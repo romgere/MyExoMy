@@ -29,6 +29,7 @@ export default class ControlController extends Controller {
 
   @tracked showHud = true;
   @tracked fullHud = true;
+  @tracked showVideo = true;
   @tracked showVJoy = false;
   @tracked showCameraSettingsModal = false;
 
@@ -168,6 +169,11 @@ export default class ControlController extends Controller {
   @action
   toggleHud() {
     this.showHud = !this.showHud;
+  }
+
+  @action
+  toggleVideo() {
+    this.showVideo = !this.showVideo;
   }
 
   @action
