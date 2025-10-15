@@ -3,6 +3,9 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import LocomotionMode from '@robot/shared/locomotion-modes';
+import { modifier } from 'ember-modifier';
+import { CameraConfig } from '@robot/shared/camera';
+import { SlSplitPanel } from '@shoelace-style/shoelace';
 
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type GamepadService from '@robot/control-center/services/gamepad';
@@ -10,7 +13,6 @@ import type { PS4ContollerAxes } from '@robot/control-center/services/gamepad';
 import type SlChangeEvent from '@shoelace-style/shoelace/dist/events/sl-change';
 import type SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 import type { ControlRouteModel } from '@robot/control-center/routes/control';
-import { CameraConfig } from '@robot/shared/camera';
 
 export default class ControlController extends Controller {
   @service declare roverConnection: RoverConnectionService;
@@ -21,6 +23,12 @@ export default class ControlController extends Controller {
 
   LocomotionMode = LocomotionMode;
 
+  splitPanel?: SlSplitPanel;
+
+  registerSplitPanel = modifier((element: SlSplitPanel) => {
+    this.splitPanel = element;
+  });
+
   @tracked locomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
   lastDefaultLocomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
 
@@ -29,6 +37,7 @@ export default class ControlController extends Controller {
 
   @tracked showHud = true;
   @tracked fullHud = true;
+  @tracked showVideo = true;
   @tracked showVJoy = false;
   @tracked showCameraSettingsModal = false;
 
@@ -171,6 +180,11 @@ export default class ControlController extends Controller {
   }
 
   @action
+  toggleVideo() {
+    this.showVideo = !this.showVideo;
+  }
+
+  @action
   toggleFullHud() {
     this.fullHud = !this.fullHud;
   }
@@ -194,6 +208,14 @@ export default class ControlController extends Controller {
   onApplyCameraSettings(settings: CameraConfig) {
     this.roverConnection.sendUpdateCameraSettingsCommand(settings);
     this.closeCameraSettings();
+  }
+
+  @action
+  setAspectRatio(ratio: '4:3' | '16:9') {
+    const leftPanelWidth = window.innerHeight * (ratio === '4:3' ? 4 / 3 : 16 / 9);
+    if (this.splitPanel && leftPanelWidth + 50 < window.innerWidth) {
+      this.splitPanel.positionInPixels = leftPanelWidth;
+    }
   }
 }
 
