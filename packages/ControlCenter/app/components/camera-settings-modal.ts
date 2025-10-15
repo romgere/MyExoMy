@@ -22,12 +22,14 @@ interface Args {
 
 type GenericRangeValues = Record<keyof typeof genericAdvancedRangeSettings, number>;
 
-const genericSettingsValues: GenericRangeValues = Object.entries(
-  genericAdvancedRangeSettings,
-).reduce<GenericRangeValues>((acc, [name, settings]) => {
-  acc[name] = settings.default;
-  return acc;
-}, {});
+const genericSettingsDefault = (): GenericRangeValues =>
+  Object.entries(genericAdvancedRangeSettings).reduce<GenericRangeValues>(
+    (acc, [name, settings]) => {
+      acc[name] = settings.default;
+      return acc;
+    },
+    {},
+  );
 
 export default class ConnectionStatusComponent extends Component<Args> {
   // Settings list
@@ -53,7 +55,7 @@ export default class ConnectionStatusComponent extends Component<Args> {
   awb: AwbMode = defaultAwb;
 
   @tracked
-  genericRanges = genericSettingsValues;
+  genericRanges = genericSettingsDefault();
 
   @tracked
   iso = 500;
@@ -85,6 +87,19 @@ export default class ConnectionStatusComponent extends Component<Args> {
       ...this.genericRangeValues,
       ...(this.isoAuto ? {} : { iso: this.iso }),
     };
+  }
+
+  @action
+  resetSettings() {
+    this.resolution = defaultResolution;
+    this.fps = defaultFps;
+    this.flip = defaultFlip;
+    this.rotation = defaultRotation;
+    this.exposure = defaultExposure;
+    this.awb = defaultAwb;
+    this.genericRanges = genericSettingsDefault();
+    this.iso = 500;
+    this.isoAuto = true;
   }
 
   @action

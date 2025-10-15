@@ -132,16 +132,15 @@
 
   </sl-tab-group>
 
-  <sl-button slot='footer' variant='default' loading={{this.connecting}} {{on 'click' @onClose}}>
+  <sl-button slot='footer' variant='default' {{on 'click' @onClose}}>
     Cancel
   </sl-button>
 
-  <sl-button
-    slot='footer'
-    variant='primary'
-    loading={{this.connecting}}
-    {{on 'click' this.onApply}}
-  >
+  <sl-button slot='footer' variant='default' {{on 'click' this.resetSettings}}>
+    Default
+  </sl-button>
+
+  <sl-button slot='footer' variant='primary' {{on 'click' this.onApply}}>
     Apply
   </sl-button>
 </sl-dialog>
