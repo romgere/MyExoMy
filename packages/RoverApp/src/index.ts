@@ -59,10 +59,28 @@ class RoverMain {
     this.eventBroker.emit(name, payload);
   };
 
-  private onWorkerError(worker: Worker, serviceName: string, e: Error) {
+  private async onWorkerError(worker: Worker, serviceName: string, e: Error) {
     logger.error(`Service ${serviceName}: error`, e);
 
-    // TODO: restart service
+    logger.info(`Service ${serviceName}: terminating...`);
+
+    try {
+      await worker.terminate();
+    } finally {
+      logger.info(`Service ${serviceName}: terminated.`);
+    }
+  }
+
+  private async restartService(serviceName: string) {
+    delete this.serviceInstances[serviceName];
+
+    logger.info(`Service ${serviceName}: restarting...`);
+    try {
+      await this.startServiceWorker(serviceName, this.config);
+      logger.info(`Service ${serviceName}: restarted.`);
+    } catch (e) {
+      logger.info(`Service ${serviceName}: error while restarting.`, e);
+    }
   }
 
   private startServiceWorker(serviceName: string, config: ExomyConfig) {
@@ -94,11 +112,7 @@ class RoverMain {
     worker.on('exit', (code) => {
       logger.info(`Service ${serviceName}: stopped (code: ${code})`);
       if (code !== 0) {
-        this.onWorkerError(
-          worker,
-          serviceName,
-          new Error(`${serviceName} service worker stopped with exit code ${code}`),
-        );
+        this.restartService(serviceName);
       }
     });
 
