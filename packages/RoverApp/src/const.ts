@@ -55,7 +55,7 @@ export const motor_watchdog_timeout = 5000;
 export const motor_event_update_interval = 500;
 export const pi_sensor_update_interval = 1000;
 // Reading all sensor took ~10/15ms, too small value could lead to high latency rover commands
-export const external_sensor_update_interval = 500;
+export const external_sensor_update_interval = 250;
 
 // List of all events
 export const allEvents: EventsName[] = [

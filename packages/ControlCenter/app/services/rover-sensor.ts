@@ -12,11 +12,11 @@ import type RoverConnectionService from '@robot/control-center/services/rover-co
 import type { ProximitySensorPosition } from '@robot/shared/events.js';
 
 // Defined how many gyro data entries we use to smooth values
-// Given we received new data every 50ms
-// 10 = we average values received from the last 500ms but introduce a 500 ms latency on UI
-const gyroHistoryLength = 10;
+// Given we received new data every 250ms
+// 4 = we average values received from the last 1000ms but introduce a small latency on UI
+const gyroHistoryLength = 4;
 // Same for lidar
-const lidarHistoryLength = 10;
+const lidarHistoryLength = 4;
 
 export default class RoverSensor extends Service {
   @service declare roverConnection: RoverConnectionService;
