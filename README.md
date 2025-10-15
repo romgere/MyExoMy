@@ -27,9 +27,6 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 ## Software
 
-- Make UI able to "live change" the camera settings
-- get rid of tsx error when starting rover app
-- Handle service crash/restarting
 - Improve config script
 - Improve logger & make critical logs available in UI
 - Improve Latency & payload/socket.io data size in general (better de/serialization)

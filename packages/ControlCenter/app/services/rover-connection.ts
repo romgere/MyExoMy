@@ -110,19 +110,12 @@ export default class RoverConnexionService extends Service {
     this.socket?.emit('controlCommand', data);
   }
 
-  sendUpdateCameraSettingsCommand() {
+  sendUpdateCameraSettingsCommand(settings: CameraConfig) {
     if (!this.connected) {
       return;
     }
 
-    const conf: CameraConfig = {
-      fps: 25,
-      // width: 1920,
-      // height: 1080,
-      exposureMode: 'fixedfps',
-    } as CameraConfig;
-
-    this.socket?.emit('updateCameraSettings', conf);
+    this.socket?.emit('updateCameraSettings', settings);
   }
 
   @action

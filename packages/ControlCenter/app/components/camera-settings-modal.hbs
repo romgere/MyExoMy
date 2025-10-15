@@ -1,0 +1,147 @@
+<sl-dialog label='Change camera settings' open={{@open}} {{on 'sl-request-close' @onClose}}>
+
+  <sl-tab-group>
+    <sl-tab slot='nav' panel='general'>General</sl-tab>
+    <sl-tab slot='nav' panel='advanced'>Advanced</sl-tab>
+
+    <sl-tab-panel name='general'>
+      <sl-select
+        label='Resolution'
+        value={{this.resolution}}
+        {{on 'sl-change' this.changeResolution}}
+      >
+        {{#each-in this.resolutions as |id resolution|}}
+          <sl-option value={{id}}>
+            {{resolution.width}}x{{resolution.height}}
+          </sl-option>
+        {{/each-in}}
+      </sl-select>
+      <br />
+
+      <sl-range
+        label='FPS'
+        value={{this.fps}}
+        min='1'
+        max='40'
+        help-text='Current: {{this.fps}} FPS.'
+        {{on 'sl-change' this.changeFPS}}
+      ></sl-range>
+      <br />
+
+      <sl-radio-group
+        label='Flip'
+        name='flip'
+        value={{this.flip}}
+        size='small'
+        {{on 'sl-change' this.changeFlip}}
+      >
+        <sl-radio-button value='none'>None</sl-radio-button>
+        <sl-radio-button value='horizontal'>Horizontal</sl-radio-button>
+        <sl-radio-button value='vertical'>Vertical</sl-radio-button>
+        <sl-radio-button value='both'>Both</sl-radio-button>
+      </sl-radio-group>
+      <br />
+
+      <sl-radio-group
+        label='Rotation'
+        name='rotation'
+        size='small'
+        value='{{this.rotation}}'
+        {{on 'sl-change' this.changeRotation}}
+      >
+        <sl-radio-button value='0'>0</sl-radio-button>
+        <sl-radio-button value='90'>90</sl-radio-button>
+        <sl-radio-button value='180'>180</sl-radio-button>
+        <sl-radio-button value='270'>270</sl-radio-button>
+      </sl-radio-group>
+      <br />
+
+      <sl-select
+        label='Exposure mode'
+        value={{this.exposure}}
+        {{on 'sl-change' this.changeExposure}}
+      >
+        <sl-option value='off'>Off</sl-option>
+        <sl-option value='auto'>Auto</sl-option>
+        <sl-option value='night'>Night</sl-option>
+        <sl-option value='nightpreview'>NightPreview</sl-option>
+        <sl-option value='backlight'>Backlight</sl-option>
+        <sl-option value='spotlight'>Spotlight</sl-option>
+        <sl-option value='sports'>Sports</sl-option>
+        <sl-option value='snow'>Snow</sl-option>
+        <sl-option value='beach'>Beach</sl-option>
+        <sl-option value='verylong'>VeryLong</sl-option>
+        <sl-option value='fixedfps'>FixedFps</sl-option>
+        <sl-option value='antishake'>AntiShake</sl-option>
+        <sl-option value='fireworks'>Fireworks</sl-option>
+      </sl-select>
+      <br />
+
+      <sl-select label='Awb mode' value={{this.awb}} {{on 'sl-change' this.changeAwb}}>
+        <sl-option value='off'>Off</sl-option>
+        <sl-option value='auto'>Auto</sl-option>
+        <sl-option value='sun'>Sun</sl-option>
+        <sl-option value='cloud'>Cloud</sl-option>
+        <sl-option value='shade'>Shade</sl-option>
+        <sl-option value='tungsten'>Tungsten</sl-option>
+        <sl-option value='fluorescent'>Fluorescent</sl-option>
+        <sl-option value='incandescent'>Incandescent</sl-option>
+        <sl-option value='flash'>Flash</sl-option>
+        <sl-option value='horizon'>Horizon</sl-option>
+        <sl-option value='greyworld'>GreyWorld</sl-option>
+      </sl-select>
+      <br />
+    </sl-tab-panel>
+    <sl-tab-panel name='advanced'>
+
+      <sl-range
+        label='ISO'
+        disabled={{this.isoAuto}}
+        value={{this.iso}}
+        min='100'
+        max='800'
+        help-text='Current: {{if this.isoAuto "auto" this.iso}}.'
+        {{on 'sl-change' this.changeIso}}
+      ></sl-range>
+      <div class='right'>
+        <sl-switch
+          size='small'
+          checked={{(not this.isoAuto)}}
+          {{on 'sl-change' this.changeIsoAuto}}
+        >
+          Custom ISO
+        </sl-switch>
+      </div>
+      <br />
+
+      {{! GENERIC RANGE SETTINGS }}
+      {{#each-in this.genericAdvancedRangeSettings as |name settings|}}
+        <sl-range
+          label={{settings.label}}
+          value={{get this.genericRanges name}}
+          min={{settings.min}}
+          max={{settings.max}}
+          step={{settings.step}}
+          help-text='Current: {{get this.genericRanges name}}{{settings.unit}}.'
+          {{on 'sl-change' (fn this.changeGenericRange name)}}
+        ></sl-range>
+        <br />
+      {{/each-in}}
+
+    </sl-tab-panel>
+
+  </sl-tab-group>
+
+  <sl-button slot='footer' variant='default' loading={{this.connecting}} {{on 'click' @onClose}}>
+    Cancel
+  </sl-button>
+
+  <sl-button
+    slot='footer'
+    variant='primary'
+    loading={{this.connecting}}
+    {{on 'click' this.onApply}}
+  >
+    Apply
+  </sl-button>
+</sl-dialog>
