@@ -63,17 +63,6 @@ export const gps_update_interval = 1000;
 export const sim7600e_gps_device = '/dev/ttyUSBGPS';
 export const sim7600e_serial_at_device = '/dev/ttyS4G';
 
-// List of all events
-export const allEvents: EventsName[] = [
-  'controlCommand',
-  'updateCameraSettings',
-  'roverCommand',
-  'motorCommand',
-  'motorStatus',
-  'piSensor',
-  'externalSensor',
-];
-
 // List rover event that are allowed to be received from websocket (from command app)
 export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];
 
