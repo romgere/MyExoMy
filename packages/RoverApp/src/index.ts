@@ -1,8 +1,6 @@
 import readConfig from '@robot/rover-app/helpers/read-config.js';
-import EventBroker from '@robot/rover-app/lib/event-broker.js';
 import logger from '@robot/rover-app/lib/logger.js';
 import serviceRegistry, { ServicesClass } from '@robot/rover-app/services/index.js';
-import { allEvents } from '@robot/rover-app/const.js';
 import { Worker } from 'worker_threads';
 import path from 'path';
 import { EventsTypesMapping } from '@robot/shared/events.js';
@@ -18,8 +16,6 @@ const THREAD_SERVICE_WORKER_FILE = path.resolve(
 );
 
 class RoverMain {
-  // private httpServer = new HttpServer(httpServerPort);
-  private eventBroker = new EventBroker();
   private config: ExomyConfig;
   private serviceInstances: Record<string, { worker: Worker; serviceClass: ServicesClass }> = {};
 
@@ -32,39 +28,29 @@ class RoverMain {
       // Start thread worker for each service
       this.startServiceWorker(serviceName, this.config);
     }
-
-    // Register to all event from eventBroker & broadcast them to workers
-    allEvents.forEach((eventName) => {
-      this.eventBroker.on(eventName, (payload) => this.sendEventToWorkers(eventName, payload));
-    });
-  }
-
-  private sendEventToWorkers<E extends keyof EventsTypesMapping>(
-    eventName: E,
-    payload: EventsTypesMapping[E],
-  ) {
-    Object.values(this.serviceInstances).forEach(({ worker }) => {
-      worker.postMessage({
-        name: eventName,
-        payload,
-      } satisfies ServiceWorkerMessage<EventsTypesMapping, E>);
-    });
   }
 
   private onWorkerMessage = <E extends keyof EventsTypesMapping>(
+    sender: Worker,
     messageFromWorker: ServiceWorkerMessage<EventsTypesMapping, E>,
   ) => {
-    // proxy to event broker
+    // proxy message to other workers
     const { name, payload } = messageFromWorker;
-    this.eventBroker.emit(name, payload);
+    Object.values(this.serviceInstances).forEach(({ worker }) => {
+      if (worker !== sender) {
+        worker.postMessage({
+          name,
+          payload,
+        } satisfies ServiceWorkerMessage<EventsTypesMapping, E>);
+      }
+    });
   };
 
   private async onWorkerError(worker: Worker, serviceName: string, e: Error) {
     logger.error(`Service ${serviceName}: error`, e);
 
-    logger.info(`Service ${serviceName}: terminating...`);
-
     try {
+      logger.info(`Service ${serviceName}: terminating...`);
       await worker.terminate();
     } finally {
       logger.info(`Service ${serviceName}: terminated.`);
@@ -103,7 +89,12 @@ class RoverMain {
       logger.info(`Service ${serviceName}: worker online.`);
     });
 
-    worker.on('message', this.onWorkerMessage);
+    worker.on(
+      'message',
+      <E extends keyof EventsTypesMapping>(msg: ServiceWorkerMessage<EventsTypesMapping, E>) => {
+        this.onWorkerMessage(worker, msg);
+      },
+    );
 
     worker.on('error', (e) => {
       this.onWorkerError(worker, serviceName, e);

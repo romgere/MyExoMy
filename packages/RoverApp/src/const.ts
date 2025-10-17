@@ -56,20 +56,20 @@ export const motor_event_update_interval = 500;
 export const pi_sensor_update_interval = 1000;
 // Reading all sensor took ~10/15ms, too small value could lead to high latency rover commands
 export const external_sensor_update_interval = 250;
+// Define interval rover send GPS info to control app (data are read continuously from SIM7600E NMEA port)
+export const gps_update_interval = 1000;
 
-// List of all events
-export const allEvents: EventsName[] = [
-  'controlCommand',
-  'updateCameraSettings',
-  'roverCommand',
-  'motorCommand',
-  'motorStatus',
-  'piSensor',
-  'externalSensor',
-];
+// SIM7600E Serial port (see `Docker/run_exomy.sh`)
+export const sim7600e_gps_device = '/dev/ttyUSBGPS';
+export const sim7600e_serial_at_device = '/dev/ttyS4G';
 
 // List rover event that are allowed to be received from websocket (from command app)
 export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];
 
-// List rover event that are "proxified" to websocket (sent to websocket to control app)
-export const socketProxifiedEvents: EventsName[] = ['piSensor', 'externalSensor', 'motorStatus'];
+// List rover event that are "proxified" to websocket (sent through websocket to control app)
+export const socketProxifiedEvents: EventsName[] = [
+  'piSensor',
+  'externalSensor',
+  'motorStatus',
+  'gps',
+];

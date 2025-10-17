@@ -22,6 +22,18 @@ module.exports = function (defaults) {
               },
             ],
           }),
+          new CopyPlugin({
+            patterns: [
+              {
+                from: path.resolve(__dirname, '../../node_modules/leaflet/dist/leaflet.css'),
+                to: path.resolve(__dirname, 'public/assets/leaflet/leaflet.css'),
+              },
+              {
+                from: path.resolve(__dirname, '../../node_modules/leaflet/dist/images'),
+                to: path.resolve(__dirname, 'public/assets/leaflet/images'),
+              },
+            ],
+          }),
         ],
       },
     },

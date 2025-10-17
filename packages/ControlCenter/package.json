@@ -57,6 +57,7 @@
     "@types/ember__template": "~4.0",
     "@types/ember__test": "~4.0",
     "@types/ember__utils": "~4.0",
+    "@types/leaflet": "^1.9.21",
     "@types/htmlbars-inline-precompile": "^1.0.1",
     "@types/qunit": "^2.11.1",
     "@types/rsvp": "^4.0.3",
@@ -119,6 +120,7 @@
   "dependencies": {
     "@shoelace-style/shoelace": "^2.7.0",
     "eventemitter3": "^5.0.1",
+    "leaflet": "^1.9.4",
     "nipplejs": "^0.10.1",
     "socket.io-client": "^4.7.2"
   }

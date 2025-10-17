@@ -59,6 +59,20 @@ export type ExternalSensorEvent = {
   proximity: Record<ProximitySensorPosition, number>;
 };
 
+export type GPSEvent = {
+  latitude: [number, 'N' | 'S'];
+  longitude: [number, 'W' | 'E'];
+
+  altitude: [number, 'F' | 'M'];
+
+  speed: number;
+  heading: number;
+
+  status: 'A' | 'V';
+  quality: number;
+  satelitesCount: number;
+};
+
 export type EventsTypesMapping = {
   // External command (received from control app)
   controlCommand: ControlCommand; // External command received from control center to move the rover
@@ -72,6 +86,7 @@ export type EventsTypesMapping = {
   motorStatus: MotorStatus; // External event sent by motor service to control App with motors status
   piSensor: PiSensorEvent; // External event sent by pi-sensor service to control app
   externalSensor: ExternalSensorEvent; // External event sent by external-sensor service to control app
+  gps: GPSEvent; // External event sent by gps service to control app
 };
 export type EventsName = keyof EventsTypesMapping;
 

@@ -7,7 +7,12 @@ import OrientationHelper from '@robot/control-center/utils/orientation';
 import type { Orientation } from '@robot/control-center/utils/orientation';
 
 import type { IWData } from '@robot/shared/iwconfig';
-import type { PiSensorEvent, ExternalSensorEvent, MotorStatus } from '@robot/shared/events';
+import type {
+  PiSensorEvent,
+  ExternalSensorEvent,
+  MotorStatus,
+  GPSEvent,
+} from '@robot/shared/events';
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type { ProximitySensorPosition } from '@robot/shared/events.js';
 
@@ -26,6 +31,7 @@ export default class RoverSensor extends Service {
     this.roverConnection.on('piSensor', this.onPiSensorEvent);
     this.roverConnection.on('externalSensor', this.onExternalSensorEvent);
     this.roverConnection.on('motorStatus', this.onMotorStatusEvent);
+    this.roverConnection.on('gps', this.onGpsEvent);
   }
 
   @action
@@ -70,6 +76,18 @@ export default class RoverSensor extends Service {
     this.motorStatus = data;
   }
 
+  @action
+  onGpsEvent(data: GPSEvent) {
+    this.latitude = data.latitude;
+    this.longitude = data.longitude;
+    this.altitude = data.altitude;
+    this.speed = data.speed;
+    this.heading = data.heading;
+    this.status = data.status;
+    this.quality = data.quality;
+    this.satelitesCount = data.satelitesCount;
+  }
+
   // Result of `vcgencmd get_throttled`
   @tracked underVoltage = false;
   @tracked armFreqCapped = false;
@@ -100,6 +118,18 @@ export default class RoverSensor extends Service {
     motorSpeeds: [0, 0, 0, 0, 0, 0],
     motorAngles: [0, 0, 0, 0, 0, 0],
   };
+
+  // gps
+  @tracked latitude: GPSEvent['latitude'] = [51.505, 'N'];
+  @tracked longitude: GPSEvent['longitude'] = [-0.09, 'E'];
+  @tracked altitude: GPSEvent['altitude'] = [0, 'M'];
+
+  @tracked speed: number = 0;
+  @tracked heading: number = 0;
+
+  @tracked status: 'A' | 'V' = 'V';
+  @tracked quality: number = 0;
+  @tracked satelitesCount: number = 0;
 
   get piTemperatureString() {
     return `${this.piTemperature} °c`;
@@ -148,11 +178,6 @@ export default class RoverSensor extends Service {
 
     return Math.floor(sum / size);
   }
-
-  // Add :
-  // proximity sensor
-  // distance sensor
-  // gps
 }
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your services.

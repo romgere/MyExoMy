@@ -33,7 +33,7 @@ class SocketServerService extends Service {
       res.send('rover-pong');
     });
 
-    // Proxy io event to eventBroker class
+    // Proxy io event to "RoverMain" (& other workers)
     this.io.on('connection', (socket) => {
       socket.onAny((event, ...args) => {
         if (event === 'ping') {

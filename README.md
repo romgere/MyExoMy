@@ -29,10 +29,12 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 - Improve config script
 - Add "inserse axe" (gyro, compas) settings & proximity sensor "map"
-- Add sound alertes un UI ?
+- Add sound alertes in UI ?
 - Improve logger & make critical logs available in UI
 - Secure rover connection
-- handle 4G hat, GPS position & init SMS
+- handle 4G hat & init SMS.
+- Refactor asset loading (leaflet & shoelace)
+- Update Ember app to latest Ember version (& use vite ?)
 
 ## Hardware
 

@@ -73,6 +73,8 @@ docker run \
     -p 3000:3000 \
     -p 3001:3001 \
     --privileged \
+    --device=/dev/ttyS0:/dev/ttyS4G \
+    --device=/dev/ttyUSB1:/dev/ttyUSBGPS \
     ${options} \
     --name "${container_name}" \
     "${image_name}" \

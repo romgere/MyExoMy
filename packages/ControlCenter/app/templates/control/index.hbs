@@ -24,6 +24,7 @@
       <div class='col col-6'>
         <sl-select
           label='Driving mode'
+          size='small'
           value={{this.locomotionMode}}
           {{on 'sl-change' this.changeDrivingMode}}
         >
@@ -34,9 +35,7 @@
         </sl-select>
       </div>
     </div>
-    <sl-divider />
-
-    <div class='flex flex-space-around'>
+    <div class='flex flex-space-around mt-2'>
       {{#if this.roverConnection.connected}}
         <sl-button
           size='small'
@@ -67,24 +66,7 @@
         {{on 'click' this.openCameraSettings}}
       >Camera Settings</sl-button>
     </div>
-    <sl-divider />
-
-    <div class='row row-center'>
-      <div class='col col-6 left'>
-        <sl-switch checked={{this.showHud}} {{on 'sl-change' this.toggleHud}}>HUD</sl-switch>
-        <br /><br />
-        <sl-switch checked={{this.fullHud}} {{on 'sl-change' this.toggleFullHud}}>Full HUD</sl-switch>
-      </div>
-      <div class='col col-6 left'>
-        <sl-switch checked={{this.showVJoy}} {{on 'sl-change' this.toggleVirtualJoystick}}>Virtual
-          joystick</sl-switch>
-        <br /><br />
-        <sl-switch checked={{this.showVideo}} {{on 'sl-change' this.toggleVideo}}>Video</sl-switch>
-      </div>
-    </div>
-    <sl-divider />
-
-    <div class='flex flex-space-around'>
+    <div class='flex flex-space-around mt-2'>
 
       <sl-button
         size='small'
@@ -99,6 +81,24 @@
         outline
         {{on 'click' (fn this.setAspectRatio '16:9')}}
       >16:9</sl-button>
+    </div>
+    <br />
+
+    <GpsInfos />
+    <sl-divider />
+
+    <div class='row row-center'>
+      <div class='col col-6 left'>
+        <sl-switch checked={{this.showHud}} {{on 'sl-change' this.toggleHud}}>HUD</sl-switch>
+        <br /><br />
+        <sl-switch checked={{this.fullHud}} {{on 'sl-change' this.toggleFullHud}}>Full HUD</sl-switch>
+      </div>
+      <div class='col col-6 left'>
+        <sl-switch checked={{this.showVJoy}} {{on 'sl-change' this.toggleVirtualJoystick}}>Virtual
+          joystick</sl-switch>
+        <br /><br />
+        <sl-switch checked={{this.showVideo}} {{on 'sl-change' this.toggleVideo}}>Video</sl-switch>
+      </div>
     </div>
     <sl-divider />
 
