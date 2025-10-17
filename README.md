@@ -32,7 +32,7 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 - Add sound alertes un UI ?
 - Improve logger & make critical logs available in UI
 - Secure rover connection
-- handle 4G hat, GPS position & init SMS
+- handle 4G hat & init SMS.
 
 ## Hardware
 
