@@ -3,10 +3,10 @@ import { Box, Text } from 'ink';
 import { Br } from 'scripts/utils/br.tsx';
 import { Task } from 'ink-task-list';
 import spinners from 'cli-spinners';
-import { wheelPositionLabels, wiggleMotor } from 'scripts/utils/motor.ts';
+import { type MotorType, wheelPositionLabels, wiggleMotor } from 'scripts/utils/motor.ts';
 import SelectInput from 'ink-select-input';
 import { WheelPosition } from '@robot/rover-app/const.js';
-import { MotorConfig, MotorType } from './misc.ts';
+import { MotorConfig } from './misc.ts';
 import type { Pca9685Driver } from 'pca9685';
 
 type MotorPinLoopStep = 'move' | 'get_type' | 'get_position';

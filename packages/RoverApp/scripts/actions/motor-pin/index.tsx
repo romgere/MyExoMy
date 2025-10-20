@@ -9,7 +9,7 @@ import asyncPca9685 from '@robot/rover-app/helpers/async-pca-9685.js';
 import MotorPinLoop from './pin-loop.tsx';
 import MotorConfigTest from './config-test.tsx';
 import MotorPinDisclamer from './disclamer.tsx';
-import { isConfigValid, MotorConfig, saveConfig } from './misc.ts';
+import { isConfigValid, MotorConfig, saveMotorConfig } from './misc.ts';
 import type { Pca9685Driver } from 'pca9685';
 
 type Step = 'welcome' | 'error' | 'pin_loop' | 'pin_confirm' | 'confirm_save';
@@ -34,7 +34,7 @@ export const MotorPin = ({ onFinish }: PageArg) => {
 
   // Save new motor config to config file
   const saveAndQuit = () => {
-    saveConfig(motorConfig.current!);
+    saveMotorConfig(motorConfig.current!);
     onFinish();
   };
 
