@@ -60,7 +60,7 @@ const Main = ({ landingPage }: { landingPage?: PageName }) => {
 
   return (
     <AppLayout>
-      <Box alignItems="center" width="100%" minHeight={15} flexDirection="column">
+      <Box alignItems="center" width="100%" minHeight={12} flexDirection="column">
         <Text>Welcome to your Rover configuration App !</Text>
         <Br />
         <Task label="Please select an action :" isExpanded></Task>

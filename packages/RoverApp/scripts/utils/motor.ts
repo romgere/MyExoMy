@@ -3,6 +3,10 @@ import wait from './wait.ts';
 import { WheelPosition, configFilePath } from '@robot/rover-app/const.ts';
 import { ExomyConfig } from '@robot/rover-app/types.js';
 import fs from 'fs-extra';
+import { pwmFrequency } from '@robot/rover-app/const.js';
+
+// The cycle is the inverted frequency converted to milliseconds
+const cycle = (1 / pwmFrequency) * 1000; // ms
 
 export type MotorType = 'driving' | 'steering';
 export type PWMValueType = 'min' | 'max' | 'neutral';
@@ -25,6 +29,26 @@ export const wheelPositionLabels: Record<WheelPosition, string> = {
   [WheelPosition.RL]: 'Rear left',
   [WheelPosition.RR]: 'Rear right',
 };
+
+export const motorTypeSelectItems: { value: MotorType; label: string }[] = [
+  {
+    value: 'driving',
+    label: 'Driving motor - 360° servo',
+  },
+  {
+    value: 'steering',
+    label: 'Steering motor - 180° servo',
+  },
+];
+
+export const motorPositionSelectItems: { value: WheelPosition; label: string }[] = [
+  { value: WheelPosition.FL, label: wheelPositionLabels[WheelPosition.FL] },
+  { value: WheelPosition.FR, label: wheelPositionLabels[WheelPosition.FR] },
+  { value: WheelPosition.CL, label: wheelPositionLabels[WheelPosition.CL] },
+  { value: WheelPosition.CR, label: wheelPositionLabels[WheelPosition.CR] },
+  { value: WheelPosition.RL, label: wheelPositionLabels[WheelPosition.RL] },
+  { value: WheelPosition.RR, label: wheelPositionLabels[WheelPosition.RR] },
+];
 
 export function getMotorPin(
   motorType: MotorType,
@@ -52,4 +76,31 @@ export function setMotorPWMValue(
 ) {
   config[motorType === 'driving' ? 'drive' : 'steer'][pwmValueType][position] = newValue;
   fs.writeFileSync(configFilePath, JSON.stringify(config, null, 2));
+}
+
+export async function testMotor(
+  motorType: MotorType,
+  position: WheelPosition,
+  config: ExomyConfig,
+  pwm: Pca9685Driver,
+) {
+  const pin = config[motorType === 'driving' ? 'drive' : 'steer'].pins[position];
+
+  const minT = 0.5; // ms
+  const maxT = 2.5; // ms
+  const midT = minT + maxT / 2;
+
+  // *_dc is the percentage of a cycle the signal is on
+  const minDc = minT / cycle;
+  const maxDc = maxT / cycle;
+  const midDc = midT / cycle;
+
+  const dcList = [minDc, midDc, maxDc, midDc, minDc, midDc, maxDc];
+
+  for (const dc of dcList) {
+    pwm.setPulseRange(pin, 0, dc * 4096);
+    await wait(500);
+  }
+
+  pwm.setPulseRange(pin, 0, 0);
 }

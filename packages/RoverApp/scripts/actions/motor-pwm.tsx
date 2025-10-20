@@ -7,6 +7,8 @@ import { WheelPosition } from '@robot/rover-app/const.ts';
 import {
   getMotorPin,
   getMotorPWMValue,
+  motorPositionSelectItems,
+  motorTypeSelectItems,
   PWMValueType,
   setMotorPWMValue,
   wheelPositionLabels,
@@ -21,14 +23,7 @@ import readConfig from '@robot/rover-app/helpers/read-config.ts';
 import { ExomyConfig } from '@robot/rover-app/types.js';
 
 const motor_type_items: { value: MotorType | 'back'; label: string }[] = [
-  {
-    value: 'driving',
-    label: 'Driving motor - 360° servo',
-  },
-  {
-    value: 'steering',
-    label: 'Steering motor - 180° servo',
-  },
+  ...motorTypeSelectItems,
   {
     value: 'back',
     label: 'Quit',
@@ -36,12 +31,7 @@ const motor_type_items: { value: MotorType | 'back'; label: string }[] = [
 ];
 
 const wheel_position_items: { value: WheelPosition | 'back'; label: string }[] = [
-  { value: WheelPosition.FL, label: wheelPositionLabels[WheelPosition.FL] },
-  { value: WheelPosition.FR, label: wheelPositionLabels[WheelPosition.FR] },
-  { value: WheelPosition.CL, label: wheelPositionLabels[WheelPosition.CL] },
-  { value: WheelPosition.CR, label: wheelPositionLabels[WheelPosition.CR] },
-  { value: WheelPosition.RL, label: wheelPositionLabels[WheelPosition.RL] },
-  { value: WheelPosition.RR, label: wheelPositionLabels[WheelPosition.RR] },
+  ...motorPositionSelectItems,
   { value: 'back', label: 'Go back (select motor type)' },
 ];
 

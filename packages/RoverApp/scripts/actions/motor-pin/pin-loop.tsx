@@ -3,7 +3,12 @@ import { Box, Text } from 'ink';
 import { Br } from 'scripts/utils/br.tsx';
 import { Task } from 'ink-task-list';
 import spinners from 'cli-spinners';
-import { type MotorType, wheelPositionLabels, wiggleMotor } from 'scripts/utils/motor.ts';
+import {
+  motorPositionSelectItems,
+  type MotorType,
+  motorTypeSelectItems,
+  wiggleMotor,
+} from 'scripts/utils/motor.ts';
 import SelectInput from 'ink-select-input';
 import { WheelPosition } from '@robot/rover-app/const.js';
 import { MotorConfig } from './misc.ts';
@@ -16,14 +21,7 @@ type MotorPinLoopArgs = {
 };
 
 const motor_type_items: { value: MotorType | 'none' | 'retry'; label: string }[] = [
-  {
-    value: 'driving',
-    label: 'Driving motor - 360° servo',
-  },
-  {
-    value: 'steering',
-    label: 'Steering motor - 180° servo',
-  },
+  ...motorTypeSelectItems,
   {
     value: 'retry',
     label: 'Move the motor again',
@@ -35,12 +33,7 @@ const motor_type_items: { value: MotorType | 'none' | 'retry'; label: string }[]
 ];
 
 const motor_position_items: { value: WheelPosition | 'back'; label: string }[] = [
-  { value: WheelPosition.FL, label: wheelPositionLabels[WheelPosition.FL] },
-  { value: WheelPosition.FR, label: wheelPositionLabels[WheelPosition.FR] },
-  { value: WheelPosition.CL, label: wheelPositionLabels[WheelPosition.CL] },
-  { value: WheelPosition.CR, label: wheelPositionLabels[WheelPosition.CR] },
-  { value: WheelPosition.RL, label: wheelPositionLabels[WheelPosition.RL] },
-  { value: WheelPosition.RR, label: wheelPositionLabels[WheelPosition.RR] },
+  ...motorPositionSelectItems,
   { value: 'back', label: 'Go back' },
 ];
 
