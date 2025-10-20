@@ -9,7 +9,7 @@ export default function asyncPca9685(
 ): Promise<Pca9685Driver> {
   // If not on raspberry, mock Pca 9685 drivers (script dev/debug mode on "regular" PC)
   if (os.arch() !== 'arm') {
-    return Promise.resolve(new MockedPca9685Driver() satisfies Pca9685Options);
+    return Promise.resolve(new MockedPca9685Driver() as Pca9685Driver);
   }
 
   return new Promise((resolve, reject) => {
