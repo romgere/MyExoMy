@@ -7,8 +7,11 @@
     "typeRoots": ["src/@types"],
     "esModuleInterop": true,
     "strict": true,
-    "paths": {    
-       "@robot/rover-app/*": ["src/*"],    
-    }
+    "paths": {
+      "@robot/rover-app/*": ["src/*"]
+    },
+    "jsx": "react",
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }
