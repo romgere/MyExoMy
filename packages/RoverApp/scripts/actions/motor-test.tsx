@@ -72,7 +72,7 @@ export const MotorTest = ({ onFinish }: PageArg) => {
 
   useEffect(() => {
     if (currentStep === 'moving') {
-      testMotor(motorType!, wheelPosition!, config.current!, pca9685).then(() => {
+      testMotor(motorType!, wheelPosition!, config.current!, pca9685!).then(() => {
         setStep('choose_motor_type');
       });
     }
