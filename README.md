@@ -27,6 +27,7 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 ## Software
 
+- check if custom i2c-bus package is really needed ? (removing resolution does not seems to fail)
 - Add "inserse axe" (gyro, compas) settings & proximity sensor "map"
 - Add sound alertes in UI ?
 - Hard/Soft Iron calibration script (https://gist.github.com/srlm-io/fafee8feed8bd5661266#file-hardironcalibration-ino)
