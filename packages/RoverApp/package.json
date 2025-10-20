@@ -9,12 +9,7 @@
     "lint:js": "eslint . --ext ts",
     "lint:types": "tsc --noEmit --composite false",
     "start": "node --loader tsx --no-warnings src/index.ts",
-    "script:cam_test": "tsx scripts/cam_test.ts",
-    "script:config_motor_pins": "tsx scripts/config_motor_pins.ts",
-    "script:config_motors_pwm": "tsx scripts/config_motors_pwm.ts",
-    "script:motor_test": "tsx scripts/motor_test.ts",
-    "script:stop_motors": "tsx scripts/stop_motors.ts",
-    "script:hardiron_calibration": "tsx scripts/hardiron_calibration.ts"
+    "configuration": "node --loader tsx --no-warnings scripts/main.tsx"
   },
   "files": [],
   "author": "Jérôme Mestres",
