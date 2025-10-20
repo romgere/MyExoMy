@@ -78,6 +78,18 @@ export function setMotorPWMValue(
   fs.writeFileSync(configFilePath, JSON.stringify(config, null, 2));
 }
 
+export function resetMotorPWMValue(
+  motorType: MotorType,
+  position: WheelPosition,
+  pwmValueType: PWMValueType,
+  config: ExomyConfig,
+  pwm: Pca9685Driver,
+) {
+  const pin = config[motorType === 'driving' ? 'drive' : 'steer'].pins[position];
+  const pwn = config[motorType === 'driving' ? 'drive' : 'steer'].neutral[position];
+  pwm.setPulseRange(pin, 0, pwn);
+}
+
 export async function testMotor(
   motorType: MotorType,
   position: WheelPosition,

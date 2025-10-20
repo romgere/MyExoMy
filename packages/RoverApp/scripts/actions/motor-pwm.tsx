@@ -11,6 +11,7 @@ import {
   motorTypeSelectItems,
   PWMValueType,
   setMotorPWMValue,
+  resetMotorPWMValue,
   wheelPositionLabels,
   type MotorType,
 } from 'scripts/utils/motor.ts';
@@ -158,7 +159,8 @@ export const MotorPwm = ({ onFinish }: PageArg) => {
           driver={pca9685}
           onFinish={(newValue: number) => {
             setMotorPWMValue(newValue, motorType!, wheelPosition!, valueType!, config.current!);
-            setStep('choose_motor_type');
+            resetMotorPWMValue(motorType!, wheelPosition!, valueType!, config.current!, pca9685);
+            setStep('choose_value_type');
           }}
           pin={getMotorPin(motorType!, wheelPosition!, config.current)}
           initialPWM={getMotorPWMValue(motorType!, wheelPosition!, valueType!, config.current)}
