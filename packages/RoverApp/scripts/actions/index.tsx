@@ -1,3 +1,4 @@
+import { CameraTest } from './camera-test.tsx';
 import { MotorPin } from './motor-pin/index.tsx';
 import { MotorPwm } from './motor-pwm.tsx';
 import { MotorStop } from './motor-stop.tsx';
@@ -8,7 +9,7 @@ export type PageArg = {
 };
 
 export type Page = ({ onFinish }: PageArg) => React.JSX.Element;
-export type PageName = 'pin_config' | 'adjust_pwm' | 'stop_motors' | 'test_motors';
+export type PageName = 'pin_config' | 'adjust_pwm' | 'stop_motors' | 'test_motors' | 'test_camera';
 
 const pages: Record<PageName, { page: Page; label: string }> = {
   pin_config: {
@@ -26,6 +27,10 @@ const pages: Record<PageName, { page: Page; label: string }> = {
   test_motors: {
     page: MotorTest,
     label: 'Test a motor',
+  },
+  test_camera: {
+    page: CameraTest,
+    label: 'Test camera (record to file)',
   },
 };
 

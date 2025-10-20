@@ -8039,6 +8039,14 @@ ink-task-list@^2.0.0:
   resolved "https://registry.yarnpkg.com/ink-task-list/-/ink-task-list-2.0.0.tgz#1ce26bd0144846a254cd37f9a67b8d816c64adde"
   integrity sha512-+WadfalLGUrYT/5D4cHeShN73t5urEsI5VOwFYw3qNWdOL+GQVTLbTS0tCZkzIcBcL+dfZcQAtuoW56ZBZV+Bg==
 
+ink-text-input@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ink-text-input/-/ink-text-input-6.0.0.tgz#71bdfacbfd161fbaff88bb8ca6b3a55dbc3d36e0"
+  integrity sha512-Fw64n7Yha5deb1rHY137zHTAbSTNelUKuB5Kkk2HACXEtwIHBCf9OH2tP/LQ9fRYTl1F0dZgbW0zPnZk6FA9Lw==
+  dependencies:
+    chalk "^5.3.0"
+    type-fest "^4.18.2"
+
 ink@^6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/ink/-/ink-6.3.1.tgz#ad076f06864cd9303866f974194cda9b168776dc"
@@ -12760,7 +12768,7 @@ type-fest@^1.0.1, type-fest@^1.2.1, type-fest@^1.2.2:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-1.4.0.tgz#e9fb813fe3bf1744ec359d55d1affefa76f14be1"
   integrity sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
 
-type-fest@^4.27.0:
+type-fest@^4.18.2, type-fest@^4.27.0:
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.41.0.tgz#6ae1c8e5731273c2bf1f58ad39cbae2c91a46c58"
   integrity sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==
