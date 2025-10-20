@@ -42,6 +42,7 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 ## Various
 
+- Add some picture/screenshots of rover, UI & TUI in readme
 - Export some list & link to used component (battery, 4g hat, sensor) & ensure other can build the rover
 - plug arduino to raspberry with I2C & start with sending LiPO battery voltage ?
 
