@@ -41,8 +41,16 @@ export default class ControlController extends Controller {
   @tracked showVJoy = false;
   @tracked showCameraSettingsModal = false;
 
-  get roverAddress() {
-    return (this.model as ControlRouteModel).roverAddress;
+  get roverApiAddress() {
+    return (this.model as ControlRouteModel).roverApiAddress;
+  }
+
+  get roverCameraAddress() {
+    return (this.model as ControlRouteModel).roverCameraAddress;
+  }
+
+  get wanMode() {
+    return (this.model as ControlRouteModel).wanMode;
   }
 
   get testMode() {
@@ -164,7 +172,7 @@ export default class ControlController extends Controller {
 
   @action
   connect() {
-    this.roverConnection.connect(`ws://${this.roverAddress}`);
+    this.roverConnection.connect(this.roverApiAddress, this.wanMode);
     this.autoConnect = '1';
   }
 

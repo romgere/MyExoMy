@@ -1,9 +1,11 @@
 import Controller from '@ember/controller';
 
 export default class ControlController extends Controller {
-  queryParams = ['roverAddress', 'testMode'];
-  roverAddress?: string = undefined;
+  queryParams = ['roverApiAddress', 'roverCameraAddress', 'testMode', 'wanMode'];
+  roverApiAddress?: string = undefined;
+  roverCameraAddress?: string = undefined;
   testMode: string = '';
+  wanMode: string = '';
 }
 
 declare module '@ember/controller' {

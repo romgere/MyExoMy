@@ -11,7 +11,7 @@ export default class ControlIndex extends Route {
     const model = this.modelFor('control') as ControlRouteModel;
 
     if (!model.testMode && params.autoConnect) {
-      await this.roverConnection.connect(`ws://${model.roverAddress}`);
+      await this.roverConnection.connect(model.roverApiAddress, model.wanMode);
     }
 
     return model;
