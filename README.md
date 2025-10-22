@@ -27,6 +27,7 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 
 ## Software
 
+- Add TUI action to configure SMS sender in rover conf
 - check if custom i2c-bus package is really needed ? (removing resolution does not seems to fail)
 - Add "inserse axe" (gyro, compas) settings & proximity sensor "map"
 - Add sound alertes in UI ?
