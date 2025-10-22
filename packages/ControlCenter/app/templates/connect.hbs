@@ -2,15 +2,32 @@
 
   {{! template-lint-disable no-autofocus-attribute }}
   <sl-input
-    label='Enter rover address'
-    value={{this.roverAddress}}
+    label={{if this.wanMode 'Enter rover address' 'Enter rover main API address'}}
+    value={{this.roverApiAddress}}
     disabled={{this.connecting}}
     autofocus
     filled
-    {{on 'input' this.updateRoverAddress}}
+    {{on 'input' this.updateRoverApiAddress}}
   >
     <sl-icon name='robot' slot='prefix'></sl-icon>
   </sl-input>
+  <br />
+
+  {{#if this.wanMode}}
+    <sl-input
+      label='Enter rover Camera API address'
+      value={{this.roverCameraAddress}}
+      disabled={{this.connecting}}
+      autofocus
+      filled
+      {{on 'input' this.updateRoverCameraAddress}}
+    >
+      <sl-icon name='webcam' slot='prefix'></sl-icon>
+    </sl-input>
+    <br />
+  {{/if}}
+
+  <sl-switch checked={{this.wanMode}} {{on 'sl-change' this.toggleWanMode}}>Wan mode (4g connection)</sl-switch>
 
   <sl-button slot='footer' {{on 'click' this.testMode}}>
     Test mode

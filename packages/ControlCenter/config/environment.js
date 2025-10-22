@@ -20,6 +20,8 @@ module.exports = function (environment) {
 
     APP: {
       roverDefaultAddress: 'rover.local',
+      roverDefault4gApiAddress: 'romgere.gh.srv.us',
+      roverDefault4gCameraAddress: 'romgere--2.gh.srv.us',
     },
   };
 

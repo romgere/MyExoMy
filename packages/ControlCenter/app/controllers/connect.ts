@@ -5,7 +5,7 @@ import { service } from '@ember/service';
 
 import config from '@robot/control-center/config/environment';
 const {
-  APP: { roverDefaultAddress },
+  APP: { roverDefaultAddress, roverDefault4gApiAddress, roverDefault4gCameraAddress },
 } = config;
 
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
@@ -16,11 +16,34 @@ export default class ConnectController extends Controller {
   @service declare roverConnection: RoverConnectionService;
 
   @tracked lastError?: string;
-  @tracked roverAddress = (this.model as string) ?? roverDefaultAddress;
+  @tracked roverApiAddress = roverDefaultAddress;
+  @tracked roverCameraAddress = roverDefaultAddress;
+  @tracked wanMode = false;
 
   @action
-  updateRoverAddress(e: InputEvent) {
-    this.roverAddress = (e.target as HTMLInputElement).value;
+  updateRoverApiAddress(e: InputEvent) {
+    this.roverApiAddress = (e.target as HTMLInputElement).value;
+    if (!this.wanMode) {
+      this.roverCameraAddress = this.roverApiAddress;
+    }
+  }
+
+  @action
+  updateRoverCameraAddress(e: InputEvent) {
+    this.roverCameraAddress = (e.target as HTMLInputElement).value;
+  }
+
+  @action
+  toggleWanMode() {
+    this.wanMode = !this.wanMode;
+
+    if (this.wanMode) {
+      this.roverApiAddress = roverDefault4gApiAddress;
+      this.roverCameraAddress = roverDefault4gCameraAddress;
+    } else {
+      this.roverApiAddress = roverDefaultAddress;
+      this.roverCameraAddress = roverDefaultAddress;
+    }
   }
 
   @tracked connecting = false;
@@ -30,12 +53,14 @@ export default class ConnectController extends Controller {
     this.connecting = true;
 
     try {
-      if (await this.roverConnection.pingRover(this.roverAddress)) {
+      if (await this.roverConnection.pingRover(this.roverApiAddress, this.wanMode)) {
         this.lastError = undefined;
         this.router.transitionTo('control.index', {
           queryParams: {
-            roverAddress: this.roverAddress,
+            roverApiAddress: this.roverApiAddress,
+            roverCameraAddress: this.roverCameraAddress,
             autoConnect: '1',
+            wanMode: this.wanMode ? '1' : undefined,
             testMode: undefined,
           },
         });

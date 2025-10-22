@@ -12,5 +12,7 @@ declare const config: {
   rootURL: string;
   APP: {
     roverDefaultAddress: string;
+    roverDefault4gApiAddress: string;
+    roverDefault4gCameraAddress: string;
   };
 };

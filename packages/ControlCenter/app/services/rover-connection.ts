@@ -21,9 +21,11 @@ export default class RoverConnexionService extends Service {
   on = this.eventEmitter.on.bind(this.eventEmitter) as typeof this.eventEmitter.on;
   off = this.eventEmitter.on.bind(this.eventEmitter) as typeof this.eventEmitter.on;
 
-  async pingRover(address: string): Promise<true> {
+  async pingRover(address: string, wanMode: boolean): Promise<true> {
     try {
-      const data = await fetch(`http://${address}:3000/ping`);
+      const data = await fetch(
+        `${wanMode ? 'https' : 'http'}://${address}${wanMode ? '' : ':3000'}/ping`,
+      );
       const response = await data.text();
 
       if (response !== 'rover-pong') {
@@ -37,9 +39,12 @@ export default class RoverConnexionService extends Service {
   }
 
   @action
-  connect(address: string) {
-    console.log(`connecting to rover on ${address}:3000...`);
-    this.socket = io(`${address}:3000`);
+  connect(host: string, wanMode: boolean) {
+    const address = wanMode ? `https://${host}` : `ws://${host}:3000`;
+    const opt = wanMode ? { port: 443, secure: true } : {};
+
+    console.log(`connecting to rover on ${address}...`);
+    this.socket = io(address, opt);
     this.socket.on('connect', () => {
       console.log('connected to rover.');
       this.connected = true;
