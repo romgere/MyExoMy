@@ -9,6 +9,7 @@ import type {
   ServiceWorkerData,
   ServiceWorkerMessage,
 } from '@robot/rover-app/types.js';
+import SerialATCommandService from './services/serial-at-command.ts';
 
 const THREAD_SERVICE_WORKER_FILE = path.resolve(
   process.cwd(),
@@ -61,6 +62,19 @@ class RoverMain {
     delete this.serviceInstances[serviceName];
 
     logger.info(`Service ${serviceName}: restarting...`);
+
+    // Send an alert SMS if any service is restarting (except the one that is supposed to send SMS)
+    if (serviceName !== SerialATCommandService.serviceName) {
+      const { worker: atServiceworker } = this.serviceInstances[SerialATCommandService.serviceName];
+
+      atServiceworker.postMessage({
+        name: 'sendSms',
+        payload: {
+          content: `Warning - "${serviceName}" service restarted`,
+        },
+      });
+    }
+
     try {
       await this.startServiceWorker(serviceName, this.config);
       logger.info(`Service ${serviceName}: restarted.`);

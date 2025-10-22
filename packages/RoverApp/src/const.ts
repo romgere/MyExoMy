@@ -58,10 +58,15 @@ export const pi_sensor_update_interval = 1000;
 export const external_sensor_update_interval = 250;
 // Define interval rover send GPS info to control app (data are read continuously from SIM7600E NMEA port)
 export const gps_update_interval = 1000;
+// How often we read incomming SMS
+export const sms_verify_interval = 5000;
 
 // SIM7600E Serial port (see `Docker/run_exomy.sh`)
 export const sim7600e_gps_device = '/dev/ttyUSBGPS';
 export const sim7600e_serial_at_device = '/dev/ttyS4G';
+
+// When true, only SMS that come from `smsRecipient` (defined in rover config) are handled, other recipient message will be ignore.
+export const safe_sms_mode = true;
 
 // List rover event that are allowed to be received from websocket (from command app)
 export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];

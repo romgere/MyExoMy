@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Service from './-base.js';
 import { gps_update_interval, sim7600e_gps_device } from '../const.js';
-import { GPSEvent } from '@robot/shared/events.js';
+import { GPSEvent, IncomingSMSEvent } from '@robot/shared/events.js';
 
 class GPSService extends Service {
   static serviceName = 'gps';
@@ -82,9 +82,23 @@ class GPSService extends Service {
     this.emit('gps', this.gpsEventData);
   };
 
+  private _onSms = (sms: IncomingSMSEvent) => {
+    if (sms.content.toUpperCase() === 'GPS') {
+      // Build humain readable string from `gpsEventData`
+      const content = Object.entries(this.gpsEventData).reduce(function (acc, [key, val]) {
+        acc += `${acc === '' ? '' : '\n'}${key}=${val}`;
+        return acc;
+      }, '');
+
+      this.emit('sendSms', { content });
+    }
+  };
+
   async init() {
     this.gpsStream.on('data', this._readSteamData);
     setInterval(this._sendGpsInfo, gps_update_interval);
+
+    this.on('incomingSms', this._onSms);
   }
 }
 
