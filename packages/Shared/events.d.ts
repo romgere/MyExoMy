@@ -73,6 +73,16 @@ export type GPSEvent = {
   satelitesCount: number;
 };
 
+export type IncomingSMSEvent = {
+  sender: string;
+  content: string;
+};
+
+export type SendSMSEvent = {
+  recipient?: string;
+  content: string;
+};
+
 export type EventsTypesMapping = {
   // External command (received from control app)
   controlCommand: ControlCommand; // External command received from control center to move the rover
@@ -81,6 +91,8 @@ export type EventsTypesMapping = {
   // Internal event (live only inside rover-app)
   roverCommand: RoverCommand; // Internal event sent by control service to rover service
   motorCommand: MotorCommand; // Internal event sent by rover service to motor service
+  incomingSms: IncomingSMSEvent; // SMS is received
+  sendSms: SendSMSEvent; // Send an SMS received
 
   // External event (send to control app)
   motorStatus: MotorStatus; // External event sent by motor service to control App with motors status

@@ -6,6 +6,7 @@ import CameraService from './camera.js';
 import PiSensorService from './pi-sensors.js';
 import ExternalSensorService from './external-sensors.js';
 import GPSService from './gps.js';
+import SerialATCommandService from './serial-at-command.ts';
 
 export type ServicesClass =
   | typeof SocketServerService
@@ -15,7 +16,8 @@ export type ServicesClass =
   | typeof CameraService
   | typeof PiSensorService
   | typeof ExternalSensorService
-  | typeof GPSService;
+  | typeof GPSService
+  | typeof SerialATCommandService;
 
 const serviceRegistry: Record<string, ServicesClass> = {
   [SocketServerService.serviceName]: SocketServerService,
@@ -26,6 +28,7 @@ const serviceRegistry: Record<string, ServicesClass> = {
   [PiSensorService.serviceName]: PiSensorService,
   [ExternalSensorService.serviceName]: ExternalSensorService,
   [GPSService.serviceName]: GPSService,
+  [SerialATCommandService.serviceName]: SerialATCommandService,
 };
 
 export default serviceRegistry;

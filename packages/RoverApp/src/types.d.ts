@@ -20,6 +20,7 @@ export type ExomyConfig = {
   drive: ServoConfig;
   steer: ServoConfig;
   camera?: CameraConfig;
+  smsRecipient: string;
 };
 
 import type { EventsTypesMapping } from '@robot/shared/events.js';
