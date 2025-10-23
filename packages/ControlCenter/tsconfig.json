@@ -7,6 +7,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
+    "skipLibCheck": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "noFallthroughCasesInSwitch": true,
@@ -21,20 +22,10 @@
     "module": "es6",
     "experimentalDecorators": true,
     "paths": {
-      "@robot/control-center/tests/*": [
-        "tests/*"
-      ],
-      "@robot/control-center/*": [
-        "app/*"
-      ],
-      "*": [
-        "types/*"
-      ]
+      "@robot/control-center/tests/*": ["tests/*"],
+      "@robot/control-center/*": ["app/*"],
+      "*": ["types/*"]
     }
   },
-  "include": [
-    "app/**/*",
-    "tests/**/*",
-    "types/**/*"
-  ]
+  "include": ["app/**/*", "tests/**/*", "types/**/*"]
 }

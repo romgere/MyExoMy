@@ -8,6 +8,11 @@
     "packages/i2c-bus"
   ],
   "scripts": {
-    "lint": "yarn workspaces run lint"
+    "lint": "yarn workspaces foreach --since run lint"
+  },
+  "packageManager": "yarn@4.10.3",
+  "dependencies": {
+    "i2c-bus": "workspace:*",
+    "node-gyp": "^11.5.0"
   }
 }

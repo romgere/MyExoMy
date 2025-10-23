@@ -5,9 +5,10 @@
     "moduleResolution": "nodenext",
     "baseUrl": ".",
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "strict": true,
-    "paths": {    
-       "@exomy/shared/*": ["*"],
+    "paths": {
+      "@exomy/shared/*": ["*"]
     }
   }
 }
