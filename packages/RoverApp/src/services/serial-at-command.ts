@@ -69,13 +69,27 @@ export default class SerialATCommandService extends Service {
     this.sendATCommand('ATE0');
     await this.waitForAnswer('OK', 1000);
 
+    // Get current network mode
+    let mode = '';
+    try {
+      mode = await this.sendCommand('AT+CNMP?');
+      mode = mode.replace('+CNMP:', '').trim() === '38' ? '4G' : 'NO-4G';
+    } catch (e) {
+      mode = 'UNKNOWN';
+    }
+
     // Set Text Mode SMS
     await this.sendCommand('AT+CMGF=1');
 
     // Send ready SMS
     try {
       logger.info('Sending "ready" SMS');
-      await this.sendSms(this.smsRecipient, 'ROVER IS READY');
+
+      // Build "ready" message with some details
+      let msg = 'ROVER IS READY';
+      msg += `\nNETWORK MODE: ${mode}`;
+
+      await this.sendSms(this.smsRecipient, msg);
       logger.info('SMS sent');
     } catch (e) {
       logger.error('Fail to send "ready" SMS', e);
@@ -112,15 +126,47 @@ export default class SerialATCommandService extends Service {
     }
 
     for (const message of messages) {
-      // "Built-in" ping mechanisme
-      if (message.content.toUpperCase() === 'PING') {
-        await this.sendSms(this.smsRecipient, 'PONG!');
-      }
-      // Dispatch SMS event to over service
-      else {
-        if (!safe_sms_mode || this.smsRecipient === message.sender) {
-          this.emit('incomingSms', { sender: message.sender, content: message.content });
-        }
+      // "Built-in" commands or dispatch SMS to other service
+      switch (message.content.toUpperCase()) {
+        case 'PING':
+          await this.sendSms(this.smsRecipient, 'PONG!');
+          break;
+        case '4GON':
+        case '4G-ON':
+          {
+            logger.log('Switching to 4g mode...');
+            try {
+              await this.sendCommand('AT+CNMP=38');
+              logger.log('Switched to 4g mode.');
+              await this.timeoutPromise(2500);
+              await this.sendSms(this.smsRecipient, '4G-ON DONE');
+            } catch (e) {
+              logger.error('Error while switching to 4g mode.', e);
+              await this.sendSms(this.smsRecipient, '4G-ON ERROR');
+            }
+          }
+          break;
+        case '4GOFF':
+        case '4G-OFF':
+          {
+            logger.log('Switching to 3g mode...');
+            try {
+              // Using "GSM only" mode seems to make i2c bus & minicom exploding :/
+              await this.sendCommand('AT+CNMP=13', { timeout: 2500 });
+              logger.log('Switched to GSM mode.');
+              await this.timeoutPromise(2500);
+              await this.sendSms(this.smsRecipient, '4G-OFF DONE');
+            } catch (e) {
+              logger.error('Error while switching to GSM mode.', e);
+              await this.sendSms(this.smsRecipient, '4G-OFF ERROR');
+            }
+          }
+          break;
+        default:
+          if (!safe_sms_mode || this.smsRecipient === message.sender) {
+            this.emit('incomingSms', { sender: message.sender, content: message.content });
+          }
+          break;
       }
     }
 
@@ -223,7 +269,7 @@ export default class SerialATCommandService extends Service {
     });
 
     try {
-      await this.sendCommand(`${message}\u001a`);
+      await this.sendCommand(`${message}\u001a`, { timeout: 2000 });
     } catch (e) {
       logger.error('Fail to send SMS', e);
     }
