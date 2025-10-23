@@ -62,8 +62,8 @@ export const gps_update_interval = 1000;
 export const sms_verify_interval = 5000;
 
 // SIM7600E Serial port (see `Docker/run_exomy.sh`)
-export const sim7600e_gps_device = '/dev/ttyUSBGPS';
-export const sim7600e_serial_at_device = '/dev/ttyS4G';
+export const sim7600e_gps_device = '/dev/ttyUSB1';
+export const sim7600e_serial_at_device = '/dev/ttyS0';
 
 // When true, only SMS that come from `smsRecipient` (defined in rover config) are handled, other recipient message will be ignore.
 export const safe_sms_mode = true;

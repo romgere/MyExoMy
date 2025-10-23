@@ -17,9 +17,9 @@
     "url": "git://github.com/romgere/MyExoMy"
   },
   "devDependencies": {
-    "concurrently": "^8.0.1",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
+    "concurrently": "^8.0.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-node": "^11.1.0",
