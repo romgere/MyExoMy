@@ -36,9 +36,17 @@ class PiSensorsService extends Service {
     });
   }
 
+  async runIWConfig(): Promise<string> {
+    return new Promise(function (resolve) {
+      spawn('iwconfig').stdout.on('data', (data) => {
+        resolve(String(data));
+      });
+    });
+  }
+
   async getIWConfig() {
     try {
-      const file = await fs.readFile('/tmp/iwconfig.watch', 'utf8');
+      const file = await this.runIWConfig();
       return parseIwconfig(file);
     } catch (e) {
       logger.error('unable to get iwconfig data', e);
