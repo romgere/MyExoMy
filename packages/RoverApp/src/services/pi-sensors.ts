@@ -2,7 +2,6 @@
 import Service from './-base.js';
 import { spawn } from 'child_process';
 import { pi_sensor_update_interval } from '@robot/rover-app/const.js';
-import fs from 'fs-extra';
 import parseIwconfig from '@robot/rover-app/helpers/iwconfig-parser.js';
 import logger from '@robot/rover-app/lib/logger.js';
 
