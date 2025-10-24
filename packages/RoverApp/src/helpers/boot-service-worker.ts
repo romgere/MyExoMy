@@ -13,9 +13,9 @@ if (!ServiceClass) {
 } else if (!parentPort) {
   throw new Error(`Can't start service, not in a worker threads`);
 }
-
+const l = logger('service-worker');
 // Boot service
-logger.info(`Service ${serviceName}: initializing...`);
+l.info(`Service ${serviceName}: initializing...`);
 const service = new ServiceClass(parentPort, config);
 await service.init();
-logger.info(`Service ${serviceName}: ready.`);
+l.info(`Service ${serviceName}: ready.`);

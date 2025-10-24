@@ -2,7 +2,6 @@
 import Service from './-base.js';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { httpServerPort, videoServerPort } from '@robot/rover-app/const.js';
-import logger from '@robot/rover-app/lib/logger.js';
 
 import type { IncomingSMSEvent } from '@robot/shared/events.js';
 import sleep from '../helpers/sleep.ts';
@@ -60,17 +59,17 @@ class SshTunnelService extends Service {
 
   async startSshTunnel() {
     if (this.tunnelStarted) {
-      logger.warn("Can't start SSH tunnel, it's already started.");
+      this.logger.warn("Can't start SSH tunnel, it's already started.");
       return;
     }
 
     const { sshProcessArgs } = this;
-    logger.info('Starting SSH tunnel...', sshProcessArgs);
+    this.logger.info('Starting SSH tunnel...', sshProcessArgs);
 
     this.sshProcess = spawn('ssh', sshProcessArgs);
 
     if (this.sshProcess.exitCode) {
-      logger.warn("Can't start SSH tunnel, exitCode detected.", this.sshProcess.exitCode);
+      this.logger.warn("Can't start SSH tunnel, exitCode detected.", this.sshProcess.exitCode);
       this.sshProcess = undefined;
       return;
     }
@@ -93,13 +92,13 @@ class SshTunnelService extends Service {
       }
     });
 
-    logger.info('SSH tunnel wait for ssh answer...');
+    this.logger.info('SSH tunnel wait for ssh answer...');
 
     // Wait a bit for the process to start, before reading stdout for info...
     await sleep(2000);
 
     if (this.sshProcess.exitCode) {
-      logger.warn("Can't start SSH tunnel, exitCode detected.", this.sshProcess.exitCode);
+      this.logger.warn("Can't start SSH tunnel, exitCode detected.", this.sshProcess.exitCode);
       this.sshProcess = undefined;
       return;
     }
@@ -116,7 +115,7 @@ class SshTunnelService extends Service {
 
     this.tunnelStarted = true;
 
-    logger.info('SSH tunnel started');
+    this.logger.info('SSH tunnel started');
   }
 
   private parseStdOut(output: string) {
@@ -153,11 +152,11 @@ class SshTunnelService extends Service {
 
   async stopSshTunnel() {
     if (!this.tunnelStarted) {
-      logger.warn("Can't stop SSH tunnel, it's already stopped.");
+      this.logger.warn("Can't stop SSH tunnel, it's already stopped.");
       return;
     }
 
-    logger.log('Stopping SSH tunnel...');
+    this.logger.log('Stopping SSH tunnel...');
 
     // Turn this to flase before stopping to prevent error to be thrown
     this.tunnelStarted = false;
@@ -167,7 +166,7 @@ class SshTunnelService extends Service {
 
     await this.emit('sendSms', { content: 'SSH tunnel stopped' });
 
-    logger.log('SSH tunnel stopped.');
+    this.logger.log('SSH tunnel stopped.');
   }
 }
 

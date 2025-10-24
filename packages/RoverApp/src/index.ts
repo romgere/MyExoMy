@@ -17,10 +17,12 @@ const THREAD_SERVICE_WORKER_FILE = path.resolve(
 );
 
 class RoverMain {
+  private logger = logger('rover-main');
   private config: ExomyConfig;
   private serviceInstances: Record<string, { worker: Worker; serviceClass: ServicesClass }> = {};
 
   constructor() {
+    this.logger.info('Starting...');
     this.config = readConfig();
   }
 
@@ -48,20 +50,20 @@ class RoverMain {
   };
 
   private async onWorkerError(worker: Worker, serviceName: string, e: Error) {
-    logger.error(`Service ${serviceName}: error`, e);
+    this.logger.error(`Service ${serviceName}: error`, e);
 
     try {
-      logger.info(`Service ${serviceName}: terminating...`);
+      this.logger.info(`Service ${serviceName}: terminating...`);
       await worker.terminate();
     } finally {
-      logger.info(`Service ${serviceName}: terminated.`);
+      this.logger.info(`Service ${serviceName}: terminated.`);
     }
   }
 
   private async restartService(serviceName: string) {
     delete this.serviceInstances[serviceName];
 
-    logger.info(`Service ${serviceName}: restarting...`);
+    this.logger.info(`Service ${serviceName}: restarting...`);
 
     // Send an alert SMS if any service is restarting (except the one that is supposed to send SMS)
     if (serviceName !== SerialATCommandService.serviceName) {
@@ -77,19 +79,19 @@ class RoverMain {
 
     try {
       await this.startServiceWorker(serviceName, this.config);
-      logger.info(`Service ${serviceName}: restarted.`);
+      this.logger.info(`Service ${serviceName}: restarted.`);
     } catch (e) {
-      logger.info(`Service ${serviceName}: error while restarting.`, e);
+      this.logger.info(`Service ${serviceName}: error while restarting.`, e);
     }
   }
 
   private startServiceWorker(serviceName: string, config: ExomyConfig) {
     if (this.serviceInstances[serviceName]) {
-      logger.error(`Service ${serviceName}: already stared!`);
+      this.logger.error(`Service ${serviceName}: already stared!`);
       return;
     }
 
-    logger.info(`Service ${serviceName}: starting worker...`);
+    this.logger.info(`Service ${serviceName}: starting worker...`);
 
     const worker = new Worker(THREAD_SERVICE_WORKER_FILE, {
       workerData: {
@@ -100,7 +102,7 @@ class RoverMain {
     });
 
     worker.on('online', () => {
-      logger.info(`Service ${serviceName}: worker online.`);
+      this.logger.info(`Service ${serviceName}: worker online.`);
     });
 
     worker.on(
@@ -115,7 +117,7 @@ class RoverMain {
     });
 
     worker.on('exit', (code) => {
-      logger.info(`Service ${serviceName}: stopped (code: ${code})`);
+      this.logger.info(`Service ${serviceName}: stopped (code: ${code})`);
       if (code !== 0) {
         this.restartService(serviceName);
       }
@@ -128,6 +130,5 @@ class RoverMain {
   }
 }
 
-logger.info('Starting...');
 const roverMain = new RoverMain();
 roverMain.startServices();

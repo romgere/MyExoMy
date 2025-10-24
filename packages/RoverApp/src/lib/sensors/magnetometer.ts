@@ -20,6 +20,8 @@ const _MMC5603_CTRL_REG1 = 0x1c; // Register address for control 1
 const _MMC5603_CTRL_REG2 = 0x1d; // Register address for control 2
 
 export default class MagnetometerSensor {
+  logger = logger('magnetometer');
+
   i2cbus: PromisifiedBus;
 
   ctrl0_reg = new I2CRegister(magneto_addr, _MMC5603_CTRL_REG0);
@@ -42,7 +44,7 @@ export default class MagnetometerSensor {
   async init() {
     // make sure we're talking to the right chip
     if ((await this.chip_id.read()) != _MMC5603_CHIP_ID) {
-      logger.error('No MMC56X3 detected');
+      this.logger.error('No MMC56X3 detected');
       return false;
     }
 

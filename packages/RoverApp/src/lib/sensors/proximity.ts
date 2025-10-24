@@ -90,6 +90,8 @@ export enum TFL_STATUS {
 }
 
 export default class ProximitySensor {
+  logger = logger('magnetometer');
+
   i2cbus: PromisifiedBus;
   address: number;
 
@@ -131,7 +133,7 @@ export default class ProximitySensor {
   async init() {
     // make sure we're talking to the right chip
     if ((await this.chip_id.read()) != VCNL4040_CHIP_ID) {
-      logger.error('No VCNL4040 detected');
+      this.logger.error('No VCNL4040 detected');
       return false;
     }
   }

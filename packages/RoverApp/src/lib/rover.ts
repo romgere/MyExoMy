@@ -29,6 +29,8 @@ const ackermannRMin = ackermannFRMin > ackermannRRMin ? ackermannFRMin : ackerma
 
 // Rover class contains all the math and motor control algorithms to move the rover
 class Rover {
+  logger = logger('rover');
+
   // locomotionNames = undefined
   locomotionMode: LocomotionMode = LocomotionMode.ACKERMANN;
 
@@ -40,7 +42,7 @@ class Rover {
   // Sets the locomotion mode
   setLocomotionMode(mode: LocomotionMode) {
     if (mode && this.locomotionMode != mode) {
-      logger.info(`Set locomotion mode to: ${mode}`);
+      this.logger.info(`Set locomotion mode to: ${mode}`);
       this.locomotionMode = mode;
     }
   }

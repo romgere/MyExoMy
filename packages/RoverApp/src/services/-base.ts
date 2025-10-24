@@ -1,5 +1,5 @@
 import type { ExomyConfig, ServiceWorkerMessage } from '@robot/rover-app/types.js';
-import logger from '@robot/rover-app/lib/logger.js';
+import logger, { Logger } from '@robot/rover-app/lib/logger.js';
 import { EventsTypesMapping } from '@robot/shared/events.js';
 import type { MessagePort } from 'worker_threads';
 
@@ -7,12 +7,11 @@ type ListenerRecord<Events extends EventsTypesMapping> = {
   [P in keyof Events]?: ((payload: Events[P]) => void)[];
 };
 
-// export default abstract class Service<T extends EventMap> extends (EventEmitter as new<T>() => TypedEmitter<T>)<T> {
 export default abstract class Service {
   static serviceName: string;
 
   protected config: ExomyConfig;
-  protected logger = logger;
+  protected logger: Logger;
 
   private parentPort: MessagePort;
   private _listeners: ListenerRecord<EventsTypesMapping> = {};
@@ -44,6 +43,7 @@ export default abstract class Service {
   }
 
   constructor(parentPort: MessagePort, config: ExomyConfig) {
+    this.logger = logger((this.constructor as typeof Service).serviceName);
     this.parentPort = parentPort;
     this.config = config as ExomyConfig;
     parentPort.on('message', this._onMessage);

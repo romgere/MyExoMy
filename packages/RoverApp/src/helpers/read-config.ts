@@ -1,6 +1,5 @@
 import { configFilePath } from '@robot/rover-app/const.js';
 import fs from 'fs-extra';
-import logger from '@robot/rover-app/lib/logger.js';
 
 import type { ExomyConfig } from '@robot/rover-app/types.js';
 
@@ -9,7 +8,7 @@ export function ensureConfigFileExist() {
 
   if (!fs.existsSync(configFilePath)) {
     fs.copySync(templateFileName, configFilePath);
-    logger.log('config template was copied as current config');
+    console.warn('config template was copied as current config');
   }
 }
 

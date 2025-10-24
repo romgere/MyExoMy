@@ -5,7 +5,6 @@ import MagnetometerSensor from '@robot/rover-app/lib/sensors/magnetometer.js';
 import LidarSensor from '@robot/rover-app/lib/sensors/lidar.js';
 import ProximitySensor from '@robot/rover-app/lib/sensors/proximity.js';
 import I2CMultiplexer from '@robot/rover-app/lib/sensors/i2c-multiplexer.js';
-import logger from '@robot/rover-app/lib/logger.js';
 
 import type { Coord3D } from '@robot/shared/types.js';
 import type { ProximitySensorPosition } from '@robot/shared/events.js';
@@ -38,27 +37,27 @@ class ExternalSensorsService extends Service {
 
   async init() {
     // Init sensors
-    logger.info('init gyro...');
+    this.logger.info('init gyro...');
     await this.gyro.init();
 
-    logger.info('init magneto...');
+    this.logger.info('init magneto...');
     await this.magneto.init();
     await this.magneto.setContinuousMode(true);
     await this.magneto.setDataRate(255);
 
-    logger.info('init proximity sensors...');
+    this.logger.info('init proximity sensors...');
     for (const prox of this.proximity) {
-      logger.info(`init proximity sensor #${prox.multiplexerAddress}...`);
+      this.logger.info(`init proximity sensor #${prox.multiplexerAddress}...`);
       await this.multiplexer.select(prox.multiplexerAddress);
       await prox.sensor.init();
       await prox.sensor.enableProximity(true);
       await prox.sensor.setProximityHighResolution(true);
     }
 
-    logger.info('init lidar...');
-    logger.log('lidar version', await this.lidar.getFirmwareVersion());
+    this.logger.info('init lidar...');
+    this.logger.log('lidar version', await this.lidar.getFirmwareVersion());
 
-    logger.info('all sensor initialized.');
+    this.logger.info('all sensor initialized.');
 
     this.internal = setInterval(
       this.sendExtenalSensorEvent.bind(this),
@@ -106,31 +105,31 @@ class ExternalSensorsService extends Service {
     if (sensorsData[0].status === 'fulfilled') {
       magneto = sensorsData[0].value;
     } else {
-      logger.error("Can't read magnetometer data", sensorsData[0].reason);
+      this.logger.error("Can't read magnetometer data", sensorsData[0].reason);
     }
 
     if (sensorsData[1].status === 'fulfilled') {
       gyro = sensorsData[1].value;
     } else {
-      logger.error("Can't read gyroscope data", sensorsData[1].reason);
+      this.logger.error("Can't read gyroscope data", sensorsData[1].reason);
     }
 
     if (sensorsData[2].status === 'fulfilled') {
       accel = sensorsData[2].value;
     } else {
-      logger.error("Can't read accelerometer data", sensorsData[2].reason);
+      this.logger.error("Can't read accelerometer data", sensorsData[2].reason);
     }
 
     if (sensorsData[3].status === 'fulfilled') {
       gTemp = sensorsData[3].value;
     } else {
-      logger.error("Can't read temperature data", sensorsData[3].reason);
+      this.logger.error("Can't read temperature data", sensorsData[3].reason);
     }
 
     if (sensorsData[4].status === 'fulfilled') {
       lidar = sensorsData[4].value;
     } else {
-      logger.error("Can't read LIDAR data", sensorsData[4].reason);
+      this.logger.error("Can't read LIDAR data", sensorsData[4].reason);
     }
 
     if (sensorsData[5].status === 'fulfilled') {
@@ -138,7 +137,7 @@ class ExternalSensorsService extends Service {
         proximity[this.proximity[i].position] = sensorsData[5].value[i];
       }
     } else {
-      logger.error("Can't read proximity data", sensorsData[5].reason);
+      this.logger.error("Can't read proximity data", sensorsData[5].reason);
     }
 
     this.emit('externalSensor', {
