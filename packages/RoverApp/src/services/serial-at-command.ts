@@ -4,7 +4,6 @@ import Service from './-base.js';
 import promiseWithResolvers, {
   type PromiseWithResolvers,
 } from '../helpers/promise-with-resolver.js';
-import logger from '../lib/logger.ts';
 import { SendSMSEvent } from '@robot/shared/events.js';
 
 const RESPONSE_TIMEOUT = Symbol('minicom-response-timeout');
@@ -83,16 +82,16 @@ export default class SerialATCommandService extends Service {
 
     // Send ready SMS
     try {
-      logger.info('Sending "ready" SMS');
+      this.logger.info('Sending "ready" SMS');
 
       // Build "ready" message with some details
       let msg = 'ROVER IS READY';
       msg += `\nNETWORK MODE: ${mode}`;
 
       await this.sendSms(this.smsRecipient, msg);
-      logger.info('SMS sent');
+      this.logger.info('SMS sent');
     } catch (e) {
-      logger.error('Fail to send "ready" SMS', e);
+      this.logger.error('Fail to send "ready" SMS', e);
     }
 
     // Read "pending" SMS (clear message memory)
@@ -122,7 +121,7 @@ export default class SerialATCommandService extends Service {
     const messages = await this.readSms();
 
     if (messages.length) {
-      logger.log('SMS received', messages);
+      this.logger.log('SMS received', messages);
     }
 
     for (const message of messages) {
@@ -134,14 +133,14 @@ export default class SerialATCommandService extends Service {
         case '4GON':
         case '4G-ON':
           {
-            logger.log('Switching to 4g mode...');
+            this.logger.log('Switching to 4g mode...');
             try {
               await this.sendCommand('AT+CNMP=38');
-              logger.log('Switched to 4g mode.');
+              this.logger.log('Switched to 4g mode.');
               await this.timeoutPromise(2500);
               await this.sendSms(this.smsRecipient, '4G-ON DONE');
             } catch (e) {
-              logger.error('Error while switching to 4g mode.', e);
+              this.logger.error('Error while switching to 4g mode.', e);
               await this.sendSms(this.smsRecipient, '4G-ON ERROR');
             }
           }
@@ -149,15 +148,15 @@ export default class SerialATCommandService extends Service {
         case '4GOFF':
         case '4G-OFF':
           {
-            logger.log('Switching to 3g mode...');
+            this.logger.log('Switching to 3g mode...');
             try {
               // Using "GSM only" mode seems to make i2c bus & minicom exploding :/
               await this.sendCommand('AT+CNMP=13', { timeout: 2500 });
-              logger.log('Switched to GSM mode.');
+              this.logger.log('Switched to GSM mode.');
               await this.timeoutPromise(2500);
               await this.sendSms(this.smsRecipient, '4G-OFF DONE');
             } catch (e) {
-              logger.error('Error while switching to GSM mode.', e);
+              this.logger.error('Error while switching to GSM mode.', e);
               await this.sendSms(this.smsRecipient, '4G-OFF ERROR');
             }
           }
@@ -271,7 +270,7 @@ export default class SerialATCommandService extends Service {
     try {
       await this.sendCommand(`${message}\u001a`, { timeout: 2000 });
     } catch (e) {
-      logger.error('Fail to send SMS', e);
+      this.logger.error('Fail to send SMS', e);
     }
   }
 

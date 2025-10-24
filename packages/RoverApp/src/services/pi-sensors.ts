@@ -3,7 +3,6 @@ import Service from './-base.js';
 import { spawn } from 'child_process';
 import { pi_sensor_update_interval } from '@robot/rover-app/const.js';
 import parseIwconfig from '@robot/rover-app/helpers/iwconfig-parser.js';
-import logger from '@robot/rover-app/lib/logger.js';
 
 import type { PiSensorEvent } from '@robot/shared/events.js';
 
@@ -48,7 +47,7 @@ class PiSensorsService extends Service {
       const file = await this.runIWConfig();
       return parseIwconfig(file);
     } catch (e) {
-      logger.error('unable to get iwconfig data', e);
+      this.logger.error('unable to get iwconfig data', e);
       return {};
     }
   }
