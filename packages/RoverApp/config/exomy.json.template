@@ -16,5 +16,7 @@
     "neutral": [317, 317, 317, 322, 337, 327],
     "max": [525, 525, 530, 535, 540, 535]
   },
-  "smsRecipient": "+1234567890"
+  "smsRecipient": "+1234567890",
+  "gitHubUsername": "john-doe",
+  "sshTunnelAutoStart": false
 }

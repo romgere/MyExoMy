@@ -21,6 +21,8 @@ export type ExomyConfig = {
   steer: ServoConfig;
   camera?: CameraConfig;
   smsRecipient: string;
+  gitHubUsername: string;
+  sshTunnelAutoStart: boolean;
 };
 
 import type { EventsTypesMapping } from '@robot/shared/events.js';
