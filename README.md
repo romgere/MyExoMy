@@ -4,19 +4,19 @@ Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy p
 
 ## The rover
 
-<img alt="Picture of my Rover (Work in progress)" src="./Misc/Assets/rover1.jpg"  width="500" /> ![Pixture of head of my Rover (Work in progress)](./Misc/Assets/rover2.jpg | width=500)
+<img alt="Picture of my Rover (Work in progress)" src="./Misc/Assets/rover1.jpg"  width="500" /> <img alt="Pixture of head of my Rover (Work in progress)](./Misc/Assets/rover2.jpg" width="500" />
 
-![Rover viewed in freecad](./Misc/Assets/rover-freecad.png | width=500)
+<img alt="Rover viewed in freecad" src="./Misc/Assets/rover-freecad.png"  width="500" />
 
 ## Control Center
 
-![The control application](./Misc/Assets/control-ui.png | width=500)
-![The control application, camera update screen](./Misc/Assets/camera-update.png | width=250)
+<img alt="The control application" src="./Misc/Assets/control-ui.png" width="500" />
+<img alt="The control application, camera update screen" src="./Misc/Assets/camera-update.png" width="250" />
 
 ## Configuration application
 
-![The configuration TUI](./Misc/Assets/tui.png | width=400)
-![Video of the configuration application](./Misc/Assets/tui.webm | width=400)
+<img alt="The configuration TUI" src="./Misc/Assets/tui.png" width="500" />
+<img alt="Video of the configuration application" src="./Misc/Assets/tui.webm" width="500" />
 
 # What changed
 
