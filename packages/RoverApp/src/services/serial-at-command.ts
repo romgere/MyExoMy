@@ -5,8 +5,9 @@ import promiseWithResolvers, {
   type PromiseWithResolvers,
 } from '../helpers/promise-with-resolver.js';
 import { SendSMSEvent } from '@robot/shared/events.js';
+import sleep from '../helpers/sleep.ts';
 
-const RESPONSE_TIMEOUT = Symbol('minicom-response-timeout');
+const RESPONSE_TIMEOUT = Symbol('at-response-timeout');
 
 type ResponseTimeout = typeof RESPONSE_TIMEOUT;
 
@@ -38,7 +39,8 @@ function sanitizeStr(str: string) {
 export default class SerialATCommandService extends Service {
   static serviceName = 'AT command';
 
-  private _minicomProcess = spawn('minicom', ['-D', sim7600e_serial_at_device]);
+  // We're not using minicom here as, for some reason, it does not work when running rover app as a service
+  private _serialATProcess = spawn('cu', ['-l', sim7600e_serial_at_device, '-s', '115200']);
 
   private _responseBuffer = '';
 
@@ -50,23 +52,30 @@ export default class SerialATCommandService extends Service {
   }
 
   async init() {
-    this._minicomProcess.stdout.on('data', this.onMinicomData.bind(this));
+    if (this._serialATProcess.stdout.errored) {
+      this.logger.error(
+        'AT serial process stdout is errored',
+        this._serialATProcess.stdout.errored,
+      );
+      return;
+    }
+    this._serialATProcess.stdout.on('data', this.onProcessData.bind(this));
 
-    // Handle errors cases (make service crash - should restart minicom)
-    this._minicomProcess.on('error', this.onMinicomError.bind(this));
-    this._minicomProcess.on('close', () => {
-      this.onMinicomError(new Error('Received "close"'));
+    // Handle errors cases (make service crash - should restart process)
+    this._serialATProcess.on('error', this.onProcessError.bind(this));
+    this._serialATProcess.on('close', () => {
+      this.onProcessError(new Error('Received "close"'));
     });
-    this._minicomProcess.on('disconnect', () => {
-      this.onMinicomError(new Error('Received "disconnect"'));
+    this._serialATProcess.on('disconnect', () => {
+      this.onProcessError(new Error('Received "disconnect"'));
     });
-    this._minicomProcess.on('exit', () => {
-      this.onMinicomError(new Error('Received "exit"'));
+    this._serialATProcess.on('exit', () => {
+      this.onProcessError(new Error('Received "exit"'));
     });
 
     // Disabled echo & wait for answer before considering service fully initialized
     this.sendATCommand('ATE0');
-    await this.waitForAnswer('OK', 1000);
+    await this.waitForAnswer('OK', 5000);
 
     // Get current network mode
     let mode = '';
@@ -76,6 +85,39 @@ export default class SerialATCommandService extends Service {
     } catch (e) {
       mode = 'UNKNOWN';
     }
+
+    // Wait for the SIM to be ready
+    let cardReady = false;
+    let retry = 0;
+    do {
+      if (retry > 0) {
+        await sleep(500 + retry * 250);
+      } else if (retry > 10) {
+        this.logger.error('Fail to initialize, SIM not ready.');
+        return;
+      }
+      this.logger.log('Checking SIM status...');
+      const rep = await this.sendCommand('AT+CPIN?');
+      this.logger.log('SIM is', rep);
+      cardReady = rep === '+CPIN: READY';
+      retry++;
+    } while (!cardReady);
+
+    // Wait for being registered on network
+    let registered = false;
+    do {
+      if (retry > 0) {
+        await sleep(500 + retry * 250);
+      } else if (retry > 10) {
+        this.logger.error('Fail to initialize, not registered to network.');
+        return;
+      }
+      this.logger.log('Checking registration status...');
+      const rep = await this.sendCommand('AT+CREG?');
+      this.logger.log('Registration status is', rep);
+      registered = rep === '+CREG: 0,1';
+      retry++;
+    } while (!registered);
 
     // Set Text Mode SMS
     await this.sendCommand('AT+CMGF=1');
@@ -150,7 +192,7 @@ export default class SerialATCommandService extends Service {
           {
             this.logger.log('Switching to 3g mode...');
             try {
-              // Using "GSM only" mode seems to make i2c bus & minicom exploding :/
+              // Using "GSM only" mode seems to make i2c bus & serial exploding :/
               await this.sendCommand('AT+CNMP=13', { timeout: 2500 });
               this.logger.log('Switched to GSM mode.');
               await this.timeoutPromise(2500);
@@ -192,7 +234,7 @@ export default class SerialATCommandService extends Service {
   }
 
   private sendATCommand(command: string) {
-    this._minicomProcess.stdin.write(`${command}\r\n`);
+    this._serialATProcess.stdin.write(`${command}\r\n`);
   }
 
   private async waitForAnswer(expectedResponse: string = 'OK', timeout: number): Promise<string> {
@@ -218,10 +260,10 @@ export default class SerialATCommandService extends Service {
 
       if (res === RESPONSE_TIMEOUT) {
         throw new Error(
-          `timeout waiting for minicom response "${expectedResponse}", received "${this._responseBuffer}"`,
+          `timeout waiting for AT response "${expectedResponse}", received "${this._responseBuffer}"`,
         );
       } else if (res === undefined) {
-        throw new Error(`Error while waiting for minicom response "${expectedResponse}"`);
+        throw new Error(`Error while waiting for AT response "${expectedResponse}"`);
       }
 
       return res;
@@ -238,8 +280,8 @@ export default class SerialATCommandService extends Service {
     });
   }
 
-  private onMinicomData(data: string) {
-    this._responseBuffer += data;
+  private onProcessData(data: string) {
+    this._responseBuffer += String(data);
 
     if (
       this._expectedResponse &&
@@ -251,15 +293,15 @@ export default class SerialATCommandService extends Service {
     }
   }
 
-  private onMinicomError(error: Error) {
+  private onProcessError(error: Error) {
     try {
-      this._minicomProcess.stdin.end();
-      this._minicomProcess.kill();
+      this._serialATProcess.stdin.end();
+      this._serialATProcess.kill();
     } catch (_e) {
       // eslint-disable-next-line no-empty
     }
 
-    throw new Error(`Minicom process error: ${error.message}`);
+    throw new Error(`AT serial process error: ${error.message}`);
   }
 
   private async sendSms(recipient: string, message: string) {
