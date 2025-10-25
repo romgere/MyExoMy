@@ -4,7 +4,7 @@ Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy p
 
 ## The rover
 
-![Picture of my Rover (Work in progress)](./Misc/Assets/rover1.jpg | width=500) ![Pixture of head of my Rover (Work in progress)](./Misc/Assets/rover2.jpg | width=500)
+<img alt="Picture of my Rover (Work in progress)" src="./Misc/Assets/rover1.jpg"  width="500" /> ![Pixture of head of my Rover (Work in progress)](./Misc/Assets/rover2.jpg | width=500)
 
 ![Rover viewed in freecad](./Misc/Assets/rover-freecad.png | width=500)
 
