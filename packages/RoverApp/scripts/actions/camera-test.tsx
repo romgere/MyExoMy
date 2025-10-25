@@ -5,7 +5,7 @@ import { PageArg } from './index.tsx';
 import { Task } from 'ink-task-list';
 import spinners from 'cli-spinners';
 import { Br } from 'scripts/utils/br.tsx';
-// import TextInput from 'ink-text-input';
+import TextInput from 'ink-text-input';
 import { StreamCamera, Codec } from 'pi-camera-connect';
 import fs from 'fs-extra';
 import path from 'path';
@@ -74,7 +74,7 @@ export const CameraTest = ({ onFinish }: PageArg) => {
         <Box alignItems="center" width="100%" flexDirection="column">
           <Text>Where do you want the file to be written :</Text>
           <Br />
-          {/* <TextInput value={currentFolder} onChange={setFolder} onSubmit={onSubmitFolder} /> */}
+          <TextInput value={currentFolder} onChange={setFolder} onSubmit={onSubmitFolder} />
           {error ? (
             <Text backgroundColor="red" color="white">
               {error}
