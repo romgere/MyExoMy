@@ -4,6 +4,7 @@ import { WheelPosition, configFilePath } from '@robot/rover-app/const.ts';
 import { ExomyConfig } from '@robot/rover-app/types.js';
 import fs from 'fs-extra';
 import { pwmFrequency } from '@robot/rover-app/const.js';
+import writeConfig from '@robot/rover-app/helpers/write-config.ts';
 
 // The cycle is the inverted frequency converted to milliseconds
 const cycle = (1 / pwmFrequency) * 1000; // ms
@@ -75,7 +76,7 @@ export function setMotorPWMValue(
   config: ExomyConfig,
 ) {
   config[motorType === 'driving' ? 'drive' : 'steer'][pwmValueType][position] = newValue;
-  fs.writeFileSync(configFilePath, JSON.stringify(config, null, 2));
+  writeConfig(config);
 }
 
 export function resetMotorPWMValue(
