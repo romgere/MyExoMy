@@ -2,7 +2,21 @@
 
 Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
-![Rover viewed in freecad](./Misc/Assets/rover-freecad.png)
+## The rover
+
+![Picture of my Rover (Work in progress)](./Misc/Assets/rover1.jpg | width=500) ![Pixture of head of my Rover (Work in progress)](./Misc/Assets/rover2.jpg | width=500)
+
+![Rover viewed in freecad](./Misc/Assets/rover-freecad.png | width=500)
+
+## Control Center
+
+![The control application](./Misc/Assets/control-ui.png | width=500)
+![The control application, camera update screen](./Misc/Assets/camera-update.png | width=250)
+
+## Configuration application
+
+![The configuration TUI](./Misc/Assets/tui.png | width=400)
+![Video of the configuration application](./Misc/Assets/tui.webm | width=400)
 
 # What changed
 
@@ -31,6 +45,14 @@ Take a look to the Wiki : https://github.com/romgere/MyExoMy/wiki
 If you start from scratch, you may want to go through the [assembling rover guide](https://github.com/romgere/MyExoMy/wiki/Assembling-the-Rover) or [software installation](https://github.com/romgere/MyExoMy/wiki/Software-installation).
 
 ℹ️ The wiki is still Work In Progress, you can probably make an idea of the work that such project is needed by reading [the original ExoMy wiki](https://github.com/esa-prl/ExoMy/wiki)
+
+# Control App
+
+The control app (as it is on this repository `main` branch) is deployed on netlify. You can use it for your own conveniance if you want :
+
+[https://rover.mestres.fr](https://rover.mestres.fr)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/543b67ce-f6fd-49e3-bc17-88cf6e744329/deploy-status)](https://app.netlify.com/projects/exomycontrolapp/deploys)
 
 # Know issues
 
