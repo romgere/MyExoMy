@@ -15,8 +15,8 @@ Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy p
 
 ## Configuration application
 
-<img alt="The configuration TUI" src="./Misc/Assets/tui.png" width="500" />
-![Video of the configuration application](./Misc/Assets/tui.webm)
+<img alt="The configuration TUI" src="./Misc/Assets/tui.png" />
+<img alt="Video of the configuration application" src="./Misc/Assets/tui.gif" />
 
 # What changed
 
