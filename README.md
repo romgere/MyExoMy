@@ -24,6 +24,14 @@ Here is a brief summary of what's change comparing to [original ExoMy project](h
 - Config scripts has been rewriten into a nodejs TUI application.
 - More to come, see [todo](https://github.com/romgere/MyExoMy/wiki/ToDos)
 
+# Where to start
+
+Take a look to the Wiki : https://github.com/romgere/MyExoMy/wiki
+
+If you start from scratch, you may want to go through the [assembling rover guide](https://github.com/romgere/MyExoMy/wiki/Assembling-the-Rover) or [software installation](https://github.com/romgere/MyExoMy/wiki/Software-installation).
+
+ℹ️ The wiki is still Work In Progress, you can probably make an idea of the work that such project is needed by reading [the original ExoMy wiki](https://github.com/esa-prl/ExoMy/wiki)
+
 # Know issues
 
 - Proximity sensors boxes need a re-design (proximity sensor lifght signal hit box & result in poor "far object" detection)
