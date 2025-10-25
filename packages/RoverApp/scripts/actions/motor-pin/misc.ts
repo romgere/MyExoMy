@@ -1,7 +1,6 @@
-import { WheelPosition, configFilePath } from '@robot/rover-app/const.js';
+import { WheelPosition } from '@robot/rover-app/const.js';
 import readConfig, { ensureConfigFileExist } from '@robot/rover-app/helpers/read-config.js';
 import writeConfig from '@robot/rover-app/helpers/write-config.ts';
-import fs from 'fs-extra';
 import type { MotorType } from 'scripts/utils/motor.ts';
 
 export type MotorConfig = {

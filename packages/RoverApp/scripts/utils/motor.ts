@@ -1,8 +1,7 @@
 import type { Pca9685Driver } from 'pca9685';
 import wait from './wait.ts';
-import { WheelPosition, configFilePath } from '@robot/rover-app/const.ts';
+import { WheelPosition } from '@robot/rover-app/const.ts';
 import { ExomyConfig } from '@robot/rover-app/types.js';
-import fs from 'fs-extra';
 import { pwmFrequency } from '@robot/rover-app/const.js';
 import writeConfig from '@robot/rover-app/helpers/write-config.ts';
 
