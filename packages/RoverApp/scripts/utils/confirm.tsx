@@ -7,13 +7,24 @@ import { Br } from './br.tsx';
 export type ConfirmArg = {
   message: string;
   title: string;
+  confirmBtnLabel?: string;
+  cancelBtnLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  children?: React.ReactNode | undefined;
 };
 
 type Buttons = 'yes' | 'no';
 
-export const Confirm = ({ message, title, onConfirm, onCancel }: ConfirmArg) => {
+export const Confirm = ({
+  message,
+  title,
+  onConfirm,
+  onCancel,
+  confirmBtnLabel,
+  cancelBtnLabel,
+  children,
+}: ConfirmArg) => {
   const [focused, setFocused] = useState<Buttons | undefined>();
 
   useInput((input, key) => {
@@ -35,6 +46,7 @@ export const Confirm = ({ message, title, onConfirm, onCancel }: ConfirmArg) => 
       <TitledBox titles={[title]} borderStyle="round">
         <Box alignItems="center" flexDirection="column" padding={1}>
           <Text>{message}</Text>
+          {children}
           <Br />
           <Box alignItems="stretch" flexGrow={1} backgroundColor="red">
             <Box
@@ -43,7 +55,7 @@ export const Confirm = ({ message, title, onConfirm, onCancel }: ConfirmArg) => 
               borderColor={focused === 'no' ? 'blue' : 'white'}
               backgroundColor={focused === 'no' ? 'white' : 'black'}
             >
-              <Text color={focused === 'no' ? 'blue' : 'white'}>No</Text>
+              <Text color={focused === 'no' ? 'blue' : 'white'}>{confirmBtnLabel ?? 'No'}</Text>
             </Box>
             <Box
               paddingX={1}
@@ -51,7 +63,7 @@ export const Confirm = ({ message, title, onConfirm, onCancel }: ConfirmArg) => 
               borderColor={focused === 'yes' ? 'blue' : 'white'}
               backgroundColor={focused === 'yes' ? 'white' : 'black'}
             >
-              <Text color={focused === 'yes' ? 'blue' : 'white'}>Yes</Text>
+              <Text color={focused === 'yes' ? 'blue' : 'white'}>{cancelBtnLabel ?? 'Yes'}</Text>
             </Box>
           </Box>
         </Box>
