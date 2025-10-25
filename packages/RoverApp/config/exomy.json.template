@@ -1,8 +1,9 @@
 {
   "camera": {
-    "width": 640,
-    "height": 480,
-    "fps": 30
+    "width": 1440,
+    "height": 1080,
+    "fps": 12,
+    "bitRate": 8
   },
   "drive": {
     "pins": [5, 9, 4, 10, 2, 3],

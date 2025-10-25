@@ -1,6 +1,6 @@
-import { WheelPosition, configFilePath } from '@robot/rover-app/const.js';
+import { WheelPosition } from '@robot/rover-app/const.js';
 import readConfig, { ensureConfigFileExist } from '@robot/rover-app/helpers/read-config.js';
-import fs from 'fs-extra';
+import writeConfig from '@robot/rover-app/helpers/write-config.ts';
 import type { MotorType } from 'scripts/utils/motor.ts';
 
 export type MotorConfig = {
@@ -32,12 +32,12 @@ export function isConfigValid(config: MotorConfig[]) {
 export function saveMotorConfig(motorConfig: MotorConfig[]) {
   ensureConfigFileExist();
 
-  const jsonConfig = readConfig();
+  const roverConfig = readConfig();
 
   // Update motors pin value
   for (const motor of motorConfig) {
-    jsonConfig[motor.type === 'driving' ? 'drive' : 'steer'].pins[motor.position] = motor.pin;
+    roverConfig[motor.type === 'driving' ? 'drive' : 'steer'].pins[motor.position] = motor.pin;
   }
 
-  fs.writeFileSync(configFilePath, JSON.stringify(jsonConfig, null, 2));
+  writeConfig(roverConfig);
 }

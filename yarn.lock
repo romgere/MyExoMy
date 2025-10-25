@@ -2648,8 +2648,10 @@ __metadata:
     express: "npm:^4.18.2"
     fs-extra: "npm:^11.1.1"
     ink: "npm:^6.3.1"
+    ink-link: "npm:^5.0.0"
     ink-select-input: "npm:^6.2.0"
     ink-task-list: "npm:^2.0.0"
+    ink-text-input: "npm:^6.0.0"
     onoff: "npm:^6.0.3"
     pca9685: "npm:^5.0.0"
     pi-camera-connect: "npm:^0.3.4"
@@ -10387,6 +10389,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"has-flag@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "has-flag@npm:5.0.1"
+  checksum: 10c0/6c214902e9d829979ef0f906980599df1db5ca289a9c72cc1b1ebc2c8c924681c60b632a21bfc23728a1098a3f300029a8608f293fcc559962ecd495652aa250
+  languageName: node
+  linkType: hard
+
 "has-property-descriptors@npm:^1.0.0":
   version: 1.0.0
   resolution: "has-property-descriptors@npm:1.0.0"
@@ -10893,6 +10902,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ink-link@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "ink-link@npm:5.0.0"
+  dependencies:
+    terminal-link: "npm:^5.0.0"
+  peerDependencies:
+    ink: ">=6"
+  checksum: 10c0/6ac227347f244f175f375fda5e0d80f3a86131e41f265a4cf230bf3b881221646c7d92f39455858d444da9c5e669402d2a100d060e22b5e955a3e9a87a53d4d6
+  languageName: node
+  linkType: hard
+
 "ink-select-input@npm:^6.2.0":
   version: 6.2.0
   resolution: "ink-select-input@npm:6.2.0"
@@ -10913,6 +10933,19 @@ __metadata:
     ink: ">=3.0.0"
     react: ">=16.8.0"
   checksum: 10c0/68aa96d2842d06237b17484716a5d8052c96505ad5969f744c6d0ee1d5b7a03d6838e7f8f33695f15750a5279e0a1159a0780d62e406c2060ac5f218526d899e
+  languageName: node
+  linkType: hard
+
+"ink-text-input@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "ink-text-input@npm:6.0.0"
+  dependencies:
+    chalk: "npm:^5.3.0"
+    type-fest: "npm:^4.18.2"
+  peerDependencies:
+    ink: ">=5"
+    react: ">=18"
+  checksum: 10c0/1f163d3c88e20719d4ff1fd32978f0e4892e47b75c86d6d33fd4e2f29b02a55c82ccd8f32a6b376dc45676ce42158e4805b32ffe46a705c93330532ba2de9828
   languageName: node
   linkType: hard
 
@@ -16766,6 +16799,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"supports-color@npm:^10.0.0":
+  version: 10.2.2
+  resolution: "supports-color@npm:10.2.2"
+  checksum: 10c0/fb28dd7e0cdf80afb3f2a41df5e068d60c8b4f97f7140de2eaed5b42e075d82a0e980b20a2c0efd2b6d73cfacb55555285d8cc719fa0472220715aefeaa1da7c
+  languageName: node
+  linkType: hard
+
 "supports-color@npm:^2.0.0":
   version: 2.0.0
   resolution: "supports-color@npm:2.0.0"
@@ -16807,6 +16847,16 @@ __metadata:
     has-flag: "npm:^4.0.0"
     supports-color: "npm:^7.0.0"
   checksum: 10c0/36aaa55e67645dded8e0f846fd81d7dd05ce82ea81e62347f58d86213577eb627b2b45298656ce7a70e7155e39f071d0d3f83be91e112aed801ebaa8db1ef1d0
+  languageName: node
+  linkType: hard
+
+"supports-hyperlinks@npm:^4.1.0":
+  version: 4.3.0
+  resolution: "supports-hyperlinks@npm:4.3.0"
+  dependencies:
+    has-flag: "npm:^5.0.1"
+    supports-color: "npm:^10.0.0"
+  checksum: 10c0/af96da0ed79441fe8b3300ca6d6793a2d1569d7a2f9b2756b0dc2c7502c79f94557ad54062295e1fe6849823d2c990da098d300644313b5309823fd48e9a05e9
   languageName: node
   linkType: hard
 
@@ -16920,6 +16970,16 @@ __metadata:
     mkdirp: "npm:^0.5.1"
     rimraf: "npm:~2.6.2"
   checksum: 10c0/7a1cd75efa65b9ca97fc0dfa752673842d23fa41d9c641a447d86ca986eb7662f0d17771e1edf8d0149e76de3c6e7005faf2ccaa3baf64811c86d1d1a951dda7
+  languageName: node
+  linkType: hard
+
+"terminal-link@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "terminal-link@npm:5.0.0"
+  dependencies:
+    ansi-escapes: "npm:^7.0.0"
+    supports-hyperlinks: "npm:^4.1.0"
+  checksum: 10c0/c34e9c2ad92bc663161534f9a3f6f5e7567148c825ac8287ed5f2d9f7f61eced814227d659c2d4017de71751025704b9e71f8b0b0d7b147c56f0de799fe3b6eb
   languageName: node
   linkType: hard
 
@@ -17397,7 +17457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^4.27.0":
+"type-fest@npm:^4.18.2, type-fest@npm:^4.27.0":
   version: 4.41.0
   resolution: "type-fest@npm:4.41.0"
   checksum: 10c0/f5ca697797ed5e88d33ac8f1fec21921839871f808dc59345c9cf67345bfb958ce41bd821165dbf3ae591cedec2bf6fe8882098dfdd8dc54320b859711a2c1e4
