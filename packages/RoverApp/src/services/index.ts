@@ -8,6 +8,7 @@ import ExternalSensorService from './external-sensors.js';
 import GPSService from './gps.js';
 import SerialATCommandService from './serial-at-command.ts';
 import SshTunnelService from './ssh-tunnel.ts';
+import MiscService from './misc.ts';
 
 export type ServicesClass =
   | typeof SocketServerService
@@ -19,7 +20,8 @@ export type ServicesClass =
   | typeof ExternalSensorService
   | typeof GPSService
   | typeof SerialATCommandService
-  | typeof SshTunnelService;
+  | typeof SshTunnelService
+  | typeof MiscService;
 
 const serviceRegistry: Record<string, ServicesClass> = {
   [SocketServerService.serviceName]: SocketServerService,
@@ -32,6 +34,7 @@ const serviceRegistry: Record<string, ServicesClass> = {
   [GPSService.serviceName]: GPSService,
   [SerialATCommandService.serviceName]: SerialATCommandService,
   [SshTunnelService.serviceName]: SshTunnelService,
+  [MiscService.serviceName]: MiscService,
 };
 
 export default serviceRegistry;
