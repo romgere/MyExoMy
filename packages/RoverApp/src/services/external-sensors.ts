@@ -16,8 +16,6 @@ type ProximitySensors = {
   multiplexerAddress: number;
 };
 
-type ProximitySensorsValues = Record<ProximitySensorPosition, number>;
-
 class ExternalSensorsService extends Service {
   static serviceName = 'external-sensors';
 
@@ -29,8 +27,8 @@ class ExternalSensorsService extends Service {
   proximity: ProximitySensors[] = [
     { position: 'RR', multiplexerAddress: 0, sensor: new ProximitySensor() },
     { position: 'RL', multiplexerAddress: 1, sensor: new ProximitySensor() },
-    { position: 'FR', multiplexerAddress: 2, sensor: new ProximitySensor() },
-    { position: 'FL', multiplexerAddress: 3, sensor: new ProximitySensor() },
+    { position: 'FL', multiplexerAddress: 2, sensor: new ProximitySensor() },
+    { position: 'FR', multiplexerAddress: 3, sensor: new ProximitySensor() },
   ];
 
   multiplexer = new I2CMultiplexer();
@@ -68,11 +66,27 @@ class ExternalSensorsService extends Service {
   // Aggregate all external sensor values & send a single "externalSensor" event
   async sendExtenalSensorEvent() {
     let magneto: Coord3D = { x: 0, y: 0, z: 0 };
-    const mTemp = 0;
+    let mTemp = 0;
+
+    try {
+      magneto = await this.magneto.getEvent();
+      // can't read temperature when continuous mode is on
+      mTemp = 0; // await this.magneto.readTemperature();
+    } catch (e) {
+      this.logger.error("Can't read magnetometer data", e);
+    }
 
     let gTemp = 0;
     let gyro: Coord3D = { x: 0, y: 0, z: 0 };
     let accel: Coord3D = { x: 0, y: 0, z: 0 };
+
+    try {
+      gTemp = await this.gyro.getTemperatureSensor();
+      gyro = await this.gyro.getGyroscopeValues();
+      accel = await this.gyro.getAccelerometerValues();
+    } catch (e) {
+      this.logger.error("Can't read gyroscope data", e);
+    }
 
     let lidar: LidarData = {
       status: 0,
@@ -82,62 +96,22 @@ class ExternalSensorsService extends Service {
       temp: 0,
     };
 
-    const proximity: ProximitySensorsValues = { FR: 0, FL: 0, RR: 0, RL: 0 };
-
-    const sensorsData = await Promise.allSettled([
-      this.magneto.getEvent(),
-      // can't read temperature when continuous mode is on
-      // await this.magneto.readTemperature();
-      this.gyro.getGyroscopeValues(),
-      this.gyro.getAccelerometerValues(),
-      this.gyro.getTemperatureSensor(),
-      this.lidar.getData(),
-      // Get proximity sensors data
-      Promise.all(
-        this.proximity.map(async (prox) => {
-          await this.multiplexer.select(prox.multiplexerAddress);
-
-          return await prox.sensor.getProximity();
-        }),
-      ),
-    ]);
-
-    if (sensorsData[0].status === 'fulfilled') {
-      magneto = sensorsData[0].value;
-    } else {
-      this.logger.error("Can't read magnetometer data", sensorsData[0].reason);
+    try {
+      lidar = await this.lidar.getData();
+    } catch (e) {
+      this.logger.error("Can't read lidar data", e);
     }
 
-    if (sensorsData[1].status === 'fulfilled') {
-      gyro = sensorsData[1].value;
-    } else {
-      this.logger.error("Can't read gyroscope data", sensorsData[1].reason);
-    }
+    const proximity: Record<ProximitySensorPosition, number> = { FR: 0, FL: 0, RR: 0, RL: 0 };
 
-    if (sensorsData[2].status === 'fulfilled') {
-      accel = sensorsData[2].value;
-    } else {
-      this.logger.error("Can't read accelerometer data", sensorsData[2].reason);
-    }
+    for (const prox of this.proximity) {
+      try {
+        await this.multiplexer.select(prox.multiplexerAddress);
 
-    if (sensorsData[3].status === 'fulfilled') {
-      gTemp = sensorsData[3].value;
-    } else {
-      this.logger.error("Can't read temperature data", sensorsData[3].reason);
-    }
-
-    if (sensorsData[4].status === 'fulfilled') {
-      lidar = sensorsData[4].value;
-    } else {
-      this.logger.error("Can't read LIDAR data", sensorsData[4].reason);
-    }
-
-    if (sensorsData[5].status === 'fulfilled') {
-      for (let i = 0; i < this.proximity.length; i++) {
-        proximity[this.proximity[i].position] = sensorsData[5].value[i];
+        proximity[prox.position] = await prox.sensor.getProximity();
+      } catch (e) {
+        this.logger.error("Can't read proximity data", e);
       }
-    } else {
-      this.logger.error("Can't read proximity data", sensorsData[5].reason);
     }
 
     this.emit('externalSensor', {
