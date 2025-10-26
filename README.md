@@ -3,6 +3,7 @@
 Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy project](https://github.com/esa-prl/ExoMy/)
 
 !["Picture of my Rover (Work in progress)](./Misc/Assets/rover1.jpg)
+
 !["Pixture of head of my Rover (Work in progress)](./Misc/Assets/rover2.jpg)
 
 ## Freecad parts
@@ -14,27 +15,29 @@ All parts are editable in freecad.
 Video stream, live camera settings updates, GPS position, lot of sensors & more.
 
 !["The control application](./Misc/Assets/control-ui.png)
+
 !["The control application, camera update screen](./Misc/Assets/camera-update.png)
 
 ## Configuration application
 Easy configuration with the configuration Terminal Uer Interface.
 
 !["The configuration TUI](./Misc/Assets/tui.png)
+
 !["Video of the configuration application](./Misc/Assets/tui.gif)
 
 # What changed
 
 Here is a brief summary of what's change comparing to [original ExoMy project](https://esa-prl.github.io/ExoMy/) :
 
-- Move rover code & UI app in this single mono-repo.
+- Move rover code a mono-repo.
 - Code source re-write :
-  - Rover: Get rid of ROS & convert rover code typescript (based on Woker thread for better code isolation & error resilience)
-  - Control app: Rewrite with [Ember.js](https://emberjs.com/) framework, add feature (Game controller support, new rover feature support, ...)
-  - settings script has been rewritten in typescript into a TUI app using [ink](https://github.com/vadimdemedes/ink) (based on [React](https://fr.react.dev/))
-- Add "some" feature to therover :
+  - Rover: Get rid of ROS & convert rover code into typescript (based on Worker thread for better code isolation & error resilience)
+  - Control app: Rewrite with [Ember.js](https://emberjs.com/) framework add "some" feature (Game controller support, new rover feature support, ...)
+  - setting scripts has been rewritten in typescript into a TUI app using [ink](https://github.com/vadimdemedes/ink) (based on [React](https://fr.react.dev/))
+- Add "some" feature to the rover :
   - Send some measure from raspberry PI (Network quality, vcgencmd infos, ...)
   - Allow live camera settings update
-  - Add some HTTP response (ping) to better deal with rover connection.
+  - Add some HTTP response (ping) to better deal with rover connection
   - add sensor to rover & display values in UI (Lidar, Proximity, Magnetometer, Gyroscope)
   - add a 4g hat to allow controlling the rover from anywhere
   - add support for 4g hat built-in GPS & send live position to control app
@@ -59,6 +62,7 @@ If you start from scratch, you may want to go through the [assembling rover guid
 The control app (as it is on this repository `main` branch) is deployed on netlify. You can use it for your own conveniance if you want :
 
 [https://rover.mestres.fr](https://rover.mestres.fr)
+*This can't (yet?) be used for local developpement, Netlify no longer allow HTTP traffic & rover api is HTTPS when serving locally (Not via 4G tunnel).*
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/543b67ce-f6fd-49e3-bc17-88cf6e744329/deploy-status)](https://app.netlify.com/projects/exomycontrolapp/deploys)
 
