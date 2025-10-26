@@ -30,10 +30,10 @@ class MiscService extends Service {
       case 'wifioff':
         try {
           await this.toggleWifi('down');
-          await this.emit('sendSms', { content: 'Wifi started' });
+          await this.emit('sendSms', { content: 'Wifi stopped' });
         } catch (e) {
           this.logger.error('Error starting Wifi', e);
-          await this.emit('sendSms', { content: 'Error while starting Wifi' });
+          await this.emit('sendSms', { content: 'Error while stopping Wifi' });
         }
         break;
     }
