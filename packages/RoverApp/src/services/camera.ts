@@ -1,9 +1,8 @@
 import Service from './-base.js';
-import { StreamCamera, Codec } from 'pi-camera-connect';
 import HttpServer from '@robot/rover-app/lib/http-server.js';
 import { videoServerPort } from '../const.js';
 import type { Request, Response } from 'express';
-import type { CameraConfig } from '@robot/rover-app/types.js';
+import camera, { Mirror, type CameraOptions } from 'pi-camera-native-ts';
 
 const boundary = 'totalmjpeg';
 const streamHeaders = {
@@ -13,58 +12,58 @@ const streamHeaders = {
   'Content-Type': `multipart/x-mixed-replace; boundary=${boundary}`,
 };
 
-const defaultCameraSettings = {
+const defaultCameraSettings: Omit<CameraOptions, 'encoding'> = {
   width: 1440,
   height: 1080,
   fps: 12,
-  bitRate: 8000000, // 1MB/s seems a good comprimise to save some bandwidth & keep correct quality
+  quality: 12,
+  rotation: 0,
+  mirror: Mirror.NONE,
 };
 
 class CameraService extends Service {
   static serviceName = 'camera';
 
-  private camera: StreamCamera;
+  private currentConfig: CameraOptions;
   private httpServer = new HttpServer(videoServerPort);
-  private cameraStarted = false;
   private clientResponses: Response[] = [];
 
   constructor(...args: ConstructorParameters<typeof Service>) {
     super(...args);
 
-    this.camera = new StreamCamera({
+    this.currentConfig = {
       ...defaultCameraSettings,
       ...(this.config.camera ?? {}),
-      codec: Codec.MJPEG, // Force codec to MJPEG
-    });
+      encoding: 'MJPEG',
+    };
   }
 
   async init() {
+    camera.on('frame', this.broadcastFrameData);
+
     this.httpServer.expressApp.get('/', this.onGetStream.bind(this));
     this.on('updateCameraSettings', this.updateCameraSettings.bind(this));
   }
 
   async startCamera() {
-    await this.camera.startCapture();
-    this.camera.on('frame', this.broadcastFrameData);
-    this.cameraStarted = true;
+    await camera.start(this.currentConfig);
   }
 
   async stopCamera() {
-    this.camera.off('frame', this.broadcastFrameData);
-    await this.camera.stopCapture();
-    this.cameraStarted = false;
+    camera.off('frame', this.broadcastFrameData);
+    await camera.stop();
   }
 
-  async updateCameraSettings(config: CameraConfig) {
-    if (this.cameraStarted) {
+  async updateCameraSettings(config: Omit<CameraOptions, 'encoding'>) {
+    if (camera.running) {
       await this.stopCamera();
     }
 
-    this.camera = new StreamCamera({
+    this.currentConfig = {
       ...defaultCameraSettings,
       ...(config ?? {}),
-      codec: Codec.MJPEG, // Force codec to MJPEG
-    });
+      encoding: 'MJPEG',
+    };
 
     if (this.clientResponses.length) {
       await this.startCamera();
@@ -72,7 +71,7 @@ class CameraService extends Service {
   }
 
   async onGetStream(req: Request, res: Response) {
-    if (!this.cameraStarted) {
+    if (!camera.running) {
       await this.startCamera();
     }
 

@@ -2655,6 +2655,7 @@ __metadata:
     onoff: "npm:^6.0.3"
     pca9685: "npm:^5.0.0"
     pi-camera-connect: "npm:^0.3.4"
+    pi-camera-native-ts: "npm:^0.0.9"
     prettier: "npm:^3.0.1"
     prompt: "npm:^1.1.5"
     react: "npm:^19.2.0"
@@ -13485,6 +13486,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-addon-api@npm:^4.2.0":
+  version: 4.3.0
+  resolution: "node-addon-api@npm:4.3.0"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 10c0/5febe94d58cdef319bc96a357b43d7a13776c93ee3f2edb374000f16454e65cec06035497947d5fdaa50db1cc7ab8e3a30ca8669bb07a1b159f0307dc2c1ccdf
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:^2.6.1":
   version: 2.6.12
   resolution: "node-fetch@npm:2.6.12"
@@ -14395,6 +14405,17 @@ __metadata:
   version: 0.3.4
   resolution: "pi-camera-connect@npm:0.3.4"
   checksum: 10c0/dc0b66cdfae5861325ddfadd50a2c252573d6d29919622cc68e152265b84324688637d9406c546bf8ccf69a70e75cf56329295ecfdd58bc906fedd8cb4809b9e
+  languageName: node
+  linkType: hard
+
+"pi-camera-native-ts@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "pi-camera-native-ts@npm:0.0.9"
+  dependencies:
+    bindings: "npm:^1.5.0"
+    node-addon-api: "npm:^4.2.0"
+    node-gyp: "npm:latest"
+  checksum: 10c0/e6c22a554a27a5ac6427d3ed80aa1dabd743443f64b01a1c1aae924aedfae7b1d1849e9834c32c257eaf842da2676dc14dcd4e3bd356ebec51d73e6530bf096a
   languageName: node
   linkType: hard
 

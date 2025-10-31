@@ -2,39 +2,27 @@ import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import {
-  defaultAwb,
-  defaultExposure,
-  defaultFlip,
   defaultFps,
+  defaultMirror,
+  defaultQuality,
   defaultResolution,
   defaultRotation,
-  genericAdvancedRangeSettings,
   resolutions,
+  type Rotation,
 } from '../utils/camera-const';
-import { SlChangeEvent, SlRadioGroup, SlRange, SlSelect, SlSwitch } from '@shoelace-style/shoelace';
-import type { AwbMode, CameraConfig, ExposureMode, Flip, Rotation } from '@robot/shared/camera';
+import { SlChangeEvent, SlRadioGroup, SlRange, SlSelect } from '@shoelace-style/shoelace';
+import type { Mirror } from 'pi-camera-native-ts';
+import { CameraSettings } from '@robot/shared/camera';
 
 interface Args {
   open: boolean;
   onClose: () => void;
-  onApply: (settings: CameraConfig) => void;
+  onApply: (settings: CameraSettings) => void;
 }
-
-type GenericRangeValues = Record<keyof typeof genericAdvancedRangeSettings, number>;
-
-const genericSettingsDefault = (): GenericRangeValues =>
-  Object.entries(genericAdvancedRangeSettings).reduce<GenericRangeValues>(
-    (acc, [name, settings]) => {
-      acc[name] = settings.default;
-      return acc;
-    },
-    {},
-  );
 
 export default class ConnectionStatusComponent extends Component<Args> {
   // Settings list
   resolutions = resolutions;
-  genericAdvancedRangeSettings = genericAdvancedRangeSettings;
 
   @tracked
   resolution = defaultResolution;
@@ -43,49 +31,24 @@ export default class ConnectionStatusComponent extends Component<Args> {
   fps: number = defaultFps;
 
   @tracked
-  flip: Flip = defaultFlip;
+  mirror: Mirror = defaultMirror;
 
   @tracked
   rotation: Rotation = defaultRotation;
 
   @tracked
-  exposure: ExposureMode = defaultExposure;
+  quality: number = defaultQuality;
 
-  @tracked
-  awb: AwbMode = defaultAwb;
-
-  @tracked
-  genericRanges = genericSettingsDefault();
-
-  @tracked
-  iso = 500;
-
-  @tracked
-  isoAuto = true;
-
-  private get genericRangeValues() {
-    const values = { ...this.genericRanges };
-    for (const name in genericAdvancedRangeSettings) {
-      const f = genericAdvancedRangeSettings[name].factor ?? 1;
-      values[name] = values[name] * f;
-    }
-
-    return values;
-  }
-
-  private get cameraConfig(): CameraConfig {
+  private get cameraConfig(): CameraSettings {
     const resolution = resolutions[this.resolution];
 
     return {
       width: resolution.width,
       height: resolution.height,
       fps: this.fps,
-      flip: this.flip,
+      mirror: this.mirror,
       rotation: this.rotation,
-      awbMode: this.awb,
-      exposureMode: this.exposure,
-      ...this.genericRangeValues,
-      ...(this.isoAuto ? {} : { iso: this.iso }),
+      quality: this.quality,
     };
   }
 
@@ -93,13 +56,9 @@ export default class ConnectionStatusComponent extends Component<Args> {
   resetSettings() {
     this.resolution = defaultResolution;
     this.fps = defaultFps;
-    this.flip = defaultFlip;
     this.rotation = defaultRotation;
-    this.exposure = defaultExposure;
-    this.awb = defaultAwb;
-    this.genericRanges = genericSettingsDefault();
-    this.iso = 500;
-    this.isoAuto = true;
+    this.mirror = defaultMirror;
+    this.quality = defaultQuality;
   }
 
   @action
@@ -113,42 +72,18 @@ export default class ConnectionStatusComponent extends Component<Args> {
   }
 
   @action
-  changeFlip(event: SlChangeEvent) {
-    this.flip = (event.target as SlRadioGroup).value as Flip;
+  changeMirror(event: SlChangeEvent) {
+    this.mirror = parseInt((event.target as SlRadioGroup).value) as Mirror;
   }
 
   @action
   changeRotation(event: SlChangeEvent) {
-    this.rotation = parseInt((event.target as SlRadioGroup).value);
+    this.rotation = parseInt((event.target as SlRadioGroup).value) as Rotation;
   }
 
   @action
-  changeExposure(event: SlChangeEvent) {
-    this.exposure = (event.target as SlSelect).value as ExposureMode;
-  }
-
-  @action
-  changeAwb(event: SlChangeEvent) {
-    this.awb = (event.target as SlSelect).value as AwbMode;
-  }
-
-  @action
-  changeGenericRange(name: keyof typeof genericAdvancedRangeSettings, event: SlChangeEvent) {
-    const value = (event.target as SlRange).value;
-    this.genericRanges = {
-      ...this.genericRanges,
-      [name]: value,
-    };
-  }
-
-  @action
-  changeIso(event: SlChangeEvent) {
-    this.iso = (event.target as SlRange).value;
-  }
-
-  @action
-  changeIsoAuto(event: SlChangeEvent) {
-    this.isoAuto = !(event.target as SlSwitch).checked;
+  changeQuality(event: SlChangeEvent) {
+    this.quality = (event.target as SlRange).value;
   }
 
   @action

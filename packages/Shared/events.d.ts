@@ -1,7 +1,6 @@
 // This contains all the events name & event args used to communicate through nodes
 import { MotorSpeed, MotorAngle, Coord3D } from './types.js';
 import type LocomotionMode from './locomotion-modes.js';
-import type { CameraConfig } from './camera.js';
 import type { IWData } from './iwconfig.js';
 
 export type RoverCommand = {
@@ -86,7 +85,7 @@ export type SendSMSEvent = {
 export type EventsTypesMapping = {
   // External command (received from control app)
   controlCommand: ControlCommand; // External command received from control center to move the rover
-  updateCameraSettings: CameraConfig; // External command received from control app to update camera settings
+  updateCameraSettings: CameraSettings; // External command received from control app to update camera settings
 
   // Internal event (live only inside rover-app)
   roverCommand: RoverCommand; // Internal event sent by control service to rover service

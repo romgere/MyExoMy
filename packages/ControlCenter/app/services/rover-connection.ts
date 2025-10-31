@@ -6,7 +6,7 @@ import { EventEmitter } from 'eventemitter3';
 
 import type { Socket } from 'socket.io-client';
 import type { ControlCommand, EventsTypesMapping } from '@robot/shared/events';
-import type { CameraConfig } from '@robot/shared/camera';
+import { CameraSettings } from '@robot/shared/camera';
 
 // Interval to check latency with our rover
 const latency_check_interval = 500;
@@ -115,7 +115,7 @@ export default class RoverConnexionService extends Service {
     this.socket?.emit('controlCommand', data);
   }
 
-  sendUpdateCameraSettingsCommand(settings: CameraConfig) {
+  sendUpdateCameraSettingsCommand(settings: CameraSettings) {
     if (!this.connected) {
       return;
     }

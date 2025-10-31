@@ -1,4 +1,6 @@
-import type { AwbMode, ExposureMode, Flip, Rotation } from '@robot/shared/camera';
+import { Mirror } from 'pi-camera-native-ts';
+
+export type Rotation = 0 | 90 | 180 | 270;
 
 export type CameraResolution = {
   width: number;
@@ -19,34 +21,6 @@ export const resolutions: Record<string, CameraResolution> = {
 
 export const defaultResolution = '1440x1080';
 export const defaultFps = 12;
-export const defaultFlip: Flip = 'none' as Flip;
+export const defaultMirror: Mirror = Mirror.NONE;
 export const defaultRotation: Rotation = 0;
-export const defaultExposure: ExposureMode = 'auto' as ExposureMode;
-export const defaultAwb: AwbMode = 'auto' as AwbMode;
-
-type RangeSetting = {
-  min: string;
-  max: string;
-  default: number;
-  label: string;
-  unit?: string;
-  step?: number;
-  factor?: number;
-};
-
-export const genericAdvancedRangeSettings: Record<string, RangeSetting> = {
-  bitRate: {
-    min: '1',
-    max: '25',
-    default: 8,
-    label: 'Bit-rate',
-    unit: 'Mbps',
-    factor: 1000000,
-    step: 0.5,
-  },
-  harpness: { min: '-100', max: '100', default: 0, label: 'Harpness' },
-  contrast: { min: '-100', max: '100', default: 0, label: 'Contrast' },
-  brightness: { min: '0', max: '100', default: 50, label: 'Brightness' },
-  saturation: { min: '-100', max: '100', default: 0, label: 'Saturation' },
-  exposureCompensation: { min: '-10', max: '10', default: 0, label: 'Exposure compensation' },
-};
+export const defaultQuality = 12; // bit rate ?

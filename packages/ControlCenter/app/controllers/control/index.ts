@@ -4,7 +4,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import LocomotionMode from '@robot/shared/locomotion-modes';
 import { modifier } from 'ember-modifier';
-import { CameraConfig } from '@robot/shared/camera';
+import { CameraSettings } from '@robot/shared/camera';
 import { SlSplitPanel } from '@shoelace-style/shoelace';
 
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
@@ -213,7 +213,7 @@ export default class ControlController extends Controller {
   }
 
   @action
-  onApplyCameraSettings(settings: CameraConfig) {
+  onApplyCameraSettings(settings: CameraSettings) {
     this.roverConnection.sendUpdateCameraSettingsCommand(settings);
     this.closeCameraSettings();
   }
