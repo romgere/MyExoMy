@@ -6,28 +6,26 @@ import { Task } from 'ink-task-list';
 import spinners from 'cli-spinners';
 import { Br } from 'scripts/utils/br.tsx';
 import TextInput from 'ink-text-input';
-import { StreamCamera, Codec } from 'pi-camera-connect';
 import fs from 'fs-extra';
 import path from 'path';
 import wait from 'scripts/utils/wait.ts';
+import camera, { Mirror } from 'pi-camera-native-ts';
 
 const defaultFolder = '/home/pi/Videos/';
 const file = 'exomy-video-test.h264';
 
 async function recordVideo(file: string) {
-  const streamCamera = new StreamCamera({
-    codec: Codec.H264,
+  await camera.start({
     width: 1920,
     height: 1080,
+    fps: 20,
+    encoding: 'JPEG',
+    quality: 12,
+    rotation: 0,
+    mirror: Mirror.NONE,
   });
-
-  const videoStream = streamCamera.createStream();
-  const writeStream = fs.createWriteStream(file);
-
-  videoStream.pipe(writeStream);
-  await streamCamera.startCapture();
   await wait(5000);
-  await streamCamera.stopCapture();
+  await camera.stop();
 }
 
 type CameraTestStep = 'choose_path' | 'capturing' | 'done' | 'error';
