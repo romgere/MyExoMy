@@ -1,6 +1,11 @@
 import { openSync } from 'i2c-bus';
 import type { PromisifiedBus } from 'i2c-bus';
 
+export enum BitOrder {
+  LSB_First = 0, //LE
+  MSB_First = 1, // BE
+}
+
 /**
  * https://github.com/adafruit/Adafruit_BusIO/blob/master/Adafruit_BusIO_Register.cpp
  * This allow to read/write from/into an I2C Register.
@@ -14,21 +19,26 @@ export default class I2CRegister {
   address: number;
   registerAddress: number;
   size: number;
-  lsbFirst: boolean; // True = LE, False = BE
+  bitOrder: BitOrder; // True = LE, False = BE
 
-  constructor(address: number, registerAddress: number, size: number = 1, lsbFirst = true) {
+  constructor(
+    address: number,
+    registerAddress: number,
+    size: number = 1,
+    bitOrder: BitOrder = BitOrder.LSB_First,
+  ) {
     this.i2cbus = openSync(1).promisifiedBus();
     this.address = address;
     this.registerAddress = registerAddress;
     this.size = size;
-    this.lsbFirst = lsbFirst;
+    this.bitOrder = bitOrder;
   }
 
   async write(value: number) {
     const buffer = Buffer.alloc(this.size);
 
     for (let i = 0; i < this.size; i++) {
-      const idx = this.lsbFirst ? this.size - i - 1 : i;
+      const idx = this.bitOrder === BitOrder.LSB_First ? i : this.size - i - 1;
       buffer[idx] = value & 0xff;
       value >>= 8;
     }
@@ -43,7 +53,7 @@ export default class I2CRegister {
     let value = 0;
     for (let i = 0; i < this.size; i++) {
       value <<= 8;
-      const idx = this.lsbFirst ? this.size - i - 1 : i;
+      const idx = this.bitOrder === BitOrder.LSB_First ? this.size - i - 1 : i;
       value |= buffer[idx] & 0xff;
     }
 
@@ -64,7 +74,7 @@ export default class I2CRegister {
     let value = 0;
     for (let i = 0; i < size; i++) {
       value <<= 1;
-      const shift = this.lsbFirst ? size - i - 1 : i;
+      const shift = this.bitOrder === BitOrder.LSB_First ? size - i - 1 : i;
       value |= (await this.readBit(startBit + shift)) ? 1 : 0;
     }
     return value;
@@ -90,7 +100,7 @@ export default class I2CRegister {
     let value = await this.read();
 
     for (let i = startBit; i < startBit + size; i++) {
-      const shift = this.lsbFirst ? size - i - 1 : i;
+      const shift = this.bitOrder === BitOrder.LSB_First ? i : size - i - 1;
       const mask = 1 << (startBit + shift) % (8 * this.size);
 
       if (newValue & mask) {
