@@ -68,6 +68,6 @@ The control app (as it is on this repository `main` branch) is deployed on netli
 
 # Know issues
 
-- Proximity sensors boxes need a re-design (proximity sensor lifght signal hit box & result in poor "far object" detection)
 - New body height is still a bit small (servo connectors are a bit bended by top)
 - 4G on/off commands (SMS) does not work (switching to GSM only make i2c & AT interface somehow exploding)
+- body cover need a refactor (ergo are too weak)
