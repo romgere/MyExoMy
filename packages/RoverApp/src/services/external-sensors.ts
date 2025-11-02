@@ -5,9 +5,9 @@ import MagnetometerSensor from '@robot/rover-app/lib/sensors/magnetometer.js';
 import LidarSensor from '@robot/rover-app/lib/sensors/lidar.js';
 import ProximitySensor from '@robot/rover-app/lib/sensors/proximity.js';
 import I2CMultiplexer from '@robot/rover-app/lib/sensors/i2c-multiplexer.js';
-
+import Ina219, { INA219_ADDRESS_A0 } from '../lib/sensors/ina219.ts';
 import type { Coord3D } from '@robot/shared/types.js';
-import type { ProximitySensorPosition } from '@robot/shared/events.js';
+import type { BatteryData, ProximitySensorPosition } from '@robot/shared/events.js';
 import type { LidarData } from '@robot/rover-app/lib/sensors/lidar.js';
 
 type ProximitySensors = {
@@ -30,6 +30,8 @@ class ExternalSensorsService extends Service {
     { position: 'FL', multiplexerAddress: 2, sensor: new ProximitySensor() },
     { position: 'FR', multiplexerAddress: 3, sensor: new ProximitySensor() },
   ];
+
+  battery = new Ina219(INA219_ADDRESS_A0);
 
   multiplexer = new I2CMultiplexer();
 
@@ -54,6 +56,9 @@ class ExternalSensorsService extends Service {
 
     this.logger.info('init lidar...');
     this.logger.log('lidar version', await this.lidar.getFirmwareVersion());
+
+    this.logger.info('init battery sensor...');
+    await this.battery.calibrate32V2A();
 
     this.logger.info('all sensor initialized.');
 
@@ -114,6 +119,22 @@ class ExternalSensorsService extends Service {
       }
     }
 
+    const battery: BatteryData = {
+      busVoltage: 0,
+      shuntVoltage: 0,
+      current: 0,
+      power: 0,
+    };
+
+    try {
+      battery.busVoltage = await this.battery.getBusVoltage_V();
+      battery.shuntVoltage = await this.battery.getShuntVoltage_mV();
+      battery.current = await this.battery.getCurrent_mA();
+      battery.power = await this.battery.getPower_mW();
+    } catch (e) {
+      this.logger.error("Can't read battery data", e);
+    }
+
     this.emit('externalSensor', {
       gyro: {
         gyro,
@@ -131,6 +152,7 @@ class ExternalSensorsService extends Service {
         error: lidar.status,
       },
       proximity,
+      battery,
     });
   }
 }
