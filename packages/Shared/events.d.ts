@@ -24,7 +24,6 @@ export type ControlCommand = {
   locomotionMode: LocomotionMode;
   toggleMotors: boolean;
 };
-
 export type PiSensorEvent = {
   underVoltage: boolean;
   armFreqCapped: boolean;
@@ -36,6 +35,13 @@ export type PiSensorEvent = {
   softTemperatureLimitOccurred: boolean;
   temperature: number;
   iwData: IWData;
+};
+
+export type BatteryData = {
+  busVoltage: number; //V
+  shuntVoltage: number; //mV
+  current: number; //mA
+  power: number; //w
 };
 
 export type ProximitySensorPosition = 'RR' | 'RL' | 'FR' | 'FL';
@@ -57,6 +63,7 @@ export type ExternalSensorEvent = {
     error: number;
   };
   proximity: Record<ProximitySensorPosition, number>;
+  battery: BatteryData;
 };
 
 export type GPSEvent = {
