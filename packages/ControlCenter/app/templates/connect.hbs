@@ -29,6 +29,15 @@
 
   <sl-switch checked={{this.wanMode}} {{on 'sl-change' this.toggleWanMode}}>Wan mode (4g connection)</sl-switch>
 
+  {{#if this.lastError}}
+    <br /><br />
+    <sl-alert variant='danger' open>
+      <sl-icon slot='icon' name='exclamation-octagon'></sl-icon>
+      <strong>Connection error</strong><br />
+      {{this.lastError}}
+    </sl-alert>
+  {{/if}}
+
   <sl-button slot='footer' {{on 'click' this.testMode}}>
     Test mode
   </sl-button>
@@ -41,12 +50,4 @@
   >
     Connect
   </sl-button>
-
-  {{#if this.lastError}}
-    <sl-alert variant='danger' open>
-      <sl-icon slot='icon' name='exclamation-octagon'></sl-icon>
-      <strong>Connection error</strong><br />
-      {{this.lastError}}
-    </sl-alert>
-  {{/if}}
 </sl-dialog>
