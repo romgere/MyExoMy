@@ -1,7 +1,7 @@
-<sl-badge size="medium" variant={{if @connected "success" "danger"}}>
+<sl-badge size='medium' variant={{if @connected 'success' 'danger'}} pulse={{not @connected}}>
   {{#if @connected}}
-    Connected
+    OK
   {{else}}
-    Disconnected
+    KO
   {{/if}}
 </sl-badge>

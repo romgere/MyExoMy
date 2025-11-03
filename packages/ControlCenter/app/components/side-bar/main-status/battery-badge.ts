@@ -45,4 +45,8 @@ export default class NetworkBadgeComponent extends Component<Args> {
   get power() {
     return (this.roverSensor.power / 1000).toFixed(2);
   }
+
+  get pulse() {
+    return this.roverSensor.batteryPercent < BATTERY_HIGH;
+  }
 }

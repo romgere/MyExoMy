@@ -39,4 +39,8 @@ export default class NetworkBadgeComponent extends Component<Args> {
 
     return 'success';
   }
+
+  get pulse() {
+    return this.roverSensor.networkLinkQuality < QUALITY_MEDIUM;
+  }
 }
