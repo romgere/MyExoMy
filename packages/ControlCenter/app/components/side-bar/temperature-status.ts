@@ -11,7 +11,7 @@ export default class SensorStatus extends Component<SensorStatusArgs> {
     const t = this.roverSensor.piTemperature;
     if (t < 50) {
       return 'success';
-    } else if (t < 65) {
+    } else if (t < 75) {
       return 'warning';
     }
 
