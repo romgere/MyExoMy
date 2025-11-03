@@ -1,5 +1,10 @@
 import { spawn } from 'child_process';
-import { safe_sms_mode, sim7600e_serial_at_device, sms_verify_interval } from '../const.js';
+import {
+  gsm_event_interval,
+  safe_sms_mode,
+  sim7600e_serial_at_device,
+  sms_verify_interval,
+} from '../const.js';
 import Service from './-base.js';
 import promiseWithResolvers, {
   type PromiseWithResolvers,
@@ -142,6 +147,9 @@ export default class SerialATCommandService extends Service {
     // Start polling incoming SMS
     setInterval(this.checkSms.bind(this), sms_verify_interval);
 
+    // Start sending GSM information
+    setInterval(this.checkSignal.bind(this), gsm_event_interval);
+
     // Listen to other service that want to send SMS
     this.on('sendSms', this.onSentSms.bind(this));
   }
@@ -152,9 +160,36 @@ export default class SerialATCommandService extends Service {
   }
 
   private _checkingSMS = false;
+  private _checkingSignal = false;
+
+  get isBusy() {
+    return this._checkingSMS || this._checkingSignal;
+  }
+
+  async checkSignal() {
+    if (this.isBusy) {
+      return;
+    }
+
+    this._checkingSignal = true;
+
+    const rep = await this.sendCommand('AT+CSQ');
+    let quality = 99; // Unknown
+
+    // +CSQ: 31,99
+    if (rep.startsWith('+CSQ:')) {
+      quality = parseInt(rep.replace('+CSQ:', '').trim().split(',')[0]);
+    }
+
+    this.emit('gsm', {
+      quality,
+    });
+
+    this._checkingSignal = false;
+  }
 
   async checkSms() {
-    if (this._checkingSMS) {
+    if (this.isBusy) {
       return;
     }
 
@@ -319,7 +354,7 @@ export default class SerialATCommandService extends Service {
   private async readSms(): Promise<SMS[]> {
     const messages: SMS[] = [];
 
-    const response = await this.sendCommand('AT+CMGL="ALL"');
+    const response = await this.sendCommand('AT+CMGL="ALL"', { timeout: 2000 });
     if (response) {
       /**
        * Parse response, can contains multiple message :
