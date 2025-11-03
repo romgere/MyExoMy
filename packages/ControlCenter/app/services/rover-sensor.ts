@@ -15,6 +15,7 @@ import type {
 } from '@robot/shared/events';
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type { ProximitySensorPosition } from '@robot/shared/events.js';
+import { voltToPercent } from '../utils/battery-util';
 
 // Defined how many gyro data entries we use to smooth values
 // Given we received new data every 250ms
@@ -69,6 +70,11 @@ export default class RoverSensor extends Service {
     }
 
     this.proximity = data.proximity;
+
+    this.batteryVolt = data.battery.busVoltage + data.battery.shuntVoltage / 1000;
+    this.batteryPercent = voltToPercent(this.batteryVolt);
+    this.current = data.battery.current;
+    this.power = data.battery.power;
   }
 
   @action
@@ -130,6 +136,12 @@ export default class RoverSensor extends Service {
   @tracked status: 'A' | 'V' = 'V';
   @tracked quality: number = 0;
   @tracked satelitesCount: number = 0;
+
+  // batterry
+  @tracked batteryVolt: number = 0;
+  @tracked batteryPercent: number = 0;
+  @tracked current: number = 0;
+  @tracked power: number = 0;
 
   get piTemperatureString() {
     return `${this.piTemperature} °c`;

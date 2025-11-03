@@ -1,0 +1,31 @@
+<sl-details
+  class='no-border'
+  variant={{this.mainVariant}}
+  {{sl-details-persist 'battery-status' true}}
+>
+  <span slot='summary'>
+    <sl-icon name='lightning-charge' />&nbsp;Battery
+  </span>
+
+  <div class='flex flex-space-around'>
+    <div class='center'>
+      <label>Battery Volt.</label>
+      <br />
+      <sl-badge variant={{this.voltageBadgeVariant}}>
+        {{this.volt}}
+        V ({{this.roverSensor.batteryPercent}}
+        %)
+      </sl-badge>
+    </div>
+    <div class='center'>
+      <label>Current.</label>
+      <br />
+      <sl-badge variant={{this.currentBadgeVariant}}>{{this.current}} mA</sl-badge>
+    </div>
+    <div class='center'>
+      <label>Power</label>
+      <br />
+      <sl-badge variant={{this.powerBadgeVariant}}>{{this.power}} W</sl-badge>
+    </div>
+  </div>
+</sl-details>
