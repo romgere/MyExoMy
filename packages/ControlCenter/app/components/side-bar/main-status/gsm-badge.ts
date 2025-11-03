@@ -16,9 +16,9 @@ export default class NetworkBadgeComponent extends Component<Args> {
         return 'reception-0';
       case 'Marginal':
         return 'reception-1';
-      case 'Good':
-        return 'reception-2';
       case 'OK':
+        return 'reception-2';
+      case 'Good':
         return 'reception-3';
       case 'Excellent':
         return 'reception-4';
@@ -31,9 +31,9 @@ export default class NetworkBadgeComponent extends Component<Args> {
         return 'neutral';
       case 'Marginal':
         return 'danger';
-      case 'Good':
-        return 'warning';
       case 'OK':
+        return 'warning';
+      case 'Good':
       case 'Excellent':
         return 'success';
     }
