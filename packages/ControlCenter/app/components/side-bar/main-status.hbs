@@ -1,13 +1,13 @@
 <div class='row'>
   <div class='col center'>
     <sl-icon size='large' name='robot' /><br />
-    <SideBar::ConnectionStatus::StatusBadge @connected={{this.roverConnection.connected}} />
+    <SideBar::MainStatus::StatusBadge @connected={{this.roverConnection.connected}} />
   </div>
   <div class='col center'>
     <sl-icon size='large' name='controller' /><br />
-    <SideBar::ConnectionStatus::StatusBadge @connected={{this.gamepad.gamepadConnected}} />
+    <SideBar::MainStatus::StatusBadge @connected={{this.gamepad.gamepadConnected}} />
   </div>
   <div class='col center'>
-    <SideBar::ConnectionStatus::NetworkBadge />
+    <SideBar::MainStatus::NetworkBadge />
   </div>
 </div>
