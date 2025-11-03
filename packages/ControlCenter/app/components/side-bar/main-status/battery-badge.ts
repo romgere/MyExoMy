@@ -4,8 +4,8 @@ import { service } from '@ember/service';
 import type RoverSensorService from '@robot/control-center/services/rover-sensor';
 
 interface Args {}
-const BATTERY_HIGHT = 80;
-const BATTER_MEDIUM = 40;
+export const BATTERY_HIGH = 50;
+export const BATTER_MEDIUM = 25;
 
 export default class NetworkBadgeComponent extends Component<Args> {
   @service declare roverSensor: RoverSensorService;
@@ -13,7 +13,7 @@ export default class NetworkBadgeComponent extends Component<Args> {
   get icon() {
     const percent = this.roverSensor.batteryPercent;
 
-    if (percent > BATTERY_HIGHT) {
+    if (percent > BATTERY_HIGH) {
       return 'battery-full';
     } else if (percent > BATTER_MEDIUM) {
       return 'battery-half';
@@ -25,7 +25,7 @@ export default class NetworkBadgeComponent extends Component<Args> {
   get badgeVariant() {
     const percent = this.roverSensor.batteryPercent;
 
-    if (percent > BATTERY_HIGHT) {
+    if (percent > BATTERY_HIGH) {
       return 'success';
     } else if (percent > BATTER_MEDIUM) {
       return 'warning';

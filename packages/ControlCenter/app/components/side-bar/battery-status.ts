@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import type RoverSensorService from '@robot/control-center/services/rover-sensor';
+import { BATTER_MEDIUM, BATTERY_HIGH } from './main-status/battery-badge';
 
 interface SensorStatusArgs {}
 
@@ -9,9 +10,9 @@ export default class SensorStatus extends Component<SensorStatusArgs> {
 
   get voltageBadgeVariant() {
     const { batteryPercent } = this.roverSensor;
-    if (batteryPercent > 50) {
+    if (batteryPercent > BATTERY_HIGH) {
       return 'success';
-    } else if (batteryPercent > 25) {
+    } else if (batteryPercent > BATTER_MEDIUM) {
       return 'warning';
     }
 
