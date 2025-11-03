@@ -74,6 +74,19 @@ body {
   background-color: var(--sl-color-neutral-0);
 }
 
+.live-chart {
+  min-width: 120px;
+  height: 40px;
+
+  border-radius: var(--sl-input-border-radius-small);
+  border: solid var(--sl-input-border-width) var(--sl-input-border-color);
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
 .flex {
   display: flex;
 

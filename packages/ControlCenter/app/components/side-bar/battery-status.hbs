@@ -11,6 +11,13 @@
     <div class='center'>
       <label>Battery Volt.</label>
       <br />
+      <Misc::LiveChart
+        class='mt-1'
+        @value={{this.roverSensor.batteryVolt}}
+        @min={{8}}
+        @max={{13}}
+        @maxTime={{300}}
+      />
       <sl-badge variant={{this.voltageBadgeVariant}}>
         {{this.volt}}
         V ({{this.roverSensor.batteryPercent}}
@@ -20,11 +27,25 @@
     <div class='center'>
       <label>Current.</label>
       <br />
+      <Misc::LiveChart
+        class='mt-1'
+        @value={{this.roverSensor.current}}
+        @min={{500}}
+        @max={{1500}}
+        @maxTime={{120}}
+      />
       <sl-badge variant={{this.currentBadgeVariant}}>{{this.current}} mA</sl-badge>
     </div>
     <div class='center'>
       <label>Power</label>
       <br />
+      <Misc::LiveChart
+        class='mt-1'
+        @value={{this.roverSensor.power}}
+        @min={{6000}}
+        @max={{15000}}
+        @maxTime={{120}}
+      />
       <sl-badge variant={{this.powerBadgeVariant}}>{{this.power}} W</sl-badge>
     </div>
   </div>
