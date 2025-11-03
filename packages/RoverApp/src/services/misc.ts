@@ -36,6 +36,26 @@ class MiscService extends Service {
           await this.emit('sendSms', { content: 'Error while stopping Wifi' });
         }
         break;
+      case 'reboot':
+      case 'restart':
+        try {
+          await this.emit('sendSms', { content: 'Rover will restart...' });
+          await this.restart();
+        } catch (e) {
+          this.logger.error('Error restarting', e);
+          await this.emit('sendSms', { content: 'Error while restarting Wifi' });
+        }
+        break;
+      case 'stop':
+      case 'halt':
+        try {
+          await this.emit('sendSms', { content: 'Rover will stop...' });
+          await this.halt();
+        } catch (e) {
+          this.logger.error('Error restarting', e);
+          await this.emit('sendSms', { content: 'Error while restarting Wifi' });
+        }
+        break;
     }
   };
 
@@ -49,6 +69,36 @@ class MiscService extends Service {
         } else {
           resolve();
           this.logger.info('Wifi stated updated');
+        }
+      });
+    });
+  }
+
+  async restart() {
+    return new Promise<void>((resolve, error) => {
+      this.logger.info('Running reboot command');
+
+      exec(`sudo reboot -f`, (err) => {
+        if (err) {
+          error(err);
+        } else {
+          resolve();
+          this.logger.info('rebooting...');
+        }
+      });
+    });
+  }
+
+  async halt() {
+    return new Promise<void>((resolve, error) => {
+      this.logger.info('Running halt command');
+
+      exec(`sudo halt -f`, (err) => {
+        if (err) {
+          error(err);
+        } else {
+          resolve();
+          this.logger.info('halting...');
         }
       });
     });
