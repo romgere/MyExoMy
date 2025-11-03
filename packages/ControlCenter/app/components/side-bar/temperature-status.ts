@@ -11,7 +11,7 @@ export default class SensorStatus extends Component<SensorStatusArgs> {
     const t = this.roverSensor.piTemperature;
     if (t < 50) {
       return 'success';
-    } else if (t < 65) {
+    } else if (t < 75) {
       return 'warning';
     }
 
@@ -27,5 +27,21 @@ export default class SensorStatus extends Component<SensorStatusArgs> {
     }
 
     return 'danger';
+  }
+
+  get mainVariant() {
+    if (
+      this.bodyTemperatureBadgeVariant === 'danger' ||
+      this.piTemperatureBadgeVariant === 'danger'
+    ) {
+      return 'danger';
+    } else if (
+      this.bodyTemperatureBadgeVariant === 'warning' ||
+      this.piTemperatureBadgeVariant === 'warning'
+    ) {
+      return 'warning';
+    } else {
+      return undefined;
+    }
   }
 }

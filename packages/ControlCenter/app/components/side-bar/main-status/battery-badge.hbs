@@ -1,0 +1,16 @@
+<sl-icon size='large' name={{this.icon}} variant={{this.badgeVariant}} /><br />
+<sl-tooltip placement='bottom'>
+  <div slot='content'>
+    <ul class='network-badge-tooltip'>
+      <li><label>Volt :</label><span>{{this.volt}} V</span></li>
+      <li><label>Charge :</label><span>{{this.roverSensor.batteryPercent}} %</span></li>
+      <li><label>Current :</label><span>{{this.current}} mA</span></li>
+      <li><label>Power :</label><span>{{this.power}} W</span></li>
+    </ul>
+  </div>
+
+  <sl-badge size='medium' variant={{this.badgeVariant}}>
+    {{this.roverSensor.batteryPercent}}
+    %
+  </sl-badge>
+</sl-tooltip>

@@ -1,0 +1,41 @@
+<sl-details class='no-border' {{sl-details-persist 'ui-settings'}}>
+  <span slot='summary'>
+    <sl-icon name='sliders' />&nbsp;UI Settings
+  </span>
+
+  <div class='row row-center'>
+    <div class='col col-6 left'>
+      <sl-switch checked={{@showHud}} {{on 'sl-change' @toggleHud}}>HUD</sl-switch>
+      <br /><br />
+      <sl-switch checked={{@fullHud}} {{on 'sl-change' @toggleFullHud}}>Full HUD</sl-switch>
+    </div>
+    <div class='col col-6 left'>
+      <sl-switch checked={{@showVJoy}} {{on 'sl-change' @toggleVirtualJoystick}}>Virtual joystick</sl-switch>
+      <br /><br />
+      <sl-switch checked={{@showVideo}} {{on 'sl-change' @toggleVideo}}>Video</sl-switch>
+    </div>
+  </div>
+
+  <sl-divider />
+
+  <div class='flex flex-space-around mt-2'>
+    <label>Video size</label>
+  </div>
+
+  <div class='flex flex-space-around mt-2'>
+
+    <sl-button
+      size='small'
+      variant='primary'
+      outline
+      {{on 'click' (fn @setAspectRatio '4:3')}}
+    >4:3</sl-button>
+
+    <sl-button
+      size='small'
+      variant='primary'
+      outline
+      {{on 'click' (fn @setAspectRatio '16:9')}}
+    >16:9</sl-button>
+  </div>
+</sl-details>

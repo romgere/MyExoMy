@@ -2405,6 +2405,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kurkle/color@npm:^0.3.0":
+  version: 0.3.4
+  resolution: "@kurkle/color@npm:0.3.4"
+  checksum: 10c0/0e9fd55c614b005c5f0c4c755bca19ec0293bc7513b4ea3ec1725234f9c2fa81afbc78156baf555c8b9cb0d305619253c3f5bca016067daeebb3d00ebb4ea683
+  languageName: node
+  linkType: hard
+
 "@lint-todo/utils@npm:^13.1.1":
   version: 13.1.1
   resolution: "@lint-todo/utils@npm:13.1.1"
@@ -2570,6 +2577,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^6.3.0"
     "@typescript-eslint/parser": "npm:^6.3.0"
     broccoli-asset-rev: "npm:^3.0.0"
+    chart.js: "npm:^4.5.1"
     concurrently: "npm:^8.0.1"
     copy-webpack-plugin: "npm:^11.0.0"
     ember-auto-import: "npm:^2.6.3"
@@ -5782,6 +5790,15 @@ __metadata:
   dependencies:
     inherits: "npm:^2.0.1"
   checksum: 10c0/6c9218b646612eaaf53ae2c4f695b9c6eaa10d37b8d953fbeb1e0ef3e2021cdd96cfecb465e72d6f2ed851342a726f32ed40dc54f6c8e8b9dd4ed8a9c2ecdf7d
+  languageName: node
+  linkType: hard
+
+"chart.js@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "chart.js@npm:4.5.1"
+  dependencies:
+    "@kurkle/color": "npm:^0.3.0"
+  checksum: 10c0/3f2a11dcaae9079e8e6b8ad077e2ae311f04996f9da14815730891e66215ee8b5f2c0eb70b5a156e5bde0f89a41bae13506dc6153e50fd22dcb282b21eec706f
   languageName: node
   linkType: hard
 

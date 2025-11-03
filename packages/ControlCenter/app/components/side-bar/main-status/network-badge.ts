@@ -4,8 +4,8 @@ import { service } from '@ember/service';
 import type RoverSensorService from '@robot/control-center/services/rover-sensor';
 
 interface Args {}
-const QUALITY_LOW = 30;
-const QUALITY_MEDIUM = 70;
+const QUALITY_LOW = 25;
+const QUALITY_MEDIUM = 45;
 
 export default class NetworkBadgeComponent extends Component<Args> {
   @service declare roverSensor: RoverSensorService;
@@ -24,6 +24,7 @@ export default class NetworkBadgeComponent extends Component<Args> {
 
     return 'wifi';
   }
+
   get badgeVariant() {
     if (!this.roverSensor.currentIwData) {
       return 'neutral';

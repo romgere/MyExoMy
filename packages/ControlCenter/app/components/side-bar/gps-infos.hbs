@@ -1,0 +1,40 @@
+<sl-details class='no-border' {{sl-details-persist 'gps' true}}>
+  <span slot='summary'>
+    <sl-icon name='geo-alt' />&nbsp;GPS
+  </span>
+  <sl-resize-observer {{on 'sl-resize' this.handleResize}}>
+    <div id='map' {{this.initMap}}></div>
+  </sl-resize-observer>
+  <div class='map-tags flex flex-space-around mt-4'>
+    <sl-tag size='small' variant={{this.statusVariant}}>
+      <sl-tooltip content={{this.statusLabel}} placement='bottom'>
+        <sl-icon name='geo-alt' />
+        <sl-icon name={{this.statusIcon}} />
+      </sl-tooltip>
+    </sl-tag>
+    <sl-tag size='small'>
+      <sl-tooltip content='Speed' placement='bottom'>
+        <sl-icon name='speedometer' />
+        {{this.roverSensor.speed}}&nbsp;Kts
+      </sl-tooltip>
+    </sl-tag>
+    <sl-tag size='small'>
+      <sl-tooltip content='Heading' placement='bottom'>
+        <sl-icon name='compass' />
+        {{this.roverSensor.heading}}&nbsp;°
+      </sl-tooltip>
+    </sl-tag>
+    <sl-tooltip content='{{this.roverSensor.satelitesCount}} satellite(s)' placement='bottom'>
+      <sl-tag size='small'>
+        <sl-icon name='broadcast' />
+        x{{this.roverSensor.satelitesCount}}
+      </sl-tag>
+    </sl-tooltip>
+    <sl-tag size='small'>
+      <sl-tooltip content={{this.qualityLabel}} placement='bottom'>
+        <sl-icon name={{this.qualityIcon}} />
+        {{this.roverSensor.quality}}
+      </sl-tooltip>
+    </sl-tag>
+  </div>
+</sl-details>

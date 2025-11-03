@@ -1,0 +1,41 @@
+<sl-details
+  class='no-border'
+  variant={{this.mainVariant}}
+  {{sl-details-persist 'temperature-status' true}}
+>
+  <span slot='summary'>
+    <sl-icon name='thermometer-half' />&nbsp;Temperature
+  </span>
+
+  <div class='flex flex-space-around'>
+    <div class='center'>
+      <label>Pi Temp.</label>
+      <br />
+      <Misc::LiveChart
+        class='mt-1'
+        @value={{this.roverSensor.piTemperature}}
+        @min={{40}}
+        @max={{85}}
+        @maxTime={{120}}
+      />
+      <sl-badge
+        variant={{this.piTemperatureBadgeVariant}}
+        class='mt-1'
+      >{{this.roverSensor.piTemperatureString}}</sl-badge>
+    </div>
+    <div class='center'>
+      <label>Body Temp.</label>
+      <br />
+      <Misc::LiveChart
+        class='mt-1'
+        @value={{this.roverSensor.bodyTemperature}}
+        @min={{20}}
+        @max={{45}}
+        @maxTime={{120}}
+      />
+      <sl-badge
+        variant={{this.bodyTemperatureBadgeVariant}}
+      >{{this.roverSensor.bodyTemperatureString}}</sl-badge>
+    </div>
+  </div>
+</sl-details>

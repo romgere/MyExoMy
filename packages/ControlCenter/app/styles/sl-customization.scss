@@ -1,0 +1,23 @@
+sl-details.no-border::part(base) {
+  border: 0;
+}
+
+sl-details.no-border::part(header) {
+  padding: var(--sl-spacing-2x-small) var(--sl-spacing-medium);
+  font-weight: bold;
+}
+
+sl-details[variant='success']::part(summary),
+sl-icon[variant='success'] {
+  color: var(--sl-color-success-600);
+}
+
+sl-details[variant='warning']::part(summary),
+sl-icon[variant='warning'] {
+  color: var(--sl-color-warning-600);
+}
+
+sl-details[variant='danger']::part(summary),
+sl-icon[variant='danger'] {
+  color: var(--sl-color-danger-600);
+}
