@@ -24,6 +24,7 @@ export default class NetworkBadgeComponent extends Component<Args> {
 
     return 'wifi';
   }
+
   get badgeVariant() {
     if (!this.roverSensor.currentIwData) {
       return 'neutral';

@@ -8,13 +8,13 @@ sl-details.no-border::part(header) {
 }
 
 sl-details[variant='success']::part(summary) {
-  color: var(--sl-color-success-400);
+  color: var(--sl-color-success-600);
 }
 
 sl-details[variant='warning']::part(summary) {
-  color: var(--sl-color-warning-400);
+  color: var(--sl-color-warning-600);
 }
 
 sl-details[variant='danger']::part(summary) {
-  color: var(--sl-color-danger-400);
+  color: var(--sl-color-danger-600);
 }

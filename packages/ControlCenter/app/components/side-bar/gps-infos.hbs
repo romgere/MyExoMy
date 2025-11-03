@@ -5,7 +5,7 @@
   <sl-resize-observer {{on 'sl-resize' this.handleResize}}>
     <div id='map' {{this.initMap}}></div>
   </sl-resize-observer>
-  <div class='map-tags flex flex-space-around mt-1'>
+  <div class='map-tags flex flex-space-around mt-4'>
     <sl-tag size='small' variant={{this.statusVariant}}>
       <sl-tooltip content={{this.statusLabel}} placement='bottom'>
         <sl-icon name='geo-alt' />
