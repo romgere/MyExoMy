@@ -1,0 +1,66 @@
+<sl-details class='no-border' variant={{this.variant}} open>
+  <span slot='summary'>
+    <sl-icon name='exclamation-triangle' />&nbsp;Pi Alerts
+  </span>
+
+  <div class='flex flex-space-around'>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.underVoltage}}
+      @critical={{true}}
+      @tooltip='Under-voltage detected'
+    >
+      Volt.
+    </Misc::SensorButton>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.armFreqCapped}}
+      @critical={{true}}
+      @tooltip='ARM frequency Capped'
+    >
+      ARM Freq.
+    </Misc::SensorButton>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.throttled}}
+      @critical={{true}}
+      @tooltip='Currently throttled'
+    >
+      Throttled
+    </Misc::SensorButton>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.softTemperatureLimit}}
+      @critical={{true}}
+      @tooltip='Soft temperature limit active'
+    >
+      Temp.
+    </Misc::SensorButton>
+  </div>
+  <div class='flex flex-space-around mt-2'>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.underVoltageOccurred}}
+      @critical={{false}}
+      @tooltip='Under-voltage has occurred'
+    >
+      <em>Volt.*</em>
+    </Misc::SensorButton>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.armFreqCappedOccurred}}
+      @critical={{false}}
+      @tooltip='Arm frequency capping has occurred'
+    >
+      <em>ARM Freq.*</em>
+    </Misc::SensorButton>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.throttledOccurred}}
+      @critical={{false}}
+      @tooltip='Throttling has occurred'
+    >
+      <em>Throttled*</em>
+    </Misc::SensorButton>
+    <Misc::SensorButton
+      @enable={{this.roverSensor.softTemperatureLimitOccurred}}
+      @critical={{false}}
+      @tooltip='Soft temperature limit occurred'
+    >
+      <em>Temp.*</em>
+    </Misc::SensorButton>
+  </div>
+</sl-details>

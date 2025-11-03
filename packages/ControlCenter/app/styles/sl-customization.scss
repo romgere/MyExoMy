@@ -1,0 +1,20 @@
+sl-details.no-border::part(base) {
+  border: 0;
+}
+
+sl-details.no-border::part(header) {
+  padding: var(--sl-spacing-2x-small) var(--sl-spacing-medium);
+  font-weight: bold;
+}
+
+sl-details[variant='success']::part(summary) {
+  color: var(--sl-color-success-400);
+}
+
+sl-details[variant='warning']::part(summary) {
+  color: var(--sl-color-warning-400);
+}
+
+sl-details[variant='danger']::part(summary) {
+  color: var(--sl-color-danger-400);
+}

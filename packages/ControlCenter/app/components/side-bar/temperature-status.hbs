@@ -1,0 +1,22 @@
+<sl-details class='no-border' variant={{this.mainVariant}} open>
+  <span slot='summary'>
+    <sl-icon name='thermometer-half' />&nbsp;Temperature
+  </span>
+
+  <div class='flex flex-space-around'>
+    <div class='center'>
+      <label>Pi Temp.</label>
+      <br />
+      <sl-badge
+        variant={{this.piTemperatureBadgeVariant}}
+      >{{this.roverSensor.piTemperatureString}}</sl-badge>
+    </div>
+    <div class='center'>
+      <label>Body Temp.</label>
+      <br />
+      <sl-badge
+        variant={{this.bodyTemperatureBadgeVariant}}
+      >{{this.roverSensor.bodyTemperatureString}}</sl-badge>
+    </div>
+  </div>
+</sl-details>

@@ -28,4 +28,20 @@ export default class SensorStatus extends Component<SensorStatusArgs> {
 
     return 'danger';
   }
+
+  get mainVariant() {
+    if (
+      this.bodyTemperatureBadgeVariant === 'danger' ||
+      this.piTemperatureBadgeVariant === 'danger'
+    ) {
+      return 'danger';
+    } else if (
+      this.bodyTemperatureBadgeVariant === 'warning' ||
+      this.piTemperatureBadgeVariant === 'warning'
+    ) {
+      return 'warning';
+    } else {
+      return undefined;
+    }
+  }
 }
