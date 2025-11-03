@@ -17,7 +17,7 @@
     {{/if}}
   </div>
 
-  <sl-badge size='medium' variant={{this.badgeVariant}}>
+  <sl-badge size='medium' variant={{this.badgeVariant}} pulse={{this.pulse}}>
     {{#if this.roverSensor.currentIwData}}
       {{this.roverSensor.currentIwData.BitRate}}
     {{else}}

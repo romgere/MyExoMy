@@ -60,6 +60,8 @@ export const external_sensor_update_interval = 250;
 export const gps_update_interval = 1000;
 // How often we read incomming SMS
 export const sms_verify_interval = 5000;
+// How often we read GSM info (signal quality)
+export const gsm_event_interval = 2500;
 
 // SIM7600E Serial port (see `Docker/run_exomy.sh`)
 export const sim7600e_gps_device = '/dev/ttyUSB1';
@@ -77,4 +79,5 @@ export const socketProxifiedEvents: EventsName[] = [
   'externalSensor',
   'motorStatus',
   'gps',
+  'gsm',
 ];

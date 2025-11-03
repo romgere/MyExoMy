@@ -1,0 +1,13 @@
+<sl-icon size='large' name={{this.icon}} /><br />
+<sl-tooltip placement='bottom'>
+  <div slot='content'>
+    {{this.roverSensor.gsmQuality.dbString}}
+    dBm -
+    {{this.roverSensor.gsmQuality.quality}}
+  </div>
+
+  <sl-badge size='medium' variant={{this.variant}} pulse={{this.pulse}}>
+    {{this.roverSensor.gsmQuality.db}}
+    dBm
+  </sl-badge>
+</sl-tooltip>

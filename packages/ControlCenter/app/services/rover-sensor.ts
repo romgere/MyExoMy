@@ -12,10 +12,12 @@ import type {
   ExternalSensorEvent,
   MotorStatus,
   GPSEvent,
+  GSMEvent,
 } from '@robot/shared/events';
 import type RoverConnectionService from '@robot/control-center/services/rover-connection';
 import type { ProximitySensorPosition } from '@robot/shared/events.js';
 import { voltToPercent } from '../utils/battery-util';
+import { signalQuality, SignalQuality } from '../utils/gsm-util';
 
 // Defined how many gyro data entries we use to smooth values
 // Given we received new data every 250ms
@@ -33,6 +35,7 @@ export default class RoverSensor extends Service {
     this.roverConnection.on('externalSensor', this.onExternalSensorEvent);
     this.roverConnection.on('motorStatus', this.onMotorStatusEvent);
     this.roverConnection.on('gps', this.onGpsEvent);
+    this.roverConnection.on('gsm', this.onGsmEvent);
   }
 
   @action
@@ -94,6 +97,12 @@ export default class RoverSensor extends Service {
     this.satelitesCount = data.satelitesCount;
   }
 
+  @action
+  onGsmEvent(data: GSMEvent) {
+    const { quality } = data;
+    this.gsmQuality = signalQuality[quality] ?? signalQuality[0];
+  }
+
   // Result of `vcgencmd get_throttled`
   @tracked underVoltage = false;
   @tracked armFreqCapped = false;
@@ -142,6 +151,9 @@ export default class RoverSensor extends Service {
   @tracked batteryPercent: number = 0;
   @tracked current: number = 0;
   @tracked power: number = 0;
+
+  // GSM
+  @tracked gsmQuality: SignalQuality = signalQuality[0];
 
   get piTemperatureString() {
     return `${this.piTemperature} °c`;

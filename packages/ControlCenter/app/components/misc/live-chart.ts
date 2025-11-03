@@ -25,7 +25,13 @@ export default class LiveChart extends Component<LiveChartArgs> {
   chart?: Chart;
 
   get tooltip() {
-    return `Last ${this.args.maxTime} seconds`;
+    if (this.args.maxTime <= 60) {
+      return `Last ${this.args.maxTime} seconds`;
+    }
+
+    const min = Math.floor(this.args.maxTime / 60);
+
+    return `Last ${min} minutes`;
   }
 
   mountChart = modifier((element: HTMLCanvasElement) => {

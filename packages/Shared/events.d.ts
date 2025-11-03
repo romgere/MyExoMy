@@ -90,6 +90,10 @@ export type SendSMSEvent = {
   content: string;
 };
 
+export type GSMEvent = {
+  quality: number;
+};
+
 export type EventsTypesMapping = {
   // External command (received from control app)
   controlCommand: ControlCommand; // External command received from control center to move the rover
@@ -106,6 +110,7 @@ export type EventsTypesMapping = {
   piSensor: PiSensorEvent; // External event sent by pi-sensor service to control app
   externalSensor: ExternalSensorEvent; // External event sent by external-sensor service to control app
   gps: GPSEvent; // External event sent by gps service to control app
+  gsm: GSMEvent;
 };
 export type EventsName = keyof EventsTypesMapping;
 

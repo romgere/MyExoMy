@@ -18,7 +18,7 @@
         @max={{13}}
         @maxTime={{300}}
       />
-      <sl-badge variant={{this.voltageBadgeVariant}}>
+      <sl-badge class='mt-1' variant={{this.voltageBadgeVariant}}>
         {{this.volt}}
         V ({{this.roverSensor.batteryPercent}}
         %)
@@ -34,7 +34,7 @@
         @max={{1500}}
         @maxTime={{120}}
       />
-      <sl-badge variant={{this.currentBadgeVariant}}>{{this.current}} mA</sl-badge>
+      <sl-badge class='mt-1' variant={{this.currentBadgeVariant}}>{{this.current}} mA</sl-badge>
     </div>
     <div class='center'>
       <label>Power</label>
@@ -43,10 +43,10 @@
         class='mt-1'
         @value={{this.roverSensor.power}}
         @min={{6000}}
-        @max={{15000}}
+        @max={{35000}}
         @maxTime={{120}}
       />
-      <sl-badge variant={{this.powerBadgeVariant}}>{{this.power}} W</sl-badge>
+      <sl-badge class='mt-1' variant={{this.powerBadgeVariant}}>{{this.power}} W</sl-badge>
     </div>
   </div>
 </sl-details>
