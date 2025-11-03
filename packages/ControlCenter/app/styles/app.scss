@@ -63,7 +63,15 @@ body {
 
   [slot='end'] {
     align-items: center;
+    overflow-y: auto;
   }
+}
+
+#main-status-badges {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--sl-color-neutral-0);
 }
 
 .flex {
