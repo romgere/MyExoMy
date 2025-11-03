@@ -1,4 +1,8 @@
-<sl-details class='no-border' variant={{this.mainVariant}} open>
+<sl-details
+  class='no-border'
+  variant={{this.mainVariant}}
+  {{sl-details-persist 'temperature-status' true}}
+>
   <span slot='summary'>
     <sl-icon name='thermometer-half' />&nbsp;Temperature
   </span>

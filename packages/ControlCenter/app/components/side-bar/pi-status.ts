@@ -25,5 +25,7 @@ export default class SensorStatus extends Component<SensorStatusArgs> {
     ) {
       return 'warning';
     }
+
+    return undefined;
   }
 }
