@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
     "lint:js": "eslint . --ext ts",
-    "lint:types": "tsc --noEmit --composite false"
+    "lint:types": "tsc --noEmit --composite false",
+    "build": "tsc"
   },
   "files": [],
   "author": "Jérôme Mestres",
@@ -24,6 +25,7 @@
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.1",
+    "typescript": "^4.2.3"
   }
 }
