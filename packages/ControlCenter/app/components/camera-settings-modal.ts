@@ -11,7 +11,7 @@ import {
   genericAdvancedRangeSettings,
   resolutions,
 } from '../utils/camera-const';
-import { SlChangeEvent, SlRadioGroup, SlRange, SlSelect, SlSwitch } from '@shoelace-style/shoelace';
+import { SlChangeEvent, SlRadioGroup, SlRange, SlSelect } from '@shoelace-style/shoelace';
 import type { AwbMode, CameraConfig, ExposureMode, Flip, Rotation } from '@robot/shared/camera';
 
 interface Args {
