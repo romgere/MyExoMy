@@ -1,4 +1,4 @@
-import type { AwbMode, ExposureMode, Flip, Rotation } from '@robot/shared/camera';
+import { AwbMode, ExposureMode, Flip, Rotation } from '@robot/shared/camera';
 
 export type CameraResolution = {
   width: number;
@@ -19,10 +19,10 @@ export const resolutions: Record<string, CameraResolution> = {
 
 export const defaultResolution = '1440x1080';
 export const defaultFps = 12;
-export const defaultFlip: Flip = 'none' as Flip;
-export const defaultRotation: Rotation = 0;
-export const defaultExposure: ExposureMode = 'auto' as ExposureMode;
-export const defaultAwb: AwbMode = 'auto' as AwbMode;
+export const defaultFlip = Flip.None;
+export const defaultRotation = Rotation.Rotate0;
+export const defaultExposure = ExposureMode.Normal;
+export const defaultAwb = AwbMode.Auto;
 
 type RangeSetting = {
   min: string;
@@ -35,18 +35,15 @@ type RangeSetting = {
 };
 
 export const genericAdvancedRangeSettings: Record<string, RangeSetting> = {
-  bitRate: {
+  quality: {
     min: '1',
-    max: '25',
-    default: 8,
-    label: 'Bit-rate',
-    unit: 'Mbps',
-    factor: 1000000,
-    step: 0.5,
+    max: '100',
+    default: 50,
+    label: 'Quality',
   },
-  harpness: { min: '-100', max: '100', default: 0, label: 'Harpness' },
-  contrast: { min: '-100', max: '100', default: 0, label: 'Contrast' },
-  brightness: { min: '0', max: '100', default: 50, label: 'Brightness' },
-  saturation: { min: '-100', max: '100', default: 0, label: 'Saturation' },
+  sharpness: { min: '0', max: '200', default: 0, label: 'Sharpness', factor: 0.01 },
+  contrast: { min: '0', max: '200', default: 100, label: 'Contrast', factor: 0.01 },
+  brightness: { min: '-100', max: '100', default: 0, label: 'Brightness', factor: 0.01 },
+  saturation: { min: '0', max: '100', default: 0, label: 'Saturation', factor: 0.01 },
   exposureCompensation: { min: '-10', max: '10', default: 0, label: 'Exposure compensation' },
 };

@@ -61,58 +61,25 @@
         value={{this.exposure}}
         {{on 'sl-change' this.changeExposure}}
       >
-        <sl-option value='off'>Off</sl-option>
-        <sl-option value='auto'>Auto</sl-option>
-        <sl-option value='night'>Night</sl-option>
-        <sl-option value='nightpreview'>NightPreview</sl-option>
-        <sl-option value='backlight'>Backlight</sl-option>
-        <sl-option value='spotlight'>Spotlight</sl-option>
-        <sl-option value='sports'>Sports</sl-option>
-        <sl-option value='snow'>Snow</sl-option>
-        <sl-option value='beach'>Beach</sl-option>
-        <sl-option value='verylong'>VeryLong</sl-option>
-        <sl-option value='fixedfps'>FixedFps</sl-option>
-        <sl-option value='antishake'>AntiShake</sl-option>
-        <sl-option value='fireworks'>Fireworks</sl-option>
+        <sl-option value='normal'>Normal</sl-option>
+        <sl-option value='sport'>Sport</sl-option>
+        <sl-option value='long'>Long</sl-option>
       </sl-select>
       <br />
 
       <sl-select label='Awb mode' value={{this.awb}} {{on 'sl-change' this.changeAwb}}>
-        <sl-option value='off'>Off</sl-option>
         <sl-option value='auto'>Auto</sl-option>
-        <sl-option value='sun'>Sun</sl-option>
-        <sl-option value='cloud'>Cloud</sl-option>
-        <sl-option value='shade'>Shade</sl-option>
+        <sl-option value='incandescent'>Incandescent</sl-option>
         <sl-option value='tungsten'>Tungsten</sl-option>
         <sl-option value='fluorescent'>Fluorescent</sl-option>
-        <sl-option value='incandescent'>Incandescent</sl-option>
-        <sl-option value='flash'>Flash</sl-option>
-        <sl-option value='horizon'>Horizon</sl-option>
-        <sl-option value='greyworld'>GreyWorld</sl-option>
+        <sl-option value='indoor'>Indoor</sl-option>
+        <sl-option value='daylight'>Daylight</sl-option>
+        <sl-option value='cloudy'>Cloudy</sl-option>
+        <sl-option value='custom'>Custom</sl-option>
       </sl-select>
       <br />
     </sl-tab-panel>
     <sl-tab-panel name='advanced'>
-
-      <sl-range
-        label='ISO'
-        disabled={{this.isoAuto}}
-        value={{this.iso}}
-        min='100'
-        max='800'
-        help-text='Current: {{if this.isoAuto "auto" this.iso}}.'
-        {{on 'sl-change' this.changeIso}}
-      ></sl-range>
-      <div class='right'>
-        <sl-switch
-          size='small'
-          checked={{(not this.isoAuto)}}
-          {{on 'sl-change' this.changeIsoAuto}}
-        >
-          Custom ISO
-        </sl-switch>
-      </div>
-      <br />
 
       {{! GENERIC RANGE SETTINGS }}
       {{#each-in this.genericAdvancedRangeSettings as |name settings|}}
