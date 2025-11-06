@@ -1,5 +1,6 @@
 import type { ServoArray } from '@robot/shared/types.js';
-import type { StreamOptions } from 'pi-camera-connect';
+import type { EventsTypesMapping } from '@robot/shared/events.js';
+import type { CameraConfig } from '@robot/shared/camera.js';
 
 // TODO: restrict to -100 to 100
 export type DrivingCommand = number;
@@ -14,18 +15,14 @@ type ServoConfig = {
   max: ServoArray<number>;
 };
 
-export type CameraConfig = Partial<Exclude<StreamOptions, 'codec'>>;
-
 export type ExomyConfig = {
   drive: ServoConfig;
   steer: ServoConfig;
-  camera?: CameraConfig;
+  camera?: Partial<CameraConfig>;
   smsRecipient: string;
   gitHubUsername: string;
   sshTunnelAutoStart: boolean;
 };
-
-import type { EventsTypesMapping } from '@robot/shared/events.js';
 
 export type ServiceWorkerMessage<Events extends EventsTypesMapping, Name extends keyof Events> = {
   name: Name;

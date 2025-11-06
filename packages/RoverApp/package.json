@@ -33,7 +33,6 @@
     "ink-text-input": "^6.0.0",
     "onoff": "^6.0.3",
     "pca9685": "^5.0.0",
-    "pi-camera-connect": "^0.3.4",
     "prompt": "^1.1.5",
     "react": "^19.2.0",
     "socket.io": "^4.7.2",

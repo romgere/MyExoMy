@@ -4,7 +4,7 @@
     "target": "esnext",
     "moduleResolution": "nodenext",
     "baseUrl": ".",
-    "typeRoots": ["src/@types"],
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "strict": true,
     "paths": {

@@ -6,17 +6,16 @@ import { Task } from 'ink-task-list';
 import spinners from 'cli-spinners';
 import { Br } from 'scripts/utils/br.tsx';
 import TextInput from 'ink-text-input';
-import { StreamCamera, Codec } from 'pi-camera-connect';
 import fs from 'fs-extra';
 import path from 'path';
 import wait from 'scripts/utils/wait.ts';
+import StreamCamera from '@robot/rover-app/lib/stream-camera.ts';
 
 const defaultFolder = '/home/pi/Videos/';
 const file = 'exomy-video-test.h264';
 
 async function recordVideo(file: string) {
   const streamCamera = new StreamCamera({
-    codec: Codec.H264,
     width: 1920,
     height: 1080,
   });
