@@ -2,7 +2,7 @@
   <span slot='summary'>
     <sl-icon name='gear' />&nbsp;Rover settings
   </span>
-  <div class='row row-center'>
+  {{!-- <div class='row row-center'>
     <div class='col col-6'>
       <sl-select
         label='Driving mode'
@@ -15,6 +15,11 @@
           <sl-option value={{mode}}>{{mode}}</sl-option>
         {{/each-in}}
       </sl-select>
+    </div>
+  </div> --}}
+  <div class='row'>
+    <div class='col col-6'>
+      <sl-switch checked={{@cameraIREnable}} {{on 'sl-change' @toggleIRCamera}}>IR Camera</sl-switch>
     </div>
   </div>
   <div class='flex flex-space-around mt-2'>

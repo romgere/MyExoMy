@@ -123,6 +123,14 @@ export default class RoverConnexionService extends Service {
     this.socket?.emit('updateCameraSettings', settings);
   }
 
+  sendToggleCameraIR(enable: boolean) {
+    if (!this.connected) {
+      return;
+    }
+
+    this.socket?.emit('toggleCameraIR', enable);
+  }
+
   @action
   disconnect() {
     this.socket?.disconnect();

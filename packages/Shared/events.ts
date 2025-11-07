@@ -98,6 +98,7 @@ export type EventsTypesMapping = {
   // External command (received from control app)
   controlCommand: ControlCommand; // External command received from control center to move the rover
   updateCameraSettings: CameraConfig; // External command received from control app to update camera settings
+  toggleCameraIR: boolean;
 
   // Internal event (live only inside rover-app)
   roverCommand: RoverCommand; // Internal event sent by control service to rover service
