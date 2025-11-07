@@ -20,8 +20,8 @@ class GPSService extends Service {
   private quality: number = 0;
   private satelitesCount: number = 0;
 
-  private _readSteamData = (data: string) => {
-    if (!data.trim().length) {
+  private _readSteamData = (data: string | Buffer) => {
+    if (typeof data !== 'string' || !data.trim().length) {
       return;
     }
 

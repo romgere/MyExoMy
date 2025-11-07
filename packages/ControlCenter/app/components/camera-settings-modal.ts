@@ -11,7 +11,7 @@ import {
   genericAdvancedRangeSettings,
   resolutions,
 } from '../utils/camera-const';
-import { SlChangeEvent, SlRadioGroup, SlRange, SlSelect, SlSwitch } from '@shoelace-style/shoelace';
+import { SlChangeEvent, SlRadioGroup, SlRange, SlSelect } from '@shoelace-style/shoelace';
 import type { AwbMode, CameraConfig, ExposureMode, Flip, Rotation } from '@robot/shared/camera';
 
 interface Args {
@@ -57,12 +57,6 @@ export default class ConnectionStatusComponent extends Component<Args> {
   @tracked
   genericRanges = genericSettingsDefault();
 
-  @tracked
-  iso = 500;
-
-  @tracked
-  isoAuto = true;
-
   private get genericRangeValues() {
     const values = { ...this.genericRanges };
     for (const name in genericAdvancedRangeSettings) {
@@ -85,7 +79,6 @@ export default class ConnectionStatusComponent extends Component<Args> {
       awbMode: this.awb,
       exposureMode: this.exposure,
       ...this.genericRangeValues,
-      ...(this.isoAuto ? {} : { iso: this.iso }),
     };
   }
 
@@ -98,8 +91,6 @@ export default class ConnectionStatusComponent extends Component<Args> {
     this.exposure = defaultExposure;
     this.awb = defaultAwb;
     this.genericRanges = genericSettingsDefault();
-    this.iso = 500;
-    this.isoAuto = true;
   }
 
   @action
@@ -139,16 +130,6 @@ export default class ConnectionStatusComponent extends Component<Args> {
       ...this.genericRanges,
       [name]: value,
     };
-  }
-
-  @action
-  changeIso(event: SlChangeEvent) {
-    this.iso = (event.target as SlRange).value;
-  }
-
-  @action
-  changeIsoAuto(event: SlChangeEvent) {
-    this.isoAuto = !(event.target as SlSwitch).checked;
   }
 
   @action

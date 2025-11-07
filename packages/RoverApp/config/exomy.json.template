@@ -3,7 +3,11 @@
     "width": 1440,
     "height": 1080,
     "fps": 12,
-    "bitRate": 8
+    "quality": 40,
+    "additionnalArgs": [
+      "--tuning-file",
+      "/usr/share/libcamera/ipa/rpi/vc4/imx219_noir.json"
+    ]
   },
   "drive": {
     "pins": [5, 9, 4, 10, 2, 3],

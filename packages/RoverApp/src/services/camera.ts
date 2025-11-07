@@ -1,9 +1,9 @@
 import Service from './-base.js';
-import { StreamCamera, Codec } from 'pi-camera-connect';
 import HttpServer from '@robot/rover-app/lib/http-server.js';
 import { videoServerPort } from '../const.js';
 import type { Request, Response } from 'express';
-import type { CameraConfig } from '@robot/rover-app/types.js';
+import { type CameraConfig } from '@robot/shared/camera.js';
+import StreamCamera from '../lib/stream-camera.ts';
 
 const boundary = 'totalmjpeg';
 const streamHeaders = {
@@ -34,7 +34,6 @@ class CameraService extends Service {
     this.camera = new StreamCamera({
       ...defaultCameraSettings,
       ...(this.config.camera ?? {}),
-      codec: Codec.MJPEG, // Force codec to MJPEG
     });
   }
 
@@ -63,7 +62,6 @@ class CameraService extends Service {
     this.camera = new StreamCamera({
       ...defaultCameraSettings,
       ...(config ?? {}),
-      codec: Codec.MJPEG, // Force codec to MJPEG
     });
 
     if (this.clientResponses.length) {
