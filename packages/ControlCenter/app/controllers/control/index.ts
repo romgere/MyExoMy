@@ -41,6 +41,8 @@ export default class ControlController extends Controller {
   @tracked showVJoy = false;
   @tracked showCameraSettingsModal = false;
 
+  @tracked cameraIREnable = true;
+
   get roverApiAddress() {
     return (this.model as ControlRouteModel).roverApiAddress;
   }
@@ -200,6 +202,12 @@ export default class ControlController extends Controller {
   @action
   toggleVirtualJoystick() {
     this.showVJoy = !this.showVJoy;
+  }
+
+  @action
+  toggleIRCamera() {
+    this.cameraIREnable = !this.cameraIREnable;
+    this.roverConnection.sendToggleCameraIR(this.cameraIREnable);
   }
 
   @action

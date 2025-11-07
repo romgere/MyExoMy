@@ -30,6 +30,17 @@
     <sl-divider />
     <SideBar::GpsInfos />
     <sl-divider />
+    <SideBar::RoverSettings
+      @locomotionMode={{this.locomotionMode}}
+      @changeDrivingMode={{this.changeDrivingMode}}
+      @connect={{this.connect}}
+      @disconnect={{this.disconnect}}
+      @motors={{this.motors}}
+      @openCameraSettings={{this.openCameraSettings}}
+      @cameraIREnable={{this.cameraIREnable}}
+      @toggleIRCamera={{this.toggleIRCamera}}
+    />
+    <sl-divider />
     <SideBar::UiSetttings
       @showHud={{this.showHud}}
       @toggleHud={{this.toggleHud}}
@@ -40,15 +51,6 @@
       @showVideo={{this.showVideo}}
       @toggleVideo={{this.toggleVideo}}
       @setAspectRatio={{this.setAspectRatio}}
-    />
-    <sl-divider />
-    <SideBar::RoverSettings
-      @locomotionMode={{this.locomotionMode}}
-      @changeDrivingMode={{this.changeDrivingMode}}
-      @connect={{this.connect}}
-      @disconnect={{this.disconnect}}
-      @motors={{this.motors}}
-      @openCameraSettings={{this.openCameraSettings}}
     />
   </div>
 </sl-split-panel>

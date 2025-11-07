@@ -67,11 +67,18 @@ export const gsm_event_interval = 2500;
 export const sim7600e_gps_device = '/dev/ttyUSB1';
 export const sim7600e_serial_at_device = '/dev/ttyS0';
 
+// PIN to enable/disabled IR on camera
+export const camera_ir_cut_gpio_pin = 5;
+
 // When true, only SMS that come from `smsRecipient` (defined in rover config) are handled, other recipient message will be ignore.
 export const safe_sms_mode = true;
 
 // List rover event that are allowed to be received from websocket (from command app)
-export const socketAllowedCommand: EventsName[] = ['controlCommand', 'updateCameraSettings'];
+export const socketAllowedCommand: EventsName[] = [
+  'controlCommand',
+  'updateCameraSettings',
+  'toggleCameraIR',
+];
 
 // List rover event that are "proxified" to websocket (sent through websocket to control app)
 export const socketProxifiedEvents: EventsName[] = [
