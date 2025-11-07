@@ -1,6 +1,6 @@
 import type { ServoArray } from '@robot/shared/types.js';
 import type { EventsTypesMapping } from '@robot/shared/events.js';
-import type { CameraConfig } from '@robot/shared/camera.js';
+import { StreamCameraConfig } from './lib/stream-camera.ts';
 
 // TODO: restrict to -100 to 100
 export type DrivingCommand = number;
@@ -18,7 +18,7 @@ type ServoConfig = {
 export type ExomyConfig = {
   drive: ServoConfig;
   steer: ServoConfig;
-  camera?: Partial<CameraConfig>;
+  camera?: Partial<StreamCameraConfig>;
   smsRecipient: string;
   gitHubUsername: string;
   sshTunnelAutoStart: boolean;

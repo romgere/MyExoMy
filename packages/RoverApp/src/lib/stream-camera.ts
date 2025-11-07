@@ -13,21 +13,22 @@ interface StreamCameraEventEmitter {
   once(event: 'frame', listener: (image: Buffer) => void): this;
 }
 
+export type StreamCameraConfig = CameraConfig & {
+  additionnalArgs?: string[];
+  captureExecutableName: string;
+};
+
 export default class StreamCamera extends EventEmitter implements StreamCameraEventEmitter {
   private logger = logger('stream-camera-lib');
 
-  private readonly options: CameraConfig;
+  private readonly options: StreamCameraConfig;
   private childProcess?: ChildProcessWithoutNullStreams;
   private streams: Array<stream.Readable> = [];
 
-  private captureExecutableName: string;
-
   static readonly jpegSignature = Buffer.from([0xff, 0xd8, 0xff]);
 
-  constructor(options: CameraConfig = {}, captureExecutableName = 'libcamera-vid') {
+  constructor(options: Partial<StreamCameraConfig> = {}) {
     super();
-
-    this.captureExecutableName = captureExecutableName;
 
     this.options = {
       rotation: Rotation.Rotate0,
@@ -35,6 +36,7 @@ export default class StreamCamera extends EventEmitter implements StreamCameraEv
       quality: 50,
       fps: 30,
       sensorMode: SensorMode.AutoSelect,
+      captureExecutableName: 'libcamera-vid',
       ...options,
     };
   }
@@ -159,16 +161,19 @@ export default class StreamCamera extends EventEmitter implements StreamCameraEv
           // Do not display preview overlay on screen
           '--nopreview',
 
+          // Add any "user" additionnal options
+          ...(this.options.additionnalArgs ?? []),
+
           // Output to stdout
           '--output',
 
           '-',
         ];
 
-        this.logger.log('start capturing...', this.captureExecutableName, args.join(' '));
+        this.logger.log('start capturing...', this.options.captureExecutableName, args.join(' '));
 
         // Spawn child process
-        this.childProcess = spawn(this.captureExecutableName, args);
+        this.childProcess = spawn(this.options.captureExecutableName, args);
 
         // Listen for error event to reject promise
         this.childProcess.once('error', () =>
