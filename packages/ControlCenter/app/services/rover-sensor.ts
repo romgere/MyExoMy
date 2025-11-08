@@ -63,13 +63,13 @@ export default class RoverSensor extends Service {
     // Push data to gyro history
     this.orientationHistory.push(orientation);
     if (this.orientationHistory.length > gyroHistoryLength) {
-      this.orientationHistory.splice(1, this.orientationHistory.length - gyroHistoryLength);
+      this.orientationHistory.splice(0, this.orientationHistory.length - gyroHistoryLength);
     }
 
     // Push data to lidar history
     this.lidarDistanceHistory.push(data.lidar.distance);
     if (this.lidarDistanceHistory.length > lidarHistoryLength) {
-      this.lidarDistanceHistory.splice(1, this.lidarDistanceHistory.length - lidarHistoryLength);
+      this.lidarDistanceHistory.splice(0, this.lidarDistanceHistory.length - lidarHistoryLength);
     }
 
     this.proximity = data.proximity;
@@ -178,20 +178,18 @@ export default class RoverSensor extends Service {
   get smoothedOrientation(): Orientation {
     const size = this.orientationHistory.length;
     const sum = this.orientationHistory.reduce<Orientation>(
-      function (acc, { roll, pitch, yaw, heading }) {
+      function (acc, { roll, pitch, heading }) {
         acc.roll += roll;
         acc.pitch += pitch;
-        acc.yaw += yaw;
         acc.heading += heading;
         return acc;
       },
-      { roll: 0, pitch: 0, yaw: 0, heading: 0 },
+      { roll: 0, pitch: 0, heading: 0 },
     );
 
     return {
       roll: Math.floor(sum.roll / size),
       pitch: Math.floor(sum.pitch / size),
-      yaw: Math.floor(sum.yaw / size),
       heading: Math.floor(sum.heading / size),
     };
   }
