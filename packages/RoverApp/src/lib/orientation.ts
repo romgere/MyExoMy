@@ -1,21 +1,11 @@
 // Inspired by https://gist.github.com/srlm-io/fafee8feed8bd5661266#file-orientation-cpp-L3
-import { Coord3D } from '@robot/shared/types';
+import type { Coord3D, RoverOrientation } from '@robot/shared/types.js';
+import { ExomyConfig } from '../types.js';
 const { atan2, atan, sin, cos } = Math;
 
 function degrees(radians: number) {
   return radians * (180 / Math.PI);
 }
-
-// TODO: Make this a config
-const default_hardiron_x = -25.9875;
-const default_hardiron_y = -13.75625;
-const default_hardiron_z = -5.52812;
-
-export type Orientation = {
-  roll: number;
-  pitch: number;
-  heading: number;
-};
 
 /** Use an eCompass algorithm to calculate orientation
  *
@@ -28,24 +18,13 @@ export type Orientation = {
  *   4. Average the minumum and maximum for each axis. This will give you your hardiron x,y,z offsets.
  */
 export default class OrientationHelper {
-  // TODO: make this a config
-  hardiron_x: number = default_hardiron_x;
-  hardiron_y: number = default_hardiron_y;
-  hardiron_z: number = default_hardiron_z;
+  private roverConfig: ExomyConfig;
 
-  // TODO: make this a config
-  // Tweak this depending on gyro/magnetometer sensor orientation inside rover body
-  inversePitch = false;
-  inverseRoll = false;
-  inverseHeading = false;
+  constructor(config: ExomyConfig) {
+    this.roverConfig = config;
+  }
 
-  // TODO: make this a config
-  // Tweak this if HUD is not centered while rover on plane surface & oriented to magnetic north
-  deviationPitch = 0.7;
-  deviationRoll = -2;
-  deviationHeading = 67;
-
-  calculate(accl: Coord3D, magn: Coord3D): Orientation {
+  calculate(accl: Coord3D, magn: Coord3D): RoverOrientation {
     const accl_x = accl.x;
     const accl_y = accl.y;
     const accl_z = accl.z;
@@ -54,17 +33,18 @@ export default class OrientationHelper {
     let roll = atan2(accl_y, accl_z);
     let pitch = atan(-accl_x / (accl_y * sin(roll) + accl_z * cos(roll)));
 
-    roll = degrees(roll) * (this.inverseRoll ? -1 : 1) + this.deviationRoll;
-    pitch = degrees(pitch) * (this.inversePitch ? -1 : 1) + this.deviationPitch;
-    // yaw = degrees(yaw) * (this.inverseYaw ? -1 : 1);
+    roll = degrees(roll) * (this.roverConfig.inverseRoll ? -1 : 1) + this.roverConfig.deviationRoll;
+    pitch =
+      degrees(pitch) * (this.roverConfig.inversePitch ? -1 : 1) + this.roverConfig.deviationPitch;
+    // yaw = degrees(yaw) * (this.roverConfig.inverseYaw ? -1 : 1);
 
-    const cx = magn.x - this.hardiron_x;
-    const cy = magn.y - this.hardiron_y;
-    // const cz = magn.z - this.hardiron_y;
+    const cx = magn.x - this.roverConfig.hardironX;
+    const cy = magn.y - this.roverConfig.hardironY;
+    // const cz = magn.z - this.roverConfig.hardironY;
 
     // now compute heading
     let heading = (atan2(cy, cx) * 180.0) / Math.PI;
-    heading = heading + this.deviationHeading;
+    heading = heading + this.roverConfig.deviationHeading;
     if (heading < 0) heading += 360;
     else if (heading > 360) heading -= 360;
 

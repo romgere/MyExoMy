@@ -3,9 +3,6 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 
-import OrientationHelper from '@robot/control-center/utils/orientation';
-import type { Orientation } from '@robot/control-center/utils/orientation';
-
 import type { IWData } from '@robot/shared/iwconfig';
 import type {
   PiSensorEvent,
@@ -18,6 +15,7 @@ import type RoverConnectionService from '@robot/control-center/services/rover-co
 import type { ProximitySensorPosition } from '@robot/shared/events.js';
 import { voltToPercent } from '../utils/battery-util';
 import { signalQuality, SignalQuality } from '../utils/gsm-util';
+import { RoverOrientation } from '@robot/shared/types';
 
 // Defined how many gyro data entries we use to smooth values
 // Given we received new data every 250ms
@@ -55,13 +53,10 @@ export default class RoverSensor extends Service {
 
   @action
   onExternalSensorEvent(data: ExternalSensorEvent) {
-    this.bodyTemperature = data.gyro.temperature;
-
-    // Compute rover orientation according to accelerometer/magnetometer values
-    const orientation = new OrientationHelper().calculate(data.gyro.accel, data.magneto.data);
+    this.bodyTemperature = data.temperature.gyro;
 
     // Push data to gyro history
-    this.orientationHistory.push(orientation);
+    this.orientationHistory.push(data.orientation);
     if (this.orientationHistory.length > gyroHistoryLength) {
       this.orientationHistory.splice(0, this.orientationHistory.length - gyroHistoryLength);
     }
@@ -119,7 +114,7 @@ export default class RoverSensor extends Service {
   // Temperature from gyroscope sensor (in rover body, based on gyro sensor)
   @tracked bodyTemperature = 0;
 
-  @tracked orientationHistory: Orientation[] = []; // Store a short gyro data history, used to smooth data
+  @tracked orientationHistory: RoverOrientation[] = []; // Store a short gyro data history, used to smooth data
 
   // Distance returned from the lidar
   @tracked lidarDistanceHistory: number[] = []; // Store a short history, used to smooth data
@@ -175,9 +170,9 @@ export default class RoverSensor extends Service {
     return Math.ceil((value / max) * 100);
   }
 
-  get smoothedOrientation(): Orientation {
+  get smoothedOrientation(): RoverOrientation {
     const size = this.orientationHistory.length;
-    const sum = this.orientationHistory.reduce<Orientation>(
+    const sum = this.orientationHistory.reduce<RoverOrientation>(
       function (acc, { roll, pitch, heading }) {
         acc.roll += roll;
         acc.pitch += pitch;
