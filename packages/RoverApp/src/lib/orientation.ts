@@ -1,6 +1,6 @@
 // Inspired by https://gist.github.com/srlm-io/fafee8feed8bd5661266#file-orientation-cpp-L3
 import type { Coord3D, RoverOrientation } from '@robot/shared/types.js';
-import { ExomyConfig } from '../types.js';
+import { OrientationConfig } from '../types.js';
 const { atan2, atan, sin, cos } = Math;
 
 function degrees(radians: number) {
@@ -18,10 +18,10 @@ function degrees(radians: number) {
  *   4. Average the minumum and maximum for each axis. This will give you your hardiron x,y,z offsets.
  */
 export default class OrientationHelper {
-  private roverConfig: ExomyConfig;
+  private orientationConfig: OrientationConfig;
 
-  constructor(config: ExomyConfig) {
-    this.roverConfig = config;
+  constructor(config: OrientationConfig) {
+    this.orientationConfig = config;
   }
 
   calculate(accl: Coord3D, magn: Coord3D): RoverOrientation {
@@ -33,18 +33,21 @@ export default class OrientationHelper {
     let roll = atan2(accl_y, accl_z);
     let pitch = atan(-accl_x / (accl_y * sin(roll) + accl_z * cos(roll)));
 
-    roll = degrees(roll) * (this.roverConfig.inverseRoll ? -1 : 1) + this.roverConfig.deviationRoll;
+    roll =
+      degrees(roll) * (this.orientationConfig.inverseRoll ? -1 : 1) +
+      this.orientationConfig.deviationRoll;
     pitch =
-      degrees(pitch) * (this.roverConfig.inversePitch ? -1 : 1) + this.roverConfig.deviationPitch;
-    // yaw = degrees(yaw) * (this.roverConfig.inverseYaw ? -1 : 1);
+      degrees(pitch) * (this.orientationConfig.inversePitch ? -1 : 1) +
+      this.orientationConfig.deviationPitch;
+    // yaw = degrees(yaw) * (this.orientationConfig.inverseYaw ? -1 : 1);
 
-    const cx = magn.x - this.roverConfig.hardironX;
-    const cy = magn.y - this.roverConfig.hardironY;
-    // const cz = magn.z - this.roverConfig.hardironY;
+    const cx = magn.x - this.orientationConfig.hardironX;
+    const cy = magn.y - this.orientationConfig.hardironY;
+    // const cz = magn.z - this.orientationConfig.hardironY;
 
     // now compute heading
     let heading = (atan2(cy, cx) * 180.0) / Math.PI;
-    heading = heading + this.roverConfig.deviationHeading;
+    heading = heading + this.orientationConfig.deviationHeading;
     if (heading < 0) heading += 360;
     else if (heading > 360) heading -= 360;
 
