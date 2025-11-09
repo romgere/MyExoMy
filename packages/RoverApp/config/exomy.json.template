@@ -23,5 +23,15 @@
   },
   "smsRecipient": "+1234567890",
   "gitHubUsername": "john-doe",
-  "sshTunnelAutoStart": false
+  "sshTunnelAutoStart": false,
+  "sshTunnelAutoStart": false,
+  "inversePitch": false,
+  "inverseRoll": false,
+  "inverseHeading": false,
+  "deviationPitch": 0,
+  "deviationRoll": 0,
+  "deviationHeading": 0,
+  "hardironX": 0,
+  "hardironY": 0,
+  "hardironZ": 0
 }

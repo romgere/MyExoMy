@@ -15,6 +15,26 @@ type ServoConfig = {
   max: ServoArray<number>;
 };
 
+// Gyroscope & magnetometer config
+type OrientationConfig = {
+  // Magnetometer config
+  hardironX: number;
+  hardironY: number;
+  hardironZ: number;
+
+  // Inverse axes
+  // Tweak this depending on gyro/magnetometer sensor orientation inside rover body
+  inversePitch: boolean;
+  inverseRoll: boolean;
+  inverseHeading: boolean;
+
+  // Axes deviation
+  // Tweak this if HUD is not centered while rover on plane surface & oriented to magnetic north
+  deviationPitch: number;
+  deviationRoll: number;
+  deviationHeading: number;
+};
+
 export type ExomyConfig = {
   drive: ServoConfig;
   steer: ServoConfig;
@@ -22,7 +42,7 @@ export type ExomyConfig = {
   smsRecipient: string;
   gitHubUsername: string;
   sshTunnelAutoStart: boolean;
-};
+} & OrientationConfig;
 
 export type ServiceWorkerMessage<Events extends EventsTypesMapping, Name extends keyof Events> = {
   name: Name;

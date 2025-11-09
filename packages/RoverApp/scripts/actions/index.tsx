@@ -5,6 +5,9 @@ import { MotorStop } from './motor-stop.tsx';
 import { MotorTest } from './motor-test.tsx';
 import { SetSMSRecipent } from './set-sms-sender.tsx';
 import { SetSSHTunnel } from './set-ssh-tunnel.tsx';
+import { HardironCalibration } from './hardiron.tsx';
+import { OrientationDeviation } from './orientation-deviation.tsx';
+import { AxeInversion } from './axe-inversion.tsx';
 
 export type PageArg = {
   onFinish: () => void;
@@ -18,7 +21,10 @@ export type PageName =
   | 'test_motors'
   | 'test_camera'
   | 'set_sms_recipient'
-  | 'set_ssh_tunnel';
+  | 'set_ssh_tunnel'
+  | 'hardiron'
+  | 'orientation_deviation'
+  | 'axe_inversion';
 
 const pages: Record<PageName, { page: Page; label: string }> = {
   pin_config: {
@@ -48,6 +54,18 @@ const pages: Record<PageName, { page: Page; label: string }> = {
   set_ssh_tunnel: {
     page: SetSSHTunnel,
     label: 'SSH tunnel settings',
+  },
+  hardiron: {
+    page: HardironCalibration,
+    label: 'HardIron calibration',
+  },
+  axe_inversion: {
+    page: AxeInversion,
+    label: 'Axes inversion',
+  },
+  orientation_deviation: {
+    page: OrientationDeviation,
+    label: 'Orientation deviation',
   },
 };
 

@@ -1,5 +1,5 @@
 // This contains all the events name & event args used to communicate through nodes
-import { MotorSpeed, MotorAngle, Coord3D } from './types.js';
+import { MotorSpeed, MotorAngle, RoverOrientation } from './types.js';
 import type LocomotionMode from './locomotion-modes.js';
 import type { CameraConfig } from './camera.js';
 import type { IWData } from './iwconfig.js';
@@ -47,17 +47,13 @@ export type BatteryData = {
 export type ProximitySensorPosition = 'RR' | 'RL' | 'FR' | 'FL';
 
 export type ExternalSensorEvent = {
-  gyro: {
-    gyro: Coord3D;
-    accel: Coord3D;
-    temperature: number;
-  };
-  magneto: {
-    data: Coord3D;
-    temperature: number;
+  orientation: RoverOrientation;
+  temperature: {
+    lidar: number;
+    magneto: number;
+    gyro: number;
   };
   lidar: {
-    temperature: number;
     distance: number;
     flux: number;
     error: number;

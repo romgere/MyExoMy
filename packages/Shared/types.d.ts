@@ -8,3 +8,9 @@ export type Coord3D = {
   y: number;
   z: number;
 };
+
+export type RoverOrientation = {
+  roll: number;
+  pitch: number;
+  heading: number;
+};
