@@ -5,6 +5,9 @@ import type { PromisifiedBus } from 'i2c-bus';
 
 const gyro_addr = 0x68; // address of gyroscope module (SEN-MPU6050)
 
+const scale_gyroscope = 131.0; // scale factors of gyroscope
+const scale_acceleration = 16384.0; // scale factors of gyroscope
+
 export default class GyroscopeSensor {
   i2cbus: PromisifiedBus;
 
@@ -25,24 +28,67 @@ export default class GyroscopeSensor {
     return Number((temperature / 340 + 36.53).toFixed(1));
   }
 
-  // reading accelerometer values
   async getAccelerometerValues() {
-    return await this.readValues(0x3b);
-  }
+    let high = await this.i2cbus.readByte(gyro_addr, 0x3b);
+    let low = await this.i2cbus.readByte(gyro_addr, 0x3b + 1);
 
-  // reading gyroscrope values
-  async getGyroscopeValues() {
-    return await this.readValues(0x43);
-  }
+    let x = (high << 8) + low;
+    if (x >= 0x8000) {
+      x = -(65535 - x + 1);
+    }
 
-  private async readValues(command: number) {
-    const buffer = Buffer.alloc(6);
-    await this.i2cbus.readI2cBlock(gyro_addr, command, 6, buffer);
+    high = await this.i2cbus.readByte(gyro_addr, 0x3d);
+    low = await this.i2cbus.readByte(gyro_addr, 0x3d + 1);
+
+    let y = (high << 8) + low;
+    if (y >= 0x8000) {
+      y = -(65535 - y + 1);
+    }
+
+    high = await this.i2cbus.readByte(gyro_addr, 0x3f);
+    low = await this.i2cbus.readByte(gyro_addr, 0x3f + 1);
+
+    let z = (high << 8) + low;
+    if (z >= 0x8000) {
+      z = -(65535 - z + 1);
+    }
 
     return {
-      x: buffer.readInt16BE(),
-      y: buffer.readInt16BE(2),
-      z: buffer.readInt16BE(4),
+      x: x / scale_acceleration, // g
+      y: y / scale_acceleration, // g
+      z: z / scale_acceleration, // g
+    };
+  }
+
+  async getGyroscopeValues() {
+    let high = await this.i2cbus.readByte(gyro_addr, 0x43);
+    let low = await this.i2cbus.readByte(gyro_addr, 0x43 + 1);
+
+    let x = (high << 8) + low;
+    if (x >= 0x8000) {
+      x = -(65535 - x + 1);
+    }
+
+    high = await this.i2cbus.readByte(gyro_addr, 0x45);
+    low = await this.i2cbus.readByte(gyro_addr, 0x45 + 1);
+
+    let y = (high << 8) + low;
+    if (y >= 0x8000) {
+      y = -(65535 - y + 1);
+    }
+
+    high = await this.i2cbus.readByte(gyro_addr, 0x47);
+    low = await this.i2cbus.readByte(gyro_addr, 0x47 + 1);
+
+    let z = (high << 8) + low;
+    if (z >= 0x8000) {
+      z = -(65535 - z + 1);
+    }
+
+    return {
+      x: ((x / scale_gyroscope) * Math.PI) / 180, // Rad/s
+      y: ((y / scale_gyroscope) * Math.PI) / 180, // Rad/s
+      z: ((z / scale_gyroscope) * Math.PI) / 180, // Rad/s
     };
   }
 }

@@ -7,11 +7,13 @@ Remote controlled (Wifi, 4g) 3D printed "Mars rover", inspired by [ESA - ExoMy p
 !["Pixture of head of my Rover (Work in progress)](./Misc/Assets/rover2.jpg)
 
 ## Freecad parts
+
 All parts are editable in freecad.
 
 !["Rover viewed in freecad](./Misc/Assets/rover-freecad.png)
 
 ## Control center application
+
 Video stream, live camera settings updates, GPS position, lot of sensors & more.
 
 !["The control application](./Misc/Assets/control-ui.png)
@@ -19,6 +21,7 @@ Video stream, live camera settings updates, GPS position, lot of sensors & more.
 !["The control application, camera update screen](./Misc/Assets/camera-update.png)
 
 ## Configuration application
+
 Easy configuration with the configuration Terminal Uer Interface.
 
 !["The configuration TUI](./Misc/Assets/tui.png)
@@ -62,7 +65,7 @@ If you start from scratch, you may want to go through the [assembling rover guid
 The control app (as it is on this repository `main` branch) is deployed on netlify. You can use it for your own conveniance if you want :
 
 [https://rover.mestres.fr](https://rover.mestres.fr)
-*This can't (yet?) be used for local developpement, Netlify no longer allow HTTP traffic & rover api is HTTPS when serving locally (Not via 4G tunnel).*
+_This can't (yet?) be used for local developpement, Netlify no longer allow HTTP traffic & rover api is HTTPS when serving locally (Not via 4G tunnel)._
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/543b67ce-f6fd-49e3-bc17-88cf6e744329/deploy-status)](https://app.netlify.com/projects/exomycontrolapp/deploys)
 
@@ -71,3 +74,4 @@ The control app (as it is on this repository `main` branch) is deployed on netli
 - New body height is still a bit small (servo connectors are a bit bended by top)
 - 4G on/off commands (SMS) does not work (switching to GSM only make i2c & AT interface somehow exploding)
 - body cover need a refactor (ergo are too weak)
+- Heading computation is working only when Rover is on plane surface (see packages/RoverApp/src/lib/orientation.ts)

@@ -9,6 +9,7 @@ import Ina219, { INA219_ADDRESS_A0 } from '../lib/sensors/ina219.ts';
 import type { Coord3D } from '@robot/shared/types.js';
 import type { BatteryData, ProximitySensorPosition } from '@robot/shared/events.js';
 import type { LidarData } from '@robot/rover-app/lib/sensors/lidar.js';
+import OrientationHelper from '../lib/orientation.ts';
 
 type ProximitySensors = {
   position: ProximitySensorPosition;
@@ -34,6 +35,13 @@ class ExternalSensorsService extends Service {
   battery = new Ina219(INA219_ADDRESS_A0);
 
   multiplexer = new I2CMultiplexer();
+
+  orientationHelper: OrientationHelper;
+
+  constructor(...args: ConstructorParameters<typeof Service>) {
+    super(...args);
+    this.orientationHelper = new OrientationHelper(this.config);
+  }
 
   async init() {
     // Init sensors
@@ -82,12 +90,12 @@ class ExternalSensorsService extends Service {
     }
 
     let gTemp = 0;
-    let gyro: Coord3D = { x: 0, y: 0, z: 0 };
+    // let gyro: Coord3D = { x: 0, y: 0, z: 0 };
     let accel: Coord3D = { x: 0, y: 0, z: 0 };
 
     try {
       gTemp = await this.gyro.getTemperatureSensor();
-      gyro = await this.gyro.getGyroscopeValues();
+      // gyro = await this.gyro.getGyroscopeValues();
       accel = await this.gyro.getAccelerometerValues();
     } catch (e) {
       this.logger.error("Can't read gyroscope data", e);
@@ -135,18 +143,16 @@ class ExternalSensorsService extends Service {
       this.logger.error("Can't read battery data", e);
     }
 
+    const orientation = this.orientationHelper.calculate(accel, magneto);
+
     this.emit('externalSensor', {
-      gyro: {
-        gyro,
-        accel,
-        temperature: gTemp,
-      },
-      magneto: {
-        data: magneto,
-        temperature: mTemp,
+      orientation,
+      temperature: {
+        lidar: lidar.temp,
+        magneto: mTemp,
+        gyro: gTemp,
       },
       lidar: {
-        temperature: lidar.temp,
         distance: lidar.dist,
         flux: lidar.flux,
         error: lidar.status,
