@@ -29,9 +29,18 @@ export default class OrientationHelper {
     const accl_y = accl.y;
     const accl_z = accl.z;
 
-    // Freescale solution
+    const cx = magn.x - this.orientationConfig.hardironX;
+    const cy = magn.y - this.orientationConfig.hardironY;
+    // const cz = magn.z - this.orientationConfig.hardironY;
+
     let roll = atan2(accl_y, accl_z);
     let pitch = atan(-accl_x / (accl_y * sin(roll) + accl_z * cos(roll)));
+    // Heading computation should take into account orientation to get correct value when rover is pitched/rolled
+    // But I can't get any code to work with my setup and I'm not good at math to figure out what's going on...
+    // One day maybe I'll dig more into it (see https://stackoverflow.com/a/35081096)
+    // I also tried https://github.com/psiphi75/ahrs but without more success
+    // There's maybe something wrong in the sensor code or hardware (how they are installed in the rover)
+    let heading = atan2(cy, cx);
 
     roll =
       degrees(roll) * (this.orientationConfig.inverseRoll ? -1 : 1) +
@@ -39,15 +48,10 @@ export default class OrientationHelper {
     pitch =
       degrees(pitch) * (this.orientationConfig.inversePitch ? -1 : 1) +
       this.orientationConfig.deviationPitch;
-    // yaw = degrees(yaw) * (this.orientationConfig.inverseYaw ? -1 : 1);
+    heading =
+      degrees(heading) * (this.orientationConfig.inverseHeading ? -1 : 1) +
+      this.orientationConfig.deviationHeading;
 
-    const cx = magn.x - this.orientationConfig.hardironX;
-    const cy = magn.y - this.orientationConfig.hardironY;
-    // const cz = magn.z - this.orientationConfig.hardironY;
-
-    // now compute heading
-    let heading = (atan2(cy, cx) * 180.0) / Math.PI;
-    heading = heading + this.orientationConfig.deviationHeading;
     if (heading < 0) heading += 360;
     else if (heading > 360) heading -= 360;
 
