@@ -1,8 +1,8 @@
 {
-  "name": "exomy-control-center",
+  "name": "myexomy",
   "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "./dist",
+    "directory": "./packages/ControlCenter/dist",
     // Ember app uses `locationType: 'history'`: serve index.html for unknown paths
     // (replaces the Netlify `/* /index.html 200` rule).
     "not_found_handling": "single-page-application"
