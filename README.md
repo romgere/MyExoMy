@@ -62,12 +62,10 @@ If you start from scratch, you may want to go through the [assembling rover guid
 
 # Control App
 
-The control app (as it is on this repository `main` branch) is deployed on netlify. You can use it for your own conveniance if you want :
+The control app (as it is on this repository `main` branch) is deployed on Cloudflare Workers. You can use it for your own conveniance if you want :
 
 [https://rover.mestres.fr](https://rover.mestres.fr)
-_This can't (yet?) be used for local developpement, Netlify no longer allow HTTP traffic & rover api is HTTPS when serving locally (Not via 4G tunnel)._
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/543b67ce-f6fd-49e3-bc17-88cf6e744329/deploy-status)](https://app.netlify.com/projects/exomycontrolapp/deploys)
+_This can't (yet?) be used for local developpement, the deployed app is HTTPS only & rover api is HTTPS when serving locally (Not via 4G tunnel)._
 
 # Know issues
 
